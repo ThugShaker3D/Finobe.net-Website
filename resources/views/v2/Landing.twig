@@ -6,10 +6,10 @@
     <div id="app">
       {% include ('v2/Modules/nav.twig') %}
       <div class="home-main-content">
-      {% if not IsLoggedIn %}
+      {% if not data.siteusername %}
         <div class="container d-flex justify-content-center">
-          <h1 class="mb-4 home-text">We do what {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} does</h1>
-          <p class="home-text">{{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} puts games on your not-phone.</p>
+          <h1 class="mb-4 home-text">We do what {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} does</h1>
+          <p class="home-text">{{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} puts games on your not-phone.</p>
           <p><a href="/auth/register" class="btn btn-primary btn-lg mt-3 mr-2">Get started ›</a></p>
         </div>
       </div>
@@ -20,7 +20,7 @@
       {% else %}
       <div class="container" style="display:flex;flex-direction:row;margin-top:3%;">
 				<div style="width:75%;">
-					<h1 class="mt-5">Hi there, {{ user.username }}</h1>
+					<h1 class="mt-5">Hi there, {{ data.user.username }}</h1>
 					<p>
 						<a href="/app/places" class="btn btn-success btn-lg mt-3 mr-2">join a game ›</a>
 					</p>

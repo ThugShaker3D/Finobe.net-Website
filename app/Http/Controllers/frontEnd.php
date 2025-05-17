@@ -36,7 +36,8 @@ class frontEnd extends Controller
 					'success' => Session::get('success', false),
 					'error' => Session::get('error', false),
 					'announcements' => []
-				]
+				],
+                'lucky_number' => rand(0, User::count())
             ]
         ];
 
@@ -71,6 +72,56 @@ class frontEnd extends Controller
 
     public function index(Request $request) {
         $this->request['data']['embeds']['title'] = 'Home' . $this->request['data']['embeds']['title'];
+
+        if($this->request['data']['siteusername']) {
+            $this->request['data']['games'] = [];
+
+            $games = Cache::remember('latest_places', 60 * 10, function() {
+                return $this->db->table('assets')
+                    ->select('assets.*', DB::raw('SUM(servers.players) AS total_players'))
+                    ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                    ->where('asset_type', 9)
+                    ->groupBy('assets.id')
+                    ->orderByDesc('total_players')
+                    ->limit(6)
+                    ->get()
+                    ->map(function ($item) {
+                        return (array) $item;
+                    })->toArray();
+            });
+            
+            foreach($games as $key => $game) {
+                $row['additional'] = json_decode($row['additional'], true);
+                $players = 0;
+
+                $servers = $this->db->table('servers')
+                    ->select('players')
+                    ->where('placeid', $game['id'])
+                    ->get()
+                    ->map(function ($item) {
+                        return (array) $item;
+                    })->toArray();
+                
+                foreach($servers as $server) {
+                    $players += count(json_decode($server['players']));
+                }
+
+                $thumbnail = $this->db->table('assets')
+                    ->select('file')
+                    ->where('id', $game['additional']['media']['imageAssetId'])
+                    ->value('file');
+                
+                $this->request['data']['games'][] = [
+                    'id' => $row['id'],
+                    'title' => $row['title'],
+                    'author' => User::find($game['author']),
+                    'thumbnail' => $thumbnail,
+                    'visits' => number_format($row['additional']['visits']),
+                    'version' => $row['additional']['version'],
+                    'players' => $players
+                ];
+            }
+        }
 
         return view($this->request['data']['user']['version'] . '/Landing', $this->request);
     }
