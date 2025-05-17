@@ -94,7 +94,7 @@ class frontEnd extends Controller
             });
             
             foreach($games as $key => $game) {
-                $game['additional'] = json_decode($row['additional'], true);
+                $game['additional'] = json_decode($game['additional'], true);
                 $players = 0;
 
                 $servers = $this->db->table('servers')
