@@ -148,7 +148,8 @@ class frontEnd extends Controller
                 return redirect('/auth/login');
             }
 
-            $user = User::makeHidden([])->where('email', $data['email'])->first()->toArray();
+            $user = User::where('email', $data['email'])->first()->toArray();
+            $user->makeHidden([]);
 
             if(!Hash::check($data['password'], $user->toArray()['password'])) {
                 Session::put('errorlogin', true);
