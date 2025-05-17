@@ -27,6 +27,7 @@ class frontEnd extends Controller
                 'csrf_token' => View::share('csrf_token', csrf_token()),
                 'siteusername' => Session::get('siteusername', false),
                 'user' => [
+                    'version' => 'v2',
                     'branding' => 'aesthetiful' // default branding
                 ],
                 'page' => strtok($_SERVER['REQUEST_URI'], '?'),
