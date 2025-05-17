@@ -149,7 +149,6 @@ class frontEnd extends Controller
             }
 
             $user = User::where('email', $data['email'])->first();
-            $user->makeHidden([]);
 
             if(!Hash::check($data['password'], $user->toArray()['password'])) {
                 Session::put('errorlogin', true);
