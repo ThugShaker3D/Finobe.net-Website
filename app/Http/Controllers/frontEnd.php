@@ -71,6 +71,11 @@ class frontEnd extends Controller
             } else {
                 $this->request['data']['embeds']['image'] .= 'logo.png';
             }
+
+            $this->request['data']['user']['places'] = $this->db->table('assets')
+                ->where('author', $this->request['data']['user']['id'])
+                ->where('asset_type', 9)
+                ->count();
         } else {
             $this->request['data']['embeds']['title'] .= 'Aesthetiful';
             $this->request['data']['embeds']['image'] .= 'logo.png';
