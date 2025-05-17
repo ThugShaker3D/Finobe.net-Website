@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Controllers\DataController;
+use App\Http\Controllers\dataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,7 @@ class frontEnd extends Controller
     protected $dataService;
     protected $request;
 
-    public function __construct(DataController $dataService, Request $request) {
+    public function __construct(dataController $dataService, Request $request) {
         $this->db = DB::connection('finobe');
         $this->dataService = $dataService;
         $this->request = [
