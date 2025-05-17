@@ -125,4 +125,18 @@ class frontEnd extends Controller
 
         return view($this->request['data']['user']['version'] . '/Landing', $this->request);
     }
+
+    public function login(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
+
+        if($this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            //
+        }
+
+        return view($this->request['data']['user']['version'] . '/Login', $this->request);
+    }
 }
