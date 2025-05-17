@@ -94,7 +94,7 @@ class frontEnd extends Controller
             });
             
             foreach($games as $key => $game) {
-                $row['additional'] = json_decode($row['additional'], true);
+                $game['additional'] = json_decode($row['additional'], true);
                 $players = 0;
 
                 $servers = $this->db->table('servers')
@@ -115,12 +115,12 @@ class frontEnd extends Controller
                     ->value('file');
                 
                 $this->request['data']['games'][] = [
-                    'id' => $row['id'],
-                    'title' => $row['title'],
+                    'id' => $game['id'],
+                    'title' => $game['title'],
                     'author' => User::find($game['author']),
                     'thumbnail' => $thumbnail,
-                    'visits' => number_format($row['additional']['visits']),
-                    'version' => $row['additional']['version'],
+                    'visits' => number_format($game['additional']['visits']),
+                    'version' => $game['additional']['version'],
                     'players' => $players
                 ];
             }
