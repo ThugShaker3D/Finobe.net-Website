@@ -25,7 +25,9 @@ class frontEnd extends Controller
                 ],
                 'csrf_token' => View::share('csrf_token', csrf_token()),
                 'siteusername' => Session::get('siteusername', false),
-                'user' => [],
+                'user' => [
+                    'branding' => 'aesthetiful' // default branding
+                ],
                 'page' => strtok($_SERVER['REQUEST_URI'], '?'),
 				'dir' => str_replace('\\', '', '/' . explode('/', trim($_SERVER['REQUEST_URI'], '/'))[0] . '/'),
                 'alerts' => [
@@ -61,10 +63,13 @@ class frontEnd extends Controller
             }
         } else {
             $this->request['data']['embeds']['title'] .= 'Aesthetiful';
+            $this->request['data']['embeds']['image'] .= 'logo.png';
         }
     }
 
     public function index(Request $request) {
-        $this->request['data']['embeds']['title'] = '' . $this->request['data']['embeds']['title'];
+        $this->request['data']['embeds']['title'] = 'Home' . $this->request['data']['embeds']['title'];
+
+        return view($this->request['data']['user']['version'] . '/Landing', $this->request);
     }
 }
