@@ -16,7 +16,7 @@ class frontEnd extends Controller
         $this->request = [
             'data' => [
                 'embeds' => [
-                    'title' => 'Finobe - ',
+                    'title' => ' - ',
                     'description' => 'Finobe, it is website. He is for old brick-builder. Good for use.',
                     'url' => env('APP_URL'),
                     'image' => env('APP_URL') . '/s/img/'
@@ -33,5 +33,27 @@ class frontEnd extends Controller
 				]
             ]
         ];
+
+        if($this->request['data']['alerts']['success']) {
+			Session::forget('success');
+		}
+		
+		if($this->request['data']['alerts']['error']) {
+			Session::forget('error');
+		}
+
+        if($this->request['data']['siteusername']) {
+            $this->request['data']['user'] = (array) $this->db->table('users')
+                ->where('username', $this->request['data']['siteusername'])
+                ->first();
+            
+            $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
+        } else {
+            $this->request['data']['embeds']['title'] .= 'Aesthetiful';
+        }
+    }
+
+    public function index(Request $request) {
+        $this->request['data']['embeds']['title'] = '' . $this->request['data']['embeds']['title'];
     }
 }
