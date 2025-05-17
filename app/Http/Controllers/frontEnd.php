@@ -37,7 +37,7 @@ class frontEnd extends Controller
 					'error' => Session::get('error', false),
 					'announcements' => []
 				],
-                'lucky_number' => rand(0, User::count())
+                'lucky_number' => rand(0, User::count()) . '/' . User::count()
             ]
         ];
 
