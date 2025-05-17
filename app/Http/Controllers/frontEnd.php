@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class frontEnd extends Controller
 {
@@ -25,7 +28,7 @@ class frontEnd extends Controller
                     'image' => env('APP_URL') . '/s/img/'
                 ],
                 'csrf_token' => View::share('csrf_token', csrf_token()),
-                'siteusername' => Session::get('siteusername', false),
+                'siteusername' => Auth::check(),
                 'user' => [
                     'version' => 'v2',
                     'branding' => 'aesthetiful' // default branding
@@ -50,7 +53,7 @@ class frontEnd extends Controller
 		}
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['user'] = (array) User::where('username', $this->request['data']['siteusername'])->first();
+            $this->request['data']['user'] = Auth::user()->toArray();
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
             
             if($this->request['data']['user']['branding'] == 'finobe') {
@@ -128,13 +131,33 @@ class frontEnd extends Controller
 
     public function login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
 
         if($this->request['data']['siteusername']) {
             return redirect('/');
         }
 
         if($request->isMethod('post')) {
-            //
+            $validator = Validator::make($data, [
+                'email' => 'required|email',
+                'password' => 'required|string'
+            ]);
+
+            if(!User::where('email', $data['email'])->exists()) {
+                Session::put('errorlogin', true);
+                return redirect('/auth/login');
+            }
+
+            $user = (array) User::where('email', $data['email'])->first();
+
+            if(!Hash::check($data['password'], $user['password'])) {
+                Session::put('errorlogin', true);
+                return redirect('/auth/login');
+            }
+
+            Auth::login($user);
+            Session::put('success', 'Successfully logged in.');
+            return redirect('/');
         }
 
         return view($this->request['data']['user']['version'] . '/Login', $this->request);
