@@ -1,0 +1,401 @@
+<html>
+  <head>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+  </head>
+  <body>
+    <div id="app">
+      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      <div class="container" style="margin-bottom:10px">
+				{% if user_profile.ban.IsBanned %}
+					<div class="alert alert-danger mb-2 mt-4">
+						<div class="container"{{ user.theme == "night" ? ' style="color: #FFF;"' : '' }}>
+							<h5 class="font-weight-light my-2"><i
+									class="far fa-exclamation-triangle fa-fw align-middle mr-1"></i> This user is banned</h5>
+							<p class="mb-2">This user has been banned for {{ user_profile.ban.data.reason }}</p>
+						</div>
+					</div>
+				{% endif %}
+                <div class="row">
+                    <div class="col-md-12 mt-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex row justify-content-around">
+                                    <div class="offset-md-1">
+                                      {% if user_profile.pfp == "" %}
+                                        <img src="/s/img/spinnerv2.gif" style="width: 17rem; height: auto;">
+                                      {% else %}
+                                        <img src="https://cdn.finobe.net/{{ user_profile.pfp }}" style="width: 19rem; height: auto;">
+                                      {% endif %}
+                                    </div>
+                                    <style>
+                                        .nowrap {
+                                            white-space: nowrap;
+                                        }
+                                    </style>
+                                    <div class="d-flex flex-column">
+                                        <div style="margin-bottom: auto;">
+                                            <h4><i class='fal fa-mars fa-1x'></i> {{ user_profile.username | raw }}</h4>
+                                            <p class="mb-1 text-{{ (user_profile.status == "admin") ? "danger" : "primary" }}">
+                                                <strong>{{ (user_profile.status == "admin") ? "Admin" : "Member" }}</strong>
+                                            </p>
+                                            <p class="mt-1"><strong>Friends: </strong>{{ user_profile.CurrentFriends|length }} <a href="/user/{{ user_profile.id }}/friends">(View ›)</a></p>
+                                            <p class="mb-1 nowrap"><strong>Join Date: </strong>{{ user_profile.created }}</p>
+                                            {% if user.username != user_profile.username %}
+                                            <div class="d-flex justify-content-start mt-5">
+                                                <p>
+                                                    <a href="/app/inbox/compose?user={{ user_profile.username }}" class="btn btn-theme mr-2 nowrap">
+                                                        Send Message
+                                                    </a>
+                                                </p>
+                                                <p>
+                                                    <a href="#" class="btn btn-theme mr-2 nowrap">
+                                                        Trade
+                                                    </a>
+                                                </p>
+                                                {% for friend in user.friends %}
+                                                    {% if friend.username == user.username and friend.status == "pending" %}
+                                                    <p>
+                                                        <a class="btn btn-theme mr-2 nowrap disabled">
+                                                            pending...
+                                                        </a>
+                                                    </p>
+                                                    {% elseif friend.username == user_profile.username and friend.status == "pending" %}
+                                                    <div class="btn-group" role="group" style="display: block;">
+                                                        <a href="/user/{{ user_profile.id }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
+                                                            accept
+                                                        </a>
+                                                        <a href="/user/{{ user_profile.id }}/remove" class="btn btn-danger mr-2 nowrap ">
+                                                            decline
+                                                        </a>
+                                                    </div>
+                                                    {% elseif friend.username == user_profile.username and friend.status == "friends" %}
+                                                    <p>
+                                                        <a href="/user/{{ user_profile.id }}/remove" class="btn btn-danger mr-2 nowrap">
+                                                            remove friend
+                                                        </a>
+                                                    </p>{#
+                                                    {% elseif not user.friends|filter(user => user.status != "pending")|length %}
+                                                            <p>
+                                                                <a href="/user/{{ user_profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                                    Send Friend Request
+                                                                </a>
+                                                            </p>#}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% for friend2 in user_profile.friends %}
+                                                            {% if friend2.username == user.username and friend2.status == "pending" %}
+                                                            <p>
+                                                                <a class="btn btn-theme mr-2 nowrap disabled">
+                                                                    pending request
+                                                                </a>
+                                                            </p>{#
+                                                            {% elseif not user_profile.friends|filter(user => user.status != "pending")|length %}
+                                                            <p>
+                                                                <a href="/user/{{ user_profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                                    Send Friend Request
+                                                                </a>
+                                                            </p>#}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                {#% if (not user.friends|filter(friend => friend.status != "pending")|length or not user_profile.friends|filter(friend2 => friend2.status != "pending")|length) and (not user.friends|filter(friend => friend.status == "pending")|length or not user_profile.friends|filter(friend2 => friend2.status == "pending")|length) %#}
+                                                {% if not user_profile.friends|filter(friend => friend.username == user.username)|length and not user.friends|filter(friend => friend.username == user_profile.username)|length %}
+                                                    <p>
+                                                        <a href="/user/{{ user_profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                            Send Friend Request
+                                                        </a>
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% if user_profile.badges|length %}
+                                            <p class="mt-2 mb-0">
+                                            {% for badge in user_profile.badges %}
+                                                <span class="badge badge-{{ badge.color }} mr-1">{{ badge.message }}</span>
+                                            {% endfor %}
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <p class="mt-4"><strong>Blurb:</strong></p>
+                                        <div class="full-width" style="height: 15rem; width: 17rem; overflow: auto;">
+                                            <p class="mt-1">{{ user_profile.blurb|raw }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="margin-bottom:10px">
+                <div class="row">
+                    <div class="col-md-5 mt-3">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                Friends <a href="/user/{{ user_profile.id }}/friends">(All ›)</a>
+                            </div>
+                            <div class="card-body">
+                                {% if user_profile.CurrentFriends|length > 0 %}
+                                    <div class="row">
+                                        {% for user1 in user_profile.CurrentFriends|slice(0, 3) %}
+                                            <div class="col-md-4 text-center">
+                                                <a class="d-flex flex-column align-items-center" href="/user/{{ user1.id }}">
+                                                    <img src="{% if user1.pfp != false %}{{ "https://cdn.finobe.net/" ~ user1.pfp }}{% else %}{{ "/s/img/spinnerv2.gif" }}{% endif %}" height="64" width="64">
+                                                    <span class="full-width">{{ user1.username }}</span>
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p style="margin-bottom: 0px;">No friends. What a party-pooper.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                Places
+                            </div>
+                            <div class="card-body">
+                                {% for place in user_profile.places %}
+                                    <button class="btn btn-primary full-width mt-2" onclick="openGame({{ place.count }});"><p class="float-left" style="margin: 0;">{{ place.title }}</p><span class="badge badge-dark float-right">{{ (place.additional.version == "2016") ? "2016" : "2012" }}</span></button>
+                                    <div class="card" id="game-{{ place.count }}" style="display: none;">
+                                        <div class="card-body text-center">
+                                            <a href="/place/{{ place.id }}"><p>{{ place.title }}</p></a>
+                                            <a href="/place/{{ place.id }}"><img src="https://cdn.finobe.net/{{ place.thumbnail }}" class="mt-2 full-width" style="max-height: 125px; object-fit: contain;"></a>
+                                            <a href="/place/{{ place.id }}"><button class="btn btn-success btn-lg full-width mt-3" id="data-v-4350f98c" style="text-transform: capitalize;"><i class="far fa-play mr-1"></i> Play</button></a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% if user_profile.places|length %}
+                                    <script>
+                                        function openGame(number) {
+                                            var game = document.getElementById('game-' + number);
+                                            game.style.display = game.style.display == "none" ? "" : "none";
+                                        }
+                                    </script>
+                                {% endif %}
+                                {% if not user_profile.places|length %}
+                                    <p style="margin-bottom:0px;">This user has no active places.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                Type
+                            </div>
+                            <div class="card-body">
+                                <button id="hats" onclick="fetchInventory('hats');" class="btn btn-theme full-width">hats</button>
+                                <button id="t-shirts" onclick="fetchInventory('t-shirts');" class="btn btn-primary full-width mt-1">t-shirts</button>
+                                <button id="shirts" onclick="fetchInventory('shirts');" class="btn btn-theme full-width mt-1">shirts</button>
+                                <button id="pants" onclick="fetchInventory('pants');" class="btn btn-theme full-width mt-1">pants</button>
+                                <button id="gears" onclick="fetchInventory('gears');" class="btn btn-theme full-width mt-1">gears</button>
+                                <button id="faces" onclick="fetchInventory('faces');" class="btn btn-theme full-width mt-1">faces</button>
+                                <button id="heads" onclick="fetchInventory('heads');" class="btn btn-theme full-width mt-1">heads</button>
+                                <button id="packages" onclick="fetchInventory('packages');" class="btn btn-theme full-width mt-1">packages</button>
+                                <button id="audio" onclick="fetchInventory('audio');" class="btn btn-theme full-width mt-1">audio</button>
+                                <button id="models" onclick="fetchInventory('models');" class="btn btn-theme full-width mt-1">models</button>
+                                <button id="badges" onclick="fetchInventory('badges');" class="btn btn-theme full-width mt-1">badges</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div data-v-4350f98c="" class="" id="loader">
+                            <div data-v-4350f98c="">
+                                <div data-v-28f94fdd="" data-v-4350f98c="" class="finobe__vloader text-center">
+                                    <span data-v-28f94fdd="" class="finobe__spinning_blob finobe__blob_thinking"></span> 
+                                    <h3 data-v-28f94fdd="" class="mt-2">Hold on, I need a moment to think...</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex" id="inventory" style="margin-left: 10px;">
+                            {#
+                            <div class="card p-0 mb-4" style="width: 31%;">
+                                <a href="" style="text-decoration: none; color: inherit;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-center align-items-center mb-3">
+                                            <img src="/s/img/finnobe3logo.png" height="95" width="95">
+                                        </div>
+                                        <p class="mb-0">bean</p>
+                                        <p class="text-muted mb-0">by <a href="/user/1">Sudo</a>
+                                    </div>
+                                </a>
+                            </div>
+                            #}
+                            {#
+                            <div class="card col-md-4 p-0">
+                                <a href="" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <img src="/s/img/finnobe3logo.png" height="95" width="95">
+                                    </div>
+                                    <p class="mb-0">bean</p>
+                                    <p class="text-muted mb-0">by <a href="/user/1">Sudo</a>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="card col-md-4 p-0">
+                                <a href="" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <img src="/s/img/finnobe3logo.png" height="95" width="95">
+                                    </div>
+                                    <p class="mb-0">bean</p>
+                                    <p class="text-muted mb-0">by <a href="/user/1">Sudo</a>
+                                </div>
+                                </a>
+                            </div>
+                            #}
+                        </div>
+                        {#
+                        <div data-v-e236382e="" data-v-4350f98c="" class="paginator clearfix text-center clearfix"><a data-v-e236382e="" class="btn btn-theme mr-2"><i data-v-e236382e="" class="far fa-chevron-left"></i></a> <span data-v-e236382e=""><input data-v-e236382e="" type="number" min="1" place="current" value="1" class="form-control form-control-sm page-input mr-1"> of <span data-v-e236382e="" place="total">1</span></span> <a data-v-e236382e="" class="btn btn-theme ml-2 "><i data-v-e236382e="" class="far fa-chevron-right"></i></a></div>
+                        #}
+                        <div data-v-e236382e="" data-v-4350f98c="" class="paginator clearfix text-center clearfix">
+                            <a data-v-e236382e="" class="btn btn-theme mr-2" id="previous-page" onclick="changePage('prev')">
+                                <i data-v-e236382e="" class="far fa-chevron-left"></i>
+                            </a>
+                            <span data-v-e236382e="">
+                                <input data-v-e236382e="" type="number" min="1" value="1" class="form-control form-control-sm page-input mr-1" id="currentPageInput" onblur="updatePage()" onkeyup="handleKeyUp(event)">
+                                of <span data-v-e236382e="" id="totalPages">1</span>
+                            </span>
+                            <a data-v-e236382e="" class="btn btn-theme ml-2" id="next-page" onclick="changePage('next')">
+                                <i data-v-e236382e="" class="far fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <script>
+                        let currentPage = 1;
+                        let currentType = 't-shirts';
+                        function fetchInventory(type, page = 1) {
+                            document.getElementById('loader').classList.remove('d-none');
+                            document.getElementById('inventory').innerHTML = "";
+                            currentPage = page;
+                            var buttons = document.querySelectorAll('.card-body button');
+                            buttons.forEach(function(button) {
+                                const validIds = ["hats", "t-shirts", "shirts", "pants", "gears", "faces", "heads", "packages", "audio", "models", "badges"];
+                                const buttonId = button.id;
+
+                                if (validIds.includes(buttonId)) {
+                                    button.classList.remove('btn-primary');
+                                    button.classList.add('btn-theme');
+                                }
+                            });
+
+                            currentType = type;
+
+                            document.getElementById(type).classList.remove("btn-theme");
+                            document.getElementById(type).classList.add("btn-primary");
+                            fetch('/api/inventory?type=' + type + '&user={{ user_profile.username }}&page=' + page)
+                                .then(response => response.json())
+                                .then(json => {
+                                    const data = json.data;
+                                    const totalPages = json.pagination.number_of_pages == 0 ? 1 : json.pagination.number_of_pages;
+
+                                    document.getElementById('currentPageInput').value = page;
+                                    document.getElementById('totalPages').textContent = totalPages;
+
+                                    let inventoryHTML = "";
+                                    let count = 1;
+                                    data.forEach(function(item) {
+                                        var itemName = item.title;
+                                        var creatorName = item.author;
+                                        var creatorId = item.details.uid;
+
+                                        if(count % 3 === 0 && count >= 3 && count <= 12) {
+                                            inventoryHTML += `
+                                                <div class="card p-0 mb-4" style="width: 31%;">
+                                                    <a href="/item/${item.id}" style="text-decoration: none; color: inherit;">
+                                                        <div class="card-body">
+                                                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                                                <img src="${item.thumbnail}" height="95" width="95">
+                                                            </div>
+                                                            <p class="mb-0">${itemName}</p>
+                                                            <p class="text-muted mb-0">by ${item.details.uid != false ? `<a href="/user/${creatorId}">${creatorName}</a>` : creatorName}</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            `;
+                                        } else {
+                                            inventoryHTML += `
+                                                <div class="card p-0 mb-4" style="width: 31%; margin-right: 3.5%;">
+                                                    <a href="/item/${item.id}" style="text-decoration: none; color: inherit;">
+                                                        <div class="card-body">
+                                                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                                                <img src="${item.thumbnail}" height="95" width="95">
+                                                            </div>
+                                                            <p class="mb-0">${itemName}</p>
+                                                            <p class="text-muted mb-0">by ${item.details.uid != false ? `<a href="/user/${creatorId}">${creatorName}</a>` : creatorName}</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            `;
+                                        }
+                                        
+                                        count++;
+                                    });
+
+                                    if(data.length == 0) {
+                                        inventoryHTML = "<p>No results</p>";
+                                    }
+
+                                    document.getElementById('inventory').innerHTML = inventoryHTML;
+                                    document.getElementById('loader').classList.add('d-none');
+
+                                    const prevButton = document.querySelector('#previous-page');
+                                    const nextButton = document.querySelector('#next-page');
+                                    prevButton.classList.toggle('disabled', page <= 1);
+                                    nextButton.classList.toggle('disabled', page >= totalPages);
+                                });
+                        }
+
+                        function changePage(direction) {
+                            if (direction === 'prev' && currentPage > 1) {
+                                currentPage--;
+                            } else if (direction === 'next' && currentPage < parseInt(document.getElementById('totalPages').textContent)) {
+                                currentPage++;
+                            }
+
+                            fetchInventory(currentType, currentPage);
+                        }
+
+                        function updatePage() {
+                            const currentPageInput = document.getElementById('currentPageInput');
+                            const totalPages = parseInt(document.getElementById('totalPages').textContent);
+
+                            if (currentPageInput.value < 1) {
+                                currentPageInput.value = 1;
+                            } else if (currentPageInput.value > totalPages) {
+                                currentPageInput.value = totalPages;
+                            }
+
+                            fetchInventory(currentType, currentPageInput.value);
+                        }
+
+                        function handleKeyUp(event) {
+                            if (event.key === 'Enter') {
+                                fetchInventory(currentType, document.getElementById('currentPageInput').value);
+                            }
+                        }
+
+                        document.querySelector('form').addEventListener('submit', function () {
+                            fetchInventory(currentType, document.getElementById('currentPageInput').value);
+                            return false;
+                        });
+
+                        fetchInventory('t-shirts');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+  </body>
+</html>

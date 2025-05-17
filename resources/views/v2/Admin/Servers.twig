@@ -1,0 +1,45 @@
+eeeeeee<br>
+<h1>create server</h1>
+<form method="post">
+<input type="hidden" name="type" value="1">
+ip
+<input type="text" name="ip"><br>
+port
+<input type="text" name="port"><br>
+placeid
+<input type="text" name="placeid"><br>
+jobid
+<input type="text" name="jobid"><br>
+status
+<input type="text" name="version"><br>
+<input type="submit">
+</form>
+<br><br><br>
+<h1>delete all servers</h1>
+<form method="post">
+<input type="hidden" name="type" value="2">
+<input type="submit">
+</form>
+<br><br>
+{% if servers is not empty %}
+<table border="1">
+    <thead>
+        <tr>
+            {% for column in servers[0]|keys %}
+                <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for server in servers %}
+            <tr>
+                {% for value in server %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No server data available.</p>
+{% endif %}

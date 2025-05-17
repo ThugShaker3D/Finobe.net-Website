@@ -1,0 +1,89 @@
+<html>
+  <head>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+  </head>
+  <body>
+    <div id="app">
+      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      <div class="container mt-4">
+                <h3 class="text-center">{{ (user_profile.username == user.username) ? "Your" : user_profile.username ~ "'s"}} Friends ({{ user_profile.friends|length }})</h3>
+                <div class="mt-2" style="display: flex; justify-content: center;">
+                  <ul class="pagination shadow-sm">
+                    <li class="page-item">
+                        <a class="page-link" id="previous-page" href="/user/{{ user_profile.id }}/friends?page={{ currentPage - 1 }}" rel="previous" aria-label="Previous <<" {{ (currentPage <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
+                    </li>
+                    {% if start_page > 1 %}
+                        <li class="page-item"><span class="page-link">...</span></li>
+                    {% endif %}
+                    {% for page in 1..totalPages %}
+                        <li class="page-item">
+                            <a class="page-link{{ (page == currentPage) ? " selected" : "" }}" href="/user/{{ user_profile.id }}/friends?page={{ page }}">
+                                {{ page }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    {% if end_page < totalPages and totalPages > 10 %}
+                        <li class="page-item"><span class="page-link">...</span></li>
+                    {% endif %}
+                    <li class="page-item">
+                        <a class="page-link" id="next-page" href="/user/{{ user_profile.id }}/friends?page={{ currentPage + 1 }}" rel="next" aria-label="Next >>" {{ (currentPage >= totalPages) ? "style='pointer-events: none;'" : "" }}>»</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="row">
+                    {% for user in friendsOnPage %}
+                    <div class="col-md-3">
+                        <div class="col-16 mt-3 ml-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex flex-column align-items-center mt-0">
+                                        <div>
+                                            <p class="mb-0"><a href="/user/{{ user.id }}">{{ user.username }}</a></p>
+                                        </div>
+                                        <div class="ml-1">
+                                            <a href="/user/{{ user.id }}">
+                                                {% if user.pfp == "" %}
+                                                <img src="/s/img/spinnerv2.gif" style="max-width: 100px;">
+                                                {% else %}
+                                                <img src="https://cdn.finobe.net/{{ user.pfp }}" style="max-width: 100px;">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if not friendsOnPage|length %}
+                    <p>No results</p>
+                    {% endif %}
+                </div>
+                <div class="mt-4" style="display: flex; justify-content: center;">
+                  <ul class="pagination shadow-sm">
+                    <li class="page-item">
+                        <a class="page-link" id="previous-page" href="/user/{{ user_profile.id }}/friends?page={{ currentPage - 1 }}" rel="previous" aria-label="Previous <<" {{ (currentPage <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
+                    </li>
+                    {% if start_page > 1 %}
+                        <li class="page-item"><span class="page-link">...</span></li>
+                    {% endif %}
+                    {% for page in 1..totalPages %}
+                        <li class="page-item">
+                            <a class="page-link{{ (page == currentPage) ? " selected" : "" }}" href="/user/{{ user_profile.id }}/friends?page={{ page }}">
+                                {{ page }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    {% if end_page < totalPages and totalPages > 10 %}
+                        <li class="page-item"><span class="page-link">...</span></li>
+                    {% endif %}
+                    <li class="page-item">
+                        <a class="page-link" id="next-page" href="/user/{{ user_profile.id }}/friends?page={{ currentPage + 1 }}" rel="next" aria-label="Next >>" {{ (currentPage >= totalPages) ? "style='pointer-events: none;'" : "" }}>»</a>
+                    </li>
+                  </ul>
+                </div>
+            </div>
+    </div>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+  </body>
+</html>

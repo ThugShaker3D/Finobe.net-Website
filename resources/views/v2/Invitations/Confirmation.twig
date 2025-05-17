@@ -1,0 +1,33 @@
+<html>
+  <head>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+  </head>
+  <body>
+    <div id="app">
+      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-10 mt-3 mb-3">
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                Invites</div>
+                                <div class="card-body text-center">
+                                    <i class="far fa-exclamation-square text-warning fa-5x mb-4"></i>
+                                    <p><strong>Do you really want to create and invite?</strong></p>
+                                    <p>Please only invite people you trust. You could be banned for inviting someone that breaks the rules. You are not allowed to sell or publicly post invites.</p>
+                                    <p class="mt-4">
+                                        <form action="" method="POST">
+                                            <a href="/invites" class="btn btn-outline-danger mr-1" style="text-transform: none;">nope, guess not</a>
+                                            <button type="submit" value="Submit" class="btn btn-primary" style="text-transform: none;">yeah, let's do it!</button>
+                                        </form>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+  </body>
+</html>

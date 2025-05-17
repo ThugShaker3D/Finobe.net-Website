@@ -1,0 +1,48 @@
+<html>
+  <head>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+  </head>
+  <body>
+    <div id="app">
+      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      <div class="container" style="margin-bottom:10px">
+                <div class="row">
+                    <div class="full-width mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                Transaction Log
+                            </div>
+                            <div class="card-body">
+                                <select name="transaction-type" class="form-control mt-2 full-width">
+                                    <option value="all">All Transactions</option>
+                                </select>
+                                <hr>
+                                <div>
+                                    <div class="card-body row justify-content-between" style="padding-top: 0;padding-bottom: 0;">
+                                        <p class="col-md-1 mb-0"><strong>Date</strong></p>
+                                        <p class="col-md-6 mb-0"><strong>Description</strong></p>
+                                        <p class="col-md-2 mb-0"><strong>Effect</strong></p>
+                                    </div>
+                                    <hr class="mb-0">
+                                    {% for purchase in purchases %}
+                                    <hr class="mt-0">
+                                    <div class="card-body row justify-content-between" style="padding-top: 0;padding-bottom: 0;">
+                                        <p class="col-md-1">{{ purchase.date }}</p>
+                                        <p class="col-md-6" style="padding:0;">Purchased <a href="{{ (purchase.assetid != 0) ? "/item/" ~ purchase.assetid : "javascript:void(0)" }}">{{ purchase.assetname|raw }}</a> by {% if purchase.uuid != false %}<a href="/user/{{ purchase.uuid }}">{{ purchase.author }}</a>{% else %}{{ purchase.author }}{% endif %}</p>
+                                        <p class="col-md-2"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> <a class=" text-decoration-none" href="javascript:void(0);" style="{{ (purchase.amount < 0) ? 'color:#e3342f;' : 'color:black;' }}text-decoration:none;pointer-events:none;">{{ purchase.amount }}</a></p>
+                                    </div>
+                                    {% endfor %}
+                                    {% if not purchases|length %}
+                                        <hr class="mt-0">
+                                        <p class="text-center">No transactions found</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+  </body>
+</html>

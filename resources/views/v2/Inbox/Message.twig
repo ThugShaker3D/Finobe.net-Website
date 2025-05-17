@@ -1,0 +1,30 @@
+<html>
+  <head>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+  </head>
+  <body>
+    <div id="app">
+      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      <div class="container">
+                <div class="row">
+                    <div class="col-md-10 offset-md-1 mt-3">
+                      <form method="POST" action="/app/inbox/message" class="mb-2"><input type="hidden" name="id" value="{{ message.id }}"><a class="btn btn-theme py-2" href="/app/inbox" style="padding-left: 10px; padding-right: 10px;"><i class="far fa-chevron-left"></i></a>{% if user.username != message.author %}<a class="btn btn-primary py-2" href="/app/inbox/compose?user={{ message.author }}&subject={{ "RE: " ~ message.subject }}" style="padding-left: 10px; padding-right: 10px; margin-left: 10px;"><i class="far fa-share fa-flip-horizontal"></i></a>{% endif %}<button type="submit" class="btn btn-info" style="margin-left: 10px;">archive{{ (message.archived == "y") ? "d" : "" }}</button></form>
+                        <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <h4 class="mb-3"><strong>{{ message.subject }}</strong></h4>
+                                        <p class="mb-1"><strong>From:</strong> <a href="/user/{{ message.uid }}">{{ message.author }}</a></p>
+                                        <p class="mb-2"><strong>Date:</strong> {{ message.date }}</p>
+                                        <hr>
+                                        <p>{{ message.message | raw }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+      </div>
+    </div>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+  </body>
+</html>

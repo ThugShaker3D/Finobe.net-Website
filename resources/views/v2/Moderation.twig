@@ -1,0 +1,42 @@
+<html>
+  <head>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+  </head>
+  <body>
+    <div id="app">
+      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      <div class="container mt-4">
+                <div class="col-lg-6 mb-2">
+                    {% if moderationType == 2 %}
+                    <strong><h3>{{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }} Moderation</h3></strong>
+                    <strong><p>You have been{{ (ban_info.perm == "y") ? " permanently" : "" }} banned from {{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}.</p></strong>
+                    <p>Reason:</p>
+                    <p><i>{{ ban_info.reason }}</i></p>
+                    {% if ban_info.perm == "n" and IsCurrentlyBanned == true %}
+                    <p>You will be able to reactivate your account on <strong>{{ expiration2 }}</strong> (approx. {{ expiration }} from now).</strong></p>
+                    <?php } else if($ban_info['perm'] == 'y') { ?>
+                    {% elseif ban_info.perm == "y" %}
+                    <p>You will not be able to reactivate your account.</p>
+                    {% else %}
+                    <p>You are able to reactivate your account.</p>
+                    <form role="form" method="POST" action="/">
+                        <button type="submit" class="btn btn-primary ">reactivate account</button>
+                    </form>
+                    {% endif %}
+                    {% else %}
+                        <strong><h3>{{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }} Moderation</h3></strong>
+                    <strong><p>You have been warned.</p></strong>
+                    <p>Reason:</p>
+                    <p><i>{{ ban_info.reason }}</i></p>
+                    <p>You are able to reactivate your account.</p>
+                    <form role="form" method="POST" action="/">
+                        <input type="hidden" name="warning" value="">
+                        <button type="submit" class="btn btn-primary ">reactivate account</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+    </div>
+    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+  </body>
+</html>
