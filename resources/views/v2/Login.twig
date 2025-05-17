@@ -22,13 +22,13 @@
                     <div class="input-group">
                         <input class="form-control{{ (data.error) ? " is-invalid" : "" }}" type="text"
                         name="email" placeholder="email">
-                        {% if data.error %}
+                        {% if data.errorlogin %}
                         <div class="input-group-append">
                             <div class="input-group-text"><i class="fas fa-exclamation-circle text-danger"></i></div>
                         </div>
                         {% endif %}
                     </div>
-                    {% if data.error %}
+                    {% if data.errorlogin %}
                     <small class="text-danger">These credentials do not match our records.</small>
                     {% endif %}
                 </div>

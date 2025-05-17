@@ -72,14 +72,57 @@ class frontEnd extends Controller
                 $this->request['data']['embeds']['image'] .= 'logo.png';
             }
 
+            $this->request['data']['user']['friends'] = json_decode($this->request['data']['user']['friends'], true);
+            $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
             $this->request['data']['user']['places'] = $this->db->table('assets')
                 ->where('author', $this->request['data']['user']['id'])
                 ->where('asset_type', 9)
                 ->count();
+            
+            $this->request['data']['notifications'] = [
+                'data' => [],
+                'ads' => env('FINOBE_ADS', true),
+                'info' => [
+                    'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
+                    'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
+                    'incomingFriends' => 0
+                ]
+            ];
+
+            $notifications = $this->db->table('pms')
+                ->where('touser', $this->request['data']['user']['username'])
+                ->orderBy('date', 'DESC')
+                ->get()
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
+            
+            foreach($notifications as $notification) {
+                $this->request['data']['notifications']['data'][] = [
+                    'id' => $notification['id'],
+                    'message' => $notification['message'],
+                    'date' => date('M j Y g:i:s A', strtotime($notification['date']))
+                ];
+            }
+
+            foreach($this->request['data']['user']['friends'] as $friend) {
+                if($friend['status'] == 'pending') {
+                    $this->request['data']['notifications']['info']['incomingFriends']++;
+                }
+            }
         } else {
             $this->request['data']['embeds']['title'] .= 'Aesthetiful';
             $this->request['data']['embeds']['image'] .= 'logo.png';
         }
+
+        $this->request['data']['announcements'] = $this->db->table('announcements')
+            ->select('message', 'expire', 'author', 'color')
+            ->where('expire', '>', 'now()')
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
     }
 
     public function index(Request $request) {

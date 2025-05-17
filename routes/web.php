@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([SetClientIp::class])->group(function() {
     Route::domain(str_replace('https://', '', 'sitetest1.finobe.net'/*env('APP_URL')for when release replace*/))->group(function() {
         Route::fallback(function() {
-            return view('v2/404', []);
+            return response()->view('v2/404', [], 404);
         });
 
         Route::get('/', [frontEnd::class, 'index']);
