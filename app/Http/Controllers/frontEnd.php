@@ -169,4 +169,12 @@ class frontEnd extends Controller
 
         return view($this->request['data']['user']['version'] . '/Login', $this->request);
     }
+
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }
