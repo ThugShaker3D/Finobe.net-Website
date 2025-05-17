@@ -1,17 +1,17 @@
 <html>
   <head>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+    {% include ('v2/Modules/head.twig') %}
   </head>
   <body>
     <div id="app">
-      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      {% include ('v2/Modules/nav.twig') %}
       <div class="container" style="margin-bottom:10px">
-				{% if user_profile.ban.IsBanned %}
+				{% if data.profile.ban.IsBanned %}
 					<div class="alert alert-danger mb-2 mt-4">
-						<div class="container"{{ user.theme == "night" ? ' style="color: #FFF;"' : '' }}>
+						<div class="container"{{ data.user.theme == "night" ? ' style="color: #FFF;"' : '' }}>
 							<h5 class="font-weight-light my-2"><i
 									class="far fa-exclamation-triangle fa-fw align-middle mr-1"></i> This user is banned</h5>
-							<p class="mb-2">This user has been banned for {{ user_profile.ban.data.reason }}</p>
+							<p class="mb-2">This user has been banned for {{ data.profile.ban.data.reason }}</p>
 						</div>
 					</div>
 				{% endif %}
@@ -21,10 +21,10 @@
                             <div class="card-body">
                                 <div class="d-flex row justify-content-around">
                                     <div class="offset-md-1">
-                                      {% if user_profile.pfp == "" %}
+                                      {% if data.profile.pfp == "" %}
                                         <img src="/s/img/spinnerv2.gif" style="width: 17rem; height: auto;">
                                       {% else %}
-                                        <img src="https://cdn.finobe.net/{{ user_profile.pfp }}" style="width: 19rem; height: auto;">
+                                        <img src="https://cdn.finobe.net/{{ data.profile.pfp }}" style="width: 19rem; height: auto;">
                                       {% endif %}
                                     </div>
                                     <style>
@@ -34,16 +34,16 @@
                                     </style>
                                     <div class="d-flex flex-column">
                                         <div style="margin-bottom: auto;">
-                                            <h4><i class='fal fa-mars fa-1x'></i> {{ user_profile.username | raw }}</h4>
-                                            <p class="mb-1 text-{{ (user_profile.status == "admin") ? "danger" : "primary" }}">
-                                                <strong>{{ (user_profile.status == "admin") ? "Admin" : "Member" }}</strong>
+                                            <h4><i class='fal fa-mars fa-1x'></i> {{ data.profile.username | raw }}</h4>
+                                            <p class="mb-1 text-{{ (data.profile.status == "admin") ? "danger" : "primary" }}">
+                                                <strong>{{ (data.profile.status == "admin") ? "Admin" : "Member" }}</strong>
                                             </p>
-                                            <p class="mt-1"><strong>Friends: </strong>{{ user_profile.CurrentFriends|length }} <a href="/user/{{ user_profile.id }}/friends">(View ›)</a></p>
-                                            <p class="mb-1 nowrap"><strong>Join Date: </strong>{{ user_profile.created }}</p>
-                                            {% if user.username != user_profile.username %}
+                                            <p class="mt-1"><strong>Friends: </strong>{{ data.profile.CurrentFriends|length }} <a href="/user/{{ data.profile.id }}/friends">(View ›)</a></p>
+                                            <p class="mb-1 nowrap"><strong>Join Date: </strong>{{ data.profile.created }}</p>
+                                            {% if data.user.username != data.profile.username %}
                                             <div class="d-flex justify-content-start mt-5">
                                                 <p>
-                                                    <a href="/app/inbox/compose?user={{ user_profile.username }}" class="btn btn-theme mr-2 nowrap">
+                                                    <a href="/app/inbox/compose?user={{ data.profile.username }}" class="btn btn-theme mr-2 nowrap">
                                                         Send Message
                                                     </a>
                                                 </p>
@@ -52,55 +52,55 @@
                                                         Trade
                                                     </a>
                                                 </p>
-                                                {% for friend in user.friends %}
+                                                {% for friend in data.user.friends %}
                                                     {% if friend.username == user.username and friend.status == "pending" %}
                                                     <p>
                                                         <a class="btn btn-theme mr-2 nowrap disabled">
                                                             pending...
                                                         </a>
                                                     </p>
-                                                    {% elseif friend.username == user_profile.username and friend.status == "pending" %}
+                                                    {% elseif friend.username == data.profile.username and friend.status == "pending" %}
                                                     <div class="btn-group" role="group" style="display: block;">
-                                                        <a href="/user/{{ user_profile.id }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
+                                                        <a href="/user/{{ data.profile.id }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
                                                             accept
                                                         </a>
-                                                        <a href="/user/{{ user_profile.id }}/remove" class="btn btn-danger mr-2 nowrap ">
+                                                        <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap ">
                                                             decline
                                                         </a>
                                                     </div>
-                                                    {% elseif friend.username == user_profile.username and friend.status == "friends" %}
+                                                    {% elseif friend.username == data.profile.username and friend.status == "friends" %}
                                                     <p>
-                                                        <a href="/user/{{ user_profile.id }}/remove" class="btn btn-danger mr-2 nowrap">
+                                                        <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap">
                                                             remove friend
                                                         </a>
                                                     </p>{#
                                                     {% elseif not user.friends|filter(user => user.status != "pending")|length %}
                                                             <p>
-                                                                <a href="/user/{{ user_profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                                <a href="/user/{{ data.profile.id }}/add" class="btn btn-primary mr-2 nowrap">
                                                                     Send Friend Request
                                                                 </a>
                                                             </p>#}
                                                     {% endif %}
                                                 {% endfor %}
-                                                {% for friend2 in user_profile.friends %}
-                                                            {% if friend2.username == user.username and friend2.status == "pending" %}
-                                                            <p>
-                                                                <a class="btn btn-theme mr-2 nowrap disabled">
-                                                                    pending request
-                                                                </a>
-                                                            </p>{#
-                                                            {% elseif not user_profile.friends|filter(user => user.status != "pending")|length %}
-                                                            <p>
-                                                                <a href="/user/{{ user_profile.id }}/add" class="btn btn-primary mr-2 nowrap">
-                                                                    Send Friend Request
-                                                                </a>
-                                                            </p>#}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                {#% if (not user.friends|filter(friend => friend.status != "pending")|length or not user_profile.friends|filter(friend2 => friend2.status != "pending")|length) and (not user.friends|filter(friend => friend.status == "pending")|length or not user_profile.friends|filter(friend2 => friend2.status == "pending")|length) %#}
-                                                {% if not user_profile.friends|filter(friend => friend.username == user.username)|length and not user.friends|filter(friend => friend.username == user_profile.username)|length %}
+                                                {% for friend in data.profile.friends %}
+                                                    {% if friend.username == data.user.username and friend.status == "pending" %}
                                                     <p>
-                                                        <a href="/user/{{ user_profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                        <a class="btn btn-theme mr-2 nowrap disabled">
+                                                            pending request
+                                                        </a>
+                                                    </p>{#
+                                                    {% elseif not data.profile.friends|filter(user => user.status != "pending")|length %}
+                                                    <p>
+                                                        <a href="/user/{{ data.profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                            Send Friend Request
+                                                         </a>
+                                                    </p>#}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {#% if (not user.friends|filter(friend => friend.status != "pending")|length or not data.profile.friends|filter(friend2 => friend2.status != "pending")|length) and (not user.friends|filter(friend => friend.status == "pending")|length or not data.profile.friends|filter(friend2 => friend2.status == "pending")|length) %#}
+                                                {% if not data.profile.friends|filter(friend => friend.username == data.user.username)|length and not data.user.friends|filter(friend => friend.username == data.profile.username)|length %}
+                                                    <p>
+                                                        <a href="/user/{{ data.profile.id }}/add" class="btn btn-primary mr-2 nowrap">
                                                             Send Friend Request
                                                         </a>
                                                     </p>
@@ -108,9 +108,9 @@
                                             </div>
                                             {% endif %}
                                         </div>
-                                        {% if user_profile.badges|length %}
+                                        {% if data.profile.badges|length %}
                                             <p class="mt-2 mb-0">
-                                            {% for badge in user_profile.badges %}
+                                            {% for badge in data.profile.badges %}
                                                 <span class="badge badge-{{ badge.color }} mr-1">{{ badge.message }}</span>
                                             {% endfor %}
                                             </p>
@@ -119,7 +119,7 @@
                                     <div>
                                         <p class="mt-4"><strong>Blurb:</strong></p>
                                         <div class="full-width" style="height: 15rem; width: 17rem; overflow: auto;">
-                                            <p class="mt-1">{{ user_profile.blurb|raw }}</p>
+                                            <p class="mt-1">{{ data.profile.blurb|raw }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -133,16 +133,16 @@
                     <div class="col-md-5 mt-3">
                         <div class="card">
                             <div class="card-header text-center">
-                                Friends <a href="/user/{{ user_profile.id }}/friends">(All ›)</a>
+                                Friends <a href="/user/{{ data.profile.id }}/friends">(All ›)</a>
                             </div>
                             <div class="card-body">
-                                {% if user_profile.CurrentFriends|length > 0 %}
+                                {% if data.profile.CurrentFriends|length > 0 %}
                                     <div class="row">
-                                        {% for user1 in user_profile.CurrentFriends|slice(0, 3) %}
+                                        {% for user in data.profile.CurrentFriends|slice(0, 3) %}
                                             <div class="col-md-4 text-center">
-                                                <a class="d-flex flex-column align-items-center" href="/user/{{ user1.id }}">
-                                                    <img src="{% if user1.pfp != false %}{{ "https://cdn.finobe.net/" ~ user1.pfp }}{% else %}{{ "/s/img/spinnerv2.gif" }}{% endif %}" height="64" width="64">
-                                                    <span class="full-width">{{ user1.username }}</span>
+                                                <a class="d-flex flex-column align-items-center" href="/user/{{ user.id }}">
+                                                    <img src="{% if user.pfp %}{{ "https://cdn.finobe.net/" ~ user.pfp }}{% else %}{{ "/s/img/spinnerv2.gif" }}{% endif %}" height="64" width="64">
+                                                    <span class="full-width">{{ user.username }}</span>
                                                 </a>
                                             </div>
                                         {% endfor %}
@@ -159,7 +159,7 @@
                                 Places
                             </div>
                             <div class="card-body">
-                                {% for place in user_profile.places %}
+                                {% for place in data.profile.places %}
                                     <button class="btn btn-primary full-width mt-2" onclick="openGame({{ place.count }});"><p class="float-left" style="margin: 0;">{{ place.title }}</p><span class="badge badge-dark float-right">{{ (place.additional.version == "2016") ? "2016" : "2012" }}</span></button>
                                     <div class="card" id="game-{{ place.count }}" style="display: none;">
                                         <div class="card-body text-center">
@@ -169,7 +169,7 @@
                                         </div>
                                     </div>
                                 {% endfor %}
-                                {% if user_profile.places|length %}
+                                {% if data.profile.places|length %}
                                     <script>
                                         function openGame(number) {
                                             var game = document.getElementById('game-' + number);
@@ -177,7 +177,7 @@
                                         }
                                     </script>
                                 {% endif %}
-                                {% if not user_profile.places|length %}
+                                {% if not data.profile.places|length %}
                                     <p style="margin-bottom:0px;">This user has no active places.</p>
                                 {% endif %}
                             </div>
@@ -293,7 +293,7 @@
 
                             document.getElementById(type).classList.remove("btn-theme");
                             document.getElementById(type).classList.add("btn-primary");
-                            fetch('/api/inventory?type=' + type + '&user={{ user_profile.username }}&page=' + page)
+                            fetch('/api/inventory?type=' + type + '&user={{ data.profile.username }}&page=' + page)
                                 .then(response => response.json())
                                 .then(json => {
                                     const data = json.data;

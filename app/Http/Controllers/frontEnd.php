@@ -181,6 +181,22 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Landing', $this->request);
     }
 
+    public function user(Request $request, $id) {
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!User::find($id)->exists()) {
+            return view('404', [], 404);
+        }
+
+        $user = User::find($id)->toArray();
+        $user['badges'] = json_decode($user['badges'], true);
+
+        $this->request['data']['badges'] = $user;
+        return view($this->request['data']['user']['version'] . '/User', $this->request);
+    }
+
     public function login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
         $this->request['data']['errorlogin'] = Session::has('errorlogin');

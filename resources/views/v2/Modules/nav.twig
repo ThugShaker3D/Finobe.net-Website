@@ -2,7 +2,7 @@
 <img src="/s/img/me_irl_lol_23423.png" id="6RLe9KwU6iqN3GRWHaVdFT6RaZY4vDSt" style="position:fixed;pointer-events:none;z-index:9999999;opacity:0.05;width:100%;height:100%;">
 {% endif %}
 <nav class="navbar navbar-expand-lg navbar-{% if data.user.theme == 1 or data.user.gary == 1 %}{{ "dark" }}{% else %}{{ "light" }}{% endif %}{% if "now"|date("m") == "10" and data.user.theme == 0 %}{{ " navbar-light-halloween" }}{% endif %} bg-{{ (data.user.theme == 1 or data.user.gary == 1 or data.user.theme == "halloween") ? "dark" : "faded" }} navbar-static-top">
-  <div class="container"><a href="/" class="navbar-brand"><img src="/s/img/{% if user.branding == "finobe" %}{% if "now"|date("m") == "10" %}{{ "halloween3.png" }}{% elseif "now"|date("m") == "11" or "now"|date("m") == "12" %}{{ "finobe_xmas.png"}}{% elseif data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (data.user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}"
+  <div class="container"><a href="/" class="navbar-brand"><img src="/s/img/{% if data.user.branding == "finobe" %}{% if "now"|date("m") == "10" %}{{ "halloween3.png" }}{% elseif "now"|date("m") == "11" or "now"|date("m") == "12" %}{{ "finobe_xmas.png"}}{% elseif data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (data.user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}"
         class="navbar-brandimg d-inline-block mr-2" style="width: auto;">
       {{ (data.user.branding == "finobe") ? "Finobe" : "Aesthetiful" }} </a> <button type="button" data-toggle="collapse" data-target="#navbar-collapse"
       aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation"
@@ -12,7 +12,7 @@
         {% if not data.siteusername %}
         <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         {% else %}
-        <li class="nav-item"><a href="/user/{{ user.id }}" class="nav-link">Profile</a></li>
+        <li class="nav-item"><a href="/user/{{ data.user.id }}" class="nav-link">Profile</a></li>
         <li class="nav-item"><a href="/app/places" class="nav-link">Games</a></li>
         <li class="nav-item"><a href="/catalog/" class="nav-link">Catalog</a></li>
 		{% endif %}
