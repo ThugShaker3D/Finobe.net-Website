@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class frontEnd extends Controller
@@ -44,8 +45,20 @@ class frontEnd extends Controller
 		}
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['user'] = (array) User::where('username', $this->request['data']['siteusername']);
+            $this->request['data']['user'] = (array) User::where('username', $this->request['data']['siteusername'])->first();
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
+            
+            if($this->request['data']['user']['branding'] == 'finobe') {
+                if($this->request['data']['user']['logo'] == 'v1') {
+                    $this->request['data']['embeds']['image'] .= 'BUSY.png';
+                } elseif($this->request['data']['user']['logo'] == 'v2') {
+                    $this->request['data']['embeds']['image'] .= 'finnobe3.png';
+                } else {
+                    $this->request['data']['embeds']['image'] .= 'finnobe3logo.png';
+                }
+            } else {
+                $this->request['data']['embeds']['image'] .= 'logo.png';
+            }
         } else {
             $this->request['data']['embeds']['title'] .= 'Aesthetiful';
         }
