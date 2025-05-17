@@ -16,6 +16,7 @@ class frontEnd extends Controller
 {
     protected $db;
     protected $request;
+    protected $dataService;
 
     public function __construct(Request $request) {
         $this->db = DB::connection('finobe');
@@ -131,7 +132,10 @@ class frontEnd extends Controller
 
     public function login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
+        $this->request['data']['errorlogin'] = Session::has('errorlogin');
         $data = $request->all();
+
+        Session::forget('errorlogin');
 
         if($this->request['data']['siteusername']) {
             return redirect('/');
