@@ -116,7 +116,7 @@ class frontEnd extends Controller
                 
                 $this->request['data']['games'][] = [
                     'id' => $game['id'],
-                    'title' => $game['title'],f
+                    'title' => $game['title'],
                     'author' => User::find($game['author'])->value('username'),
                     'thumbnail' => $thumbnail,
                     'visits' => number_format($game['additional']['visits']),
