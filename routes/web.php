@@ -11,6 +11,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::get('/', [frontEnd::class, 'index']);
+        Route::get('/user/{id}', [frontEnd::class, 'user']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
 
         Route::prefix('auth')->group(function() {
