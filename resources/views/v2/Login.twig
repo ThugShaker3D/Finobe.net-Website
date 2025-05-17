@@ -1,17 +1,17 @@
 <html>
     <head>
-        {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+        {% include ('v2/Modules/head.twig') %}
     </head>
     <body>
         <div class="d-flex flex-column justify-content-center align-items-center mh-100vh">
             <form method="POST" action=""
                 class="col-sm-8 col-md-6 col-lg-4 py-5 align-items-center justify-content-center d-flex flex-column">
-                {% if next != false %}
-                <input type="hidden" name="next" value="{{ next }}">
+                {% if data.next %}
+                    <input type="hidden" name="next" value="{{ data.next }}">
                 {% endif %}
                 <div class="form-group text-center">
-                    <div><img src="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="
-                        {{ (user.branding == "finobe" ? "Finobe" : "Aesthetiful") }}"
+                    <div><img src="/s/img/{% if data.user.branding == "finobe" %}{% if data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="
+                        {{ (data.user.branding == "finobe" ? "Finobe" : "Aesthetiful") }}"
                         class="img-fluid login__logo-img">
                     </div>
                     <h2 class="my-3">Login</h2>
@@ -19,15 +19,15 @@
                 <div class="form-group w-75">
                     <label for="login">Email</label>
                     <div class="input-group">
-                        <input class="form-control{{ (error != false) ? " is-invalid" : "" }}" type="text"
+                        <input class="form-control{{ (data.error) ? " is-invalid" : "" }}" type="text"
                         name="email" placeholder="email">
-                        {% if error != false %}
+                        {% if data.error %}
                         <div class="input-group-append">
                             <div class="input-group-text"><i class="fas fa-exclamation-circle text-danger"></i></div>
                         </div>
                         {% endif %}
                     </div>
-                    {% if error != false %}
+                    {% if data.error %}
                     <small class="text-danger">These credentials do not match our records.</small>
                     {% endif %}
                 </div>
