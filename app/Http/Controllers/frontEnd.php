@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Controllers\DataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -15,11 +16,12 @@ use Illuminate\Support\Facades\Validator;
 class frontEnd extends Controller
 {
     protected $db;
-    protected $request;
     protected $dataService;
+    protected $request;
 
-    public function __construct(Request $request) {
+    public function __construct(DataController $dataService, Request $request) {
         $this->db = DB::connection('finobe');
+        $this->dataService = $dataService;
         $this->request = [
             'data' => [
                 'embeds' => [
@@ -55,6 +57,7 @@ class frontEnd extends Controller
 
         if($this->request['data']['siteusername']) {
             $this->request['data']['user'] = Auth::user()->toArray();
+            $this->request['data']['user']['diusFormatted'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
             
             if($this->request['data']['user']['branding'] == 'finobe') {
