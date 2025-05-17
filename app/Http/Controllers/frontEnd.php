@@ -148,7 +148,7 @@ class frontEnd extends Controller
                 return redirect('/auth/login');
             }
 
-            $user = (array) User::where('email', $data['email'])->first();
+            $user = User::where('email', $data['email'])->first()->toArray();
 
             if(!Hash::check($data['password'], $user['password'])) {
                 Session::put('errorlogin', true);
