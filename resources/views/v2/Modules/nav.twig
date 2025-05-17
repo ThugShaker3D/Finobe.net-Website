@@ -173,7 +173,7 @@
 	</div>
 </div>
 {% endif %}
-{% for announcement in announcements %}
+{% for announcement in data.announcements %}
 <div class="alert alert-{{ announcement.color }} alert-skinny my-0 text-center">
 	<p class="mb-0" style="color: white;">{{ announcement.message | raw }}</p>
 </div>
@@ -252,7 +252,7 @@
 			</div>
 		</div>
 {% endif %}
-{% if IsLoggedIn and page_title != "Home" and notifications.ads %}
+{% if data.siteusername and data.page != '/' and data.notifications.ads %}
 <div class="mt-3 mb-3 d-flex justify-content-center">
     {#
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2537513323123758"
