@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -43,10 +44,7 @@ class frontEnd extends Controller
 		}
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['user'] = (array) $this->db->table('users')
-                ->where('username', $this->request['data']['siteusername'])
-                ->first();
-            
+            $this->request['data']['user'] = (array) User::where('username', $this->request['data']['siteusername']);
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
         } else {
             $this->request['data']['embeds']['title'] .= 'Aesthetiful';

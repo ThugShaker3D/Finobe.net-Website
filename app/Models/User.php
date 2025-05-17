@@ -17,6 +17,9 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $connection = 'finobe';
+    protected $table = 'users';
+    
     protected $fillable = [
         'name',
         'email',
