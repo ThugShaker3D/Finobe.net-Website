@@ -178,11 +178,11 @@
 	<p class="mb-0" style="color: white;">{{ announcement.message | raw }}</p>
 </div>
 {% endfor %}
-{% if successv2 != false %}
+{% if data.alerts.successv2 %}
 <div class="text-center alert alert-success alert-logged" role="alert" style="z-index:1;">
 	<div class="container success-container" style="color:white;">
 		<button type="button" id="x" class="close" onclick="" data-dismiss="alert" aria-hidden="true">×</button>
-			{{ successv2 }}
+			{{ data.alerts.successv2 }}
 	</div>
 </div>
 <script>
@@ -193,14 +193,14 @@
 	});
 </script>
 {% endif %}
-{% if success != false %}
+{% if data.alerts.success %}
 <div class="alert alert-success alert-skinny my-0 text-center">
-	<p class="mb-0 text-white">{{ success }}</p>
+	<p class="mb-0 text-white">{{ data.alerts.success }}</p>
 </div>
 {% endif %}
-{% if error != false %}
+{% if data.alerts.error %}
 <div class="alert alert-danger alert-skinny my-0 text-center">
-	<p class="mb-0 text-white">{{ error }}</p>
+	<p class="mb-0 text-white">{{ data.alerts.error }}</p>
 </div>
 {% endif %}
 {% if "now"|date("m") == "11" or "now"|date("m") == "12" %}
