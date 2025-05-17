@@ -26,21 +26,21 @@
 					</p>
 				</div>
 				<div style="width:25%">
-          {% if user.pfp == "" %}
+          {% if data.user.pfp == "" %}
 					<img width="250" height="250" src="/s/img/spinnerv2.gif">
           {% else %}
-          <img width="250" height="250" src="https://cdn.finobe.net/{{ user.pfp }}">
+          <img width="250" height="250" src="https://cdn.finobe.net/{{ data.user.pfp }}">
           {% endif %}
 				</div>
 			</div>
       {% endif %}
     </div>
-    {% if IsLoggedIn %}
+    {% if data.siteusername %}
       <div class="container mt-4"><h3>Latest Places</h3>
-      {% for game in games %}
-              <div data-v-5ad0ed22="" title="{{ game.title }}" class="game-card-div"><a data-v-5ad0ed22="" href="/place/{{ game.id }}" class="game-card-link"><span data-v-5ad0ed22="" class="game-card d-flex flex-column">{{ (game.version == "2016") ? '<span data-v-5ad0ed22="" class="badge badge-danger position-absolute">2016</span>' }}<span data-v-5ad0ed22="" class="thumbnail"><div data-v-5ad0ed22="" class="vue-load-image"><img data-v-5ad0ed22="" src="https://cdn.finobe.net/{{ game.thumbnail }}" class="card-img-top"></div></span> <span data-v-5ad0ed22="" class="data"><p data-v-5ad0ed22="" class="catalog-no-overflow-plz">{{ game.title }}</p> <p data-v-5ad0ed22="" class="catalog-no-overflow-plz author">by {{ game.author }}</p> <p data-v-5ad0ed22="" class="catalog-no-overflow-plz text-muted">{{ game.players }} online</p></span> <p data-v-5ad0ed22="" class="catalog-no-overflow-plz text-muted mb-0 visits"><small data-v-5ad0ed22="">{{ game.visits }} visits</small></p></span></a></div>
+      {% for game in data.games %}
+        <div data-v-5ad0ed22="" title="{{ game.title }}" class="game-card-div"><a data-v-5ad0ed22="" href="/place/{{ game.id }}" class="game-card-link"><span data-v-5ad0ed22="" class="game-card d-flex flex-column">{{ (game.version == "2016") ? '<span data-v-5ad0ed22="" class="badge badge-danger position-absolute">2016</span>' }}<span data-v-5ad0ed22="" class="thumbnail"><div data-v-5ad0ed22="" class="vue-load-image"><img data-v-5ad0ed22="" src="https://cdn.finobe.net/{{ game.thumbnail }}" class="card-img-top"></div></span> <span data-v-5ad0ed22="" class="data"><p data-v-5ad0ed22="" class="catalog-no-overflow-plz">{{ game.title }}</p> <p data-v-5ad0ed22="" class="catalog-no-overflow-plz author">by {{ game.author }}</p> <p data-v-5ad0ed22="" class="catalog-no-overflow-plz text-muted">{{ game.players }} online</p></span> <p data-v-5ad0ed22="" class="catalog-no-overflow-plz text-muted mb-0 visits"><small data-v-5ad0ed22="">{{ game.visits }} visits</small></p></span></a></div>
       {% endfor %}
-      {% if not games|length %}
+      {% if not data.games|length %}
         <p>No games found.</p>
       {% endif %}
       </div>

@@ -15,6 +15,8 @@ class SetClientIp
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $request->server->set('REMOTE_ADDR', $request->server->get('HTTP_CF_CONNECTING_IP'));
+
         return $next($request);
     }
 }

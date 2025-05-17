@@ -1,12 +1,12 @@
 {#<meta name="viewport" content="width=device-width, initial-scale=1">#}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>{{ page_title }} - {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}</title>
-<meta property="og:title" content="{{ page_title }} - {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}">
-<meta property="og:url" content="https://finobe.net/">
-<meta property="og:description" content="Finobe, it is website. He is for old brick-builder. Good for use.">
-<meta property="og:image" content="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}">
-<link rel="shortcut icon" type="image/png" href="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}">
-<link rel="stylesheet" href="/s/css/{{ (user.theme == 1 or user.gary == 1) ? "night" : "light" }}.css">
+<title>{{ data.embeds.title }}</title>
+<meta property="og:title" content="{{ data.embeds.title }}">
+<meta property="og:url" content="{{ data.embeds.url }}">
+<meta property="og:description" content="{{ data.embeds.description }}">
+<meta property="og:image" content="{{ data.embeds.image }}">
+<link rel="shortcut icon" type="image/png" href="{{ data.embeds.image }}">
+<link rel="stylesheet" href="/s/css/{{ (data.user.theme == 1 or data.user.gary == 1) ? "night" : "light" }}.css">
 {# <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.3/css/all.css" integrity="..."> #}
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="" crossorigin="anonymous">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css" integrity="" crossorigin="anonymous">

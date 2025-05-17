@@ -1,15 +1,15 @@
-{% if user.gary == 1 %}
+{% if data.user.gary == 1 %}
 <img src="/s/img/me_irl_lol_23423.png" id="6RLe9KwU6iqN3GRWHaVdFT6RaZY4vDSt" style="position:fixed;pointer-events:none;z-index:9999999;opacity:0.05;width:100%;height:100%;">
 {% endif %}
-<nav class="navbar navbar-expand-lg navbar-{% if user.theme == 1 or user.gary == 1 %}{{ "dark" }}{% else %}{{ "light" }}{% endif %}{% if "now"|date("m") == "10" and user.theme == 0 %}{{ " navbar-light-halloween" }}{% endif %} bg-{{ (user.theme == 1 or user.gary == 1 or user.theme == "halloween") ? "dark" : "faded" }} navbar-static-top">
-  <div class="container"><a href="/" class="navbar-brand"><img src="/s/img/{% if user.branding == "finobe" %}{% if "now"|date("m") == "10" %}{{ "halloween3.png" }}{% elseif "now"|date("m") == "11" or "now"|date("m") == "12" %}{{ "finobe_xmas.png"}}{% elseif user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}"
+<nav class="navbar navbar-expand-lg navbar-{% if data.user.theme == 1 or data.user.gary == 1 %}{{ "dark" }}{% else %}{{ "light" }}{% endif %}{% if "now"|date("m") == "10" and data.user.theme == 0 %}{{ " navbar-light-halloween" }}{% endif %} bg-{{ (data.user.theme == 1 or data.user.gary == 1 or data.user.theme == "halloween") ? "dark" : "faded" }} navbar-static-top">
+  <div class="container"><a href="/" class="navbar-brand"><img src="/s/img/{% if user.branding == "finobe" %}{% if "now"|date("m") == "10" %}{{ "halloween3.png" }}{% elseif "now"|date("m") == "11" or "now"|date("m") == "12" %}{{ "finobe_xmas.png"}}{% elseif data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (data.user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}"
         class="navbar-brandimg d-inline-block mr-2" style="width: auto;">
-      {{ (user.branding == "finobe") ? "Finobe" : "Aesthetiful" }} </a> <button type="button" data-toggle="collapse" data-target="#navbar-collapse"
+      {{ (data.user.branding == "finobe") ? "Finobe" : "Aesthetiful" }} </a> <button type="button" data-toggle="collapse" data-target="#navbar-collapse"
       aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation"
       class="navbar-toggler navbar-toggler-right"><span class="navbar-toggler-icon"></span></button>
     <div id="navbar-collapse" class="collapse navbar-collapse">
       <ul class="nav navbar-nav mr-auto">
-        {% if not IsLoggedIn %}
+        {% if not data.siteusername %}
         <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         {% else %}
         <li class="nav-item"><a href="/user/{{ user.id }}" class="nav-link">Profile</a></li>
@@ -17,14 +17,14 @@
         <li class="nav-item"><a href="/catalog/" class="nav-link">Catalog</a></li>
 		{% endif %}
         <li class="nav-item"><a href="/forum/home" class="nav-link">Forum</a></li>
-        {% if IsLoggedIn %}
+        {% if data.siteusername %}
         <li class="nav-item"><a href="/users" class="nav-link">Users</a></li>
         {% endif %}
         <li class="nav-item"><a href="https://blog.finobe.net/" class="nav-link">Blog</a></li>
-		{% if not IsLoggedIn %}
+		{% if not data.siteusername %}
 		<li class="nav-item"><a href="/videos" class="nav-link">Videos</a></li>
 		{% endif %}
-		{% if IsLoggedIn %}
+		{% if data.siteusername %}
 		<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><strong>More</strong></a>
 						<div class="navbar-nobelium-dropdown dropdown-menu">
@@ -33,11 +33,11 @@
 						</div>
 					</li>
 		{% endif %}
-        {% if user.status == "admin" %}
+        {% if data.user.status == "admin" %}
         <li class="nav-item"><a href="/admin/" class="nav-link">Admin</a></li>
         {% endif %}
       </ul>
-      {% if not IsLoggedIn %}
+      {% if not data.siteusername %}
       <ul class="nav navbar-nav my-2 my-lg-0">
         <li class="nav-item"><a href="/auth/login" class="nav-link">Login</a></li>
         <li class="nav-item"><a href="/auth/register" class="nav-link">Register</a></li>
@@ -48,7 +48,7 @@
 					<a href="/app/inbox" class="nav-link">
 						<i class="far align-middle fa-envelope mt-1 mr-1"></i>
             {% if notifications.info.inbox > 0 %}
-						<span class="badge badge-danger badge-notification ml-1">{{ notifications.info.inbox }}</span>
+						<span class="badge badge-danger badge-notification ml-1">{{ data.notifications.info.inbox }}</span>
             {% endif %}
 					</a>
 				</li>
