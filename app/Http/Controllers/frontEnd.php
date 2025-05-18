@@ -760,7 +760,7 @@ class frontEnd extends Controller
 
             if($validator->fails()) {
                 Session::put('error', $validator->errors()->first());
-                return redirect('/forum/home')
+                return redirect('/forum/home');
             }
 
             if($this->db->table('users')->where('username', $this->request['data']['user']['username'])->where('post_cooldown', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
