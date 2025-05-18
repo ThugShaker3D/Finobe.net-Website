@@ -26,7 +26,7 @@
                                         <div class="d-flex flex-row{{ (asset.asset_type == 18) ? ' justify-content-center' : '' }}">
                                             <img src="{{ asset.additional.media.thumbnail }}" style="width: 50%; height: auto;">
                                             {% if asset.asset_type != 18 %}
-                                                <img src="https://www.finobe.net/asset/?id={{ asset.additional.media.textureAssetId }}" style="width: 50%; height: auto;">
+                                                <img src="https://www.finobe.net/asset/?id={{ asset.additional.media.textureAssetId }}" style="width: 50%; height: auto; background-color: #000;">
                                             {% endif %}
                                         </div>
                                         {% endif %}
