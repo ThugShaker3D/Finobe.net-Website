@@ -22,6 +22,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/user/{id}', [frontEnd::class, 'user']);
         Route::get('/forum/home', [frontEnd::class, 'forum_home']);
         Route::get('/forum/home/{section}', [frontEnd::class, 'forum_section']);
+        Route::get('/forum/search', [frontEnd::class, 'forum_search']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
 
         Route::prefix('api')->group(function() {
