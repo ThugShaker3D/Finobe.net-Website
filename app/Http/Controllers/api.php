@@ -121,14 +121,11 @@ class api extends Controller
         $data['postId'] = intval($data['postId']);
 
         if($this->db->table('forum_ratings')->where('sender', $user['username'])->where('type', $data['type'])->where('toid', $data['postId'])->count()) {
-            $ratingData = $this->db->table('forum_ratings')
+            $ratingData = (array) $this->db->table('forum_ratings')
                 ->where('sender', $user['username'])
                 ->where('type', $data['type'])
                 ->where('toid', $data['postId'])
-                ->get()
-                ->map(function ($item) {
-                    return (array) $item;
-                })->toArray();
+                ->first();
             
             if($ratingData['rate_type'] != $data['rating']) {
                 $this->db->table('forum_ratings')

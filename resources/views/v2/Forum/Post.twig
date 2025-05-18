@@ -123,17 +123,18 @@
                                                 }
                                             });
                                         }
-
+                                        
                                         document.addEventListener('DOMContentLoaded', function() {
                                             document.getElementById('post-up-main').addEventListener('click', function () {
-                                                const postUp = document.getElementById('post-up-main');
-                                                const postDown = document.getElementById('post-down-main');
+                                                var post = document.getElementById('post-up-main');
+                                                var postdown = document.getElementById('post-down-main');
+                                                var number = document.getElementById('post-number-main');
 
                                                 const data = new URLSearchParams();
                                                 data.append('type', '1');
                                                 data.append('postId', '{{ data.post.id }}');
                                                 data.append('rating', 'l');
-                                                data.append('_token', '{{ data.csrf_token }}');
+                                                data.append('_token', '{{ data.csrf_token }}')
 
                                                 fetch("/api/rate", {
                                                     method: 'POST',
@@ -141,34 +142,29 @@
                                                         'Content-Type': 'application/x-www-form-urlencoded'
                                                     },
                                                     body: data
-                                                });
+                                                })
 
-                                                let upCount = parseInt(postUp.textContent.replace(/\D/g, '')) || 0;
-                                                let downCount = parseInt(postDown.textContent.replace(/\D/g, '')) || 0;
-
-                                                const upSelected = postUp.classList.contains('vote-selected');
-                                                const downSelected = postDown.classList.contains('vote-selected');
-
-                                                if (upSelected) {
-                                                    upCount -= 1;
+                                                if (post.classList.contains('vote-selected')) {
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
+                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) - 1);
                                                 } else {
-                                                    upCount += 1;
-                                                    if (downSelected) {
-                                                        downCount -= 1;
-                                                        postDown.classList.remove('vote-selected');
-                                                        postDown.innerHTML = '<i class="far fa-arrow-down"></i>' + downCount;
-                                                    }
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
+                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) + 1);
                                                 }
 
-                                                postUp.classList.toggle('vote-selected');
-                                                postUp.innerHTML = '<i class="far fa-arrow-up"></i>' + upCount;
-
-                                                sync_rating("1", "0", "{{ data.post.id }}");
+                                                if (postdown.classList.contains('vote-selected')) {
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
+                                                    postdown.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(postdown.innerText, 10) - 1);
+                                                    postdown.classList.toggle('vote-selected');
+                                                }
+                                                
+                                                post.classList.toggle('vote-selected');
                                             });
 
                                             document.getElementById('post-down-main').addEventListener('click', function () {
-                                                const postDown = document.getElementById('post-down-main');
-                                                const postUp = document.getElementById('post-up-main');
+                                                var post = document.getElementById('post-down-main');
+                                                var postup = document.getElementById('post-up-main');
+                                                var number = document.getElementById('post-number-main');
 
                                                 const data = new URLSearchParams();
                                                 data.append('type', '1');
@@ -182,29 +178,23 @@
                                                         'Content-Type': 'application/x-www-form-urlencoded'
                                                     },
                                                     body: data
-                                                });
+                                                })
 
-                                                let downCount = parseInt(postDown.textContent.replace(/\D/g, '')) || 0;
-                                                let upCount = parseInt(postUp.textContent.replace(/\D/g, '')) || 0;
-
-                                                const downSelected = postDown.classList.contains('vote-selected');
-                                                const upSelected = postUp.classList.contains('vote-selected');
-
-                                                if (downSelected) {
-                                                    downCount -= 1;
+                                                if (post.classList.contains('vote-selected')) {
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
+                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) - 1);
                                                 } else {
-                                                    downCount += 1;
-                                                    if (upSelected) {
-                                                        upCount -= 1;
-                                                        postUp.classList.remove('vote-selected');
-                                                        postUp.innerHTML = '<i class="far fa-arrow-up"></i>' + upCount;
-                                                    }
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
+                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) + 1);
                                                 }
 
-                                                postDown.classList.toggle('vote-selected');
-                                                postDown.innerHTML = '<i class="far fa-arrow-down"></i>' + downCount;
-
-                                                sync_rating("1", "0", "{{ data.post.id }}");
+                                                if (postup.classList.contains('vote-selected')) {
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
+                                                    postup.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(postup.innerText, 10) - 1);
+                                                    postup.classList.remove('vote-selected');
+                                                }
+                                                
+                                                post.classList.toggle('vote-selected');
                                             });
                                         });
                                     </script>
