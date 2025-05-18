@@ -54,7 +54,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-2 b-right">
-                                    <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ data.post.online }};"></span>
+                                    <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ (data.post.online) ? 'green' : 'grey' }};"></span>
                                     <a href="/user/{{ data.post.uuid }}">
                                         {% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if data.post.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ data.post.author }}</span>{% else %}{{ data.post.author }}{% endif %}
                                     </a> {% if data.siteusername %}[-]{% endif %}</p>
@@ -212,7 +212,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2 b-right">
-                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ data.sticked.online }};"></span> <a
+                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ (data.sticked.online) ? 'green' : 'grey' }};"></span> <a
                                             href="/user/{{ data.sticked.uuid }}">{% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if data.sticked.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ data.sticked.author }}</span>{% else %}{{ data.sticked.author }}{% endif %}</a> {% if data.siteusername %}[-]{% endif %}
                                         </p>
                                         {% if data.siteusername %}
@@ -362,7 +362,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2 b-right">
-                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ reply.online }};"></span> <a
+                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ (reply.online) ? 'green' : 'grey' }};"></span> <a
                                                 href="/user/{{ reply.uuid }}">{% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if reply.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ reply.author }}</span>{% else %}{{ reply.author }}{% endif %}</a> {% if data.siteusername %}[-]{% endif %}
                                         </p>
                                         {% if data.siteusername %}
