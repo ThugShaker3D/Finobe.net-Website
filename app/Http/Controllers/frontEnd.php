@@ -250,7 +250,7 @@ class frontEnd extends Controller
         $number_of_pages = ceil(count($posts) / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
-        $start_page = max(1, min($page - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
         $posts = $this->db->table('forum_threads')
