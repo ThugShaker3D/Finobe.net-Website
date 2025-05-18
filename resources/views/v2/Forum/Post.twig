@@ -98,44 +98,42 @@
                                     </div>
                                     {% if data.siteusername %}
                                     <script>
-                                    function sync_rating(type, index, postId) {
-                                                var number = $('#post-number-main');
-                                                var data = new URLSearchParams();
-                                                data.append('postId', postId);
-                                                data.append('type', type);
-                                                data.append('_token', '{{ data.csrf_token }}');
+                                        function sync_rating(type, index, postId) {
+                                            var number = $('#post-number-main');
+                                            var data = new URLSearchParams();
+                                            data.append('postId', postId);
+                                            data.append('type', type);
+                                            data.append('_token', '{{ data.csrf_token }}');
 
-                                                if(type == "2") {
-                                                    number = $('#reply-number-' + index);
-                                                }
-
-                                                $.ajax({
-                                                    url: "/api/rating_number",
-                                                    type: "POST",
-                                                    contentType: 'application/x-www-form-urlencoded',
-                                                    data: data.toString(),
-                                                    success: function(data) {
-                                                        //number.text(data);
-                                                        //console.log(data);
-                                                    },
-                                                    error: function(error) {
-                                                        console.error('Error:', error);
-                                                    }
-                                                });
+                                            if(type == "2") {
+                                                number = $('#reply-number-' + index);
                                             }
-                                        document.addEventListener('DOMContentLoaded', function() {
-                                            
 
+                                            $.ajax({
+                                                url: "/api/rating_number",
+                                                type: "POST",
+                                                contentType: 'application/x-www-form-urlencoded',
+                                                data: data.toString(),
+                                                success: function(data) {
+                                                    //number.text(data);
+                                                    //console.log(data);
+                                                },
+                                                error: function(error) {
+                                                    console.error('Error:', error);
+                                                }
+                                            });
+                                        }
+
+                                        document.addEventListener('DOMContentLoaded', function() {
                                             document.getElementById('post-up-main').addEventListener('click', function () {
-                                                var post = document.getElementById('post-up-main');
-                                                var postdown = document.getElementById('post-down-main');
-                                                var number = document.getElementById('post-number-main');
+                                                const postUp = document.getElementById('post-up-main');
+                                                const postDown = document.getElementById('post-down-main');
 
                                                 const data = new URLSearchParams();
                                                 data.append('type', '1');
                                                 data.append('postId', '{{ data.post.id }}');
                                                 data.append('rating', 'l');
-                                                data.append('_token', '{{ data.csrf_token }}')
+                                                data.append('_token', '{{ data.csrf_token }}');
 
                                                 fetch("/api/rate", {
                                                     method: 'POST',
@@ -143,29 +141,34 @@
                                                         'Content-Type': 'application/x-www-form-urlencoded'
                                                     },
                                                     body: data
-                                                })
+                                                });
 
-                                                if (post.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) - 1);
+                                                let upCount = parseInt(postUp.textContent.replace(/\D/g, '')) || 0;
+                                                let downCount = parseInt(postDown.textContent.replace(/\D/g, '')) || 0;
+
+                                                const upSelected = postUp.classList.contains('vote-selected');
+                                                const downSelected = postDown.classList.contains('vote-selected');
+
+                                                if (upSelected) {
+                                                    upCount -= 1;
                                                 } else {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) + 1);
+                                                    upCount += 1;
+                                                    if (downSelected) {
+                                                        downCount -= 1;
+                                                        postDown.classList.remove('vote-selected');
+                                                        postDown.innerHTML = '<i class="far fa-arrow-down"></i>' + downCount;
+                                                    }
                                                 }
 
-                                                if (postdown.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    postdown.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(postdown.innerText, 10) - 1);
-                                                    postdown.classList.toggle('vote-selected');
-                                                }
-                                                
-                                                post.classList.toggle('vote-selected');
+                                                postUp.classList.toggle('vote-selected');
+                                                postUp.innerHTML = '<i class="far fa-arrow-up"></i>' + upCount;
+
+                                                sync_rating("1", "0", "{{ data.post.id }}");
                                             });
 
                                             document.getElementById('post-down-main').addEventListener('click', function () {
-                                                var post = document.getElementById('post-down-main');
-                                                var postup = document.getElementById('post-up-main');
-                                                var number = document.getElementById('post-number-main');
+                                                const postDown = document.getElementById('post-down-main');
+                                                const postUp = document.getElementById('post-up-main');
 
                                                 const data = new URLSearchParams();
                                                 data.append('type', '1');
@@ -179,24 +182,30 @@
                                                         'Content-Type': 'application/x-www-form-urlencoded'
                                                     },
                                                     body: data
-                                                })
+                                                });
 
-                                                if (post.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) - 1);
+                                                let downCount = parseInt(postDown.textContent.replace(/\D/g, '')) || 0;
+                                                let upCount = parseInt(postUp.textContent.replace(/\D/g, '')) || 0;
+
+                                                const downSelected = postDown.classList.contains('vote-selected');
+                                                const upSelected = postUp.classList.contains('vote-selected');
+
+                                                if (downSelected) {
+                                                    downCount -= 1;
                                                 } else {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) + 1);
+                                                    downCount += 1;
+                                                    if (upSelected) {
+                                                        upCount -= 1;
+                                                        postUp.classList.remove('vote-selected');
+                                                        postUp.innerHTML = '<i class="far fa-arrow-up"></i>' + upCount;
+                                                    }
                                                 }
 
-                                                if (postup.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    postup.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(postup.innerText, 10) - 1);
-                                                    postup.classList.remove('vote-selected');
-                                                }
-                                                
-                                                post.classList.toggle('vote-selected');
-                                            })
+                                                postDown.classList.toggle('vote-selected');
+                                                postDown.innerHTML = '<i class="far fa-arrow-down"></i>' + downCount;
+
+                                                sync_rating("1", "0", "{{ data.post.id }}");
+                                            });
                                         });
                                     </script>
                                     {% endif %}
