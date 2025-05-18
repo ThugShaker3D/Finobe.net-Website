@@ -206,8 +206,8 @@ class frontEnd extends Controller
         $user['friends'] = array_reverse($user['friends']);
 
         foreach($user['friends'] as $key => $friend) {
-            $user['friends'][$key]['id'] = User::where('username', $friend['username'])->value('id');
-            $user['friends'][$key]['pfp'] = User::where('username', $friend['username'])->value('pfp');
+            $user['friends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60 * 24 * 7, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
+            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
         }
 
         foreach($user['CurrentFriends'] as $key => $friend) {
@@ -226,7 +226,7 @@ class frontEnd extends Controller
         foreach($places as $index => $place) {
             $place['additional'] = json_decode($place['additional'], true);
             $place['count'] = $index + 1;
-            $place['thumbnail'] = $this->db->table('assets')->select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file');
+            $place['thumbnail'] = Cache::remember('thumbnail_' . $place['id'], 60 * 60, function() use ($place) { return $this->db->table('assets')->select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file'); });
             $user['places'][] = $place;
         }
 
