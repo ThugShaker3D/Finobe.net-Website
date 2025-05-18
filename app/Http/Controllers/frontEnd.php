@@ -386,7 +386,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $this->request['data']['section'] = htmlspecialchars($data['q']);
+        $this->request['data']['search'] = htmlspecialchars($data['q']);
         $search = '%' . htmlspecialchars($data['q']) . '%';
 
         $posts = $this->db->table('forum_threads')
