@@ -19,7 +19,7 @@ def find_and_replace(directory):
                 process_twig_file(file_path)
 
 if __name__ == "__main__":
-    find_and_replace("C:/Users/patbr/Downloads/finoob/sitetest1finobenet/resources/views/v2/")
+    find_and_replace("C:/Users/patbr/Downloads/finoob/sitetest1finobenet/resources/views/v1/")
     print("Replacement complete.")
 
 # this was used to replace template text thing

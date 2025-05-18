@@ -1,10 +1,10 @@
 <html>
    <head>
-      {% include ('templates/Aesthetiful/Main/v1/Modules/head.twig') %}
+      {% include ('v1/Modules/head.twig') %}
    </head>
    <body>
       <div id="app main-content">
-         {% include ('templates/Aesthetiful/Main/v1/Modules/nav.twig') %}
+         {% include ('v1/Modules/nav.twig') %}
          {% if not IsLoggedIn %}
          <div class="main-content">
             <div class="container">
@@ -100,6 +100,6 @@
          </div>
          {% endif %}
       </div>
-      {% include ('templates/Aesthetiful/Main/v1/Modules/footer.twig') %}
+      {% include ('v1/Modules/footer.twig') %}
    </body>
 </html>
