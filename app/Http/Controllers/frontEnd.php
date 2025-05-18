@@ -191,7 +191,7 @@ class frontEnd extends Controller
         }
 
         $user = User::find($id)->toArray();
-        $user['blurb'] = str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags($user['blurb'])));
+        $user['blurb'] = str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($user['blurb']))));
         $user['badges'] = json_decode($user['badges'], true);
         $user['friends'] = json_decode($user['friends'], true);
         $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], function ($friend) {
