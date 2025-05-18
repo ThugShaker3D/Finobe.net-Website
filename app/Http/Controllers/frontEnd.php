@@ -484,7 +484,7 @@ class frontEnd extends Controller
         $post['uuid'] = $user['id'];
         $post['status'] = $user['status'];
         $post['pfp'] = $user['pfp'];
-        $post['posts'] $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
+        $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
 
         $posts = $this->db->table('forum_threads')
             ->orderBy('pinned', 'desc')
