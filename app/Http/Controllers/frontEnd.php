@@ -235,6 +235,50 @@ class frontEnd extends Controller
     }
 
     public function forum_home(Request $request) {
+        $data = $request->all();
+
+        $posts = $this->db->table('forum_threads')
+            ->orderBy('pinned', 'desc')
+            ->orderBy('lastreplied', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        $results_per_page = 10;
+        $number_of_pages = ceil(count($posts) / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+
+        $posts = $this->db->table('forum_threads')
+            ->orderBy('pinned', 'desc')
+            ->orderBy('lastreplied', 'desc')
+            ->offset($offset)
+            ->limit($results_per_page)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        $this->request['data']['threads'] = [
+            'data' => [],
+            'pages' => [
+                'info' => [],
+                'data' =>[]
+            ]
+        ];
+
+        foreach($posts as $post) {
+            $post['status'] = User::where('username', $post)->value('status');
+            $post['replies'] = $this->db->table('forum_replies')->where('toid', $post['id'])->count();
+            $post['title'] = htmlspecialchars($post['title']);
+            $post['author'] = htmlspecialchars($post['author']);
+            $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
+            $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
+            $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
+            $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+            $this->request['data']['threads']['data'][] = $post;
+        }
         return view($this->request['data']['user']['version'] . '/Forum/Index', $this->request);
     }
 
