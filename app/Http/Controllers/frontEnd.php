@@ -829,7 +829,7 @@ class frontEnd extends Controller
                 $this->db->table('pms')->insert([
                     'owner' => $this->request['data']['user']['username'],
                     'subject' => '',
-                    'touser' => $subscription['author'],
+                    'touser' => $subscription['username'],
                     'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
                     'forum_id' => $data['id'],
                     'reply_id' => $id
