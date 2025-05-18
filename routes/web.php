@@ -19,11 +19,11 @@ Route::middleware([SetClientIp::class])->group(function() {
             ], 404);
         });
 
-        Route::get('/', [frontEnd::class, 'index']);
         Route::get('/user/{id}', [frontEnd::class, 'user']);
         Route::get('/forum/home', [frontEnd::class, 'forum_home']);
         Route::get('/forum/home/{section}', [frontEnd::class, 'forum_section']);
         Route::get('/forum/search', [frontEnd::class, 'forum_search']);
+        Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
         Route::match(['post', 'get'], '/forum/post', [frontEnd::class, 'forum_post']);
         Route::match(['post', 'get'], '/forum/new/reply', [frontEnd::class, 'forum_reply']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
