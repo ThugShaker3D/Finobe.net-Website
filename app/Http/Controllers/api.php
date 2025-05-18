@@ -59,7 +59,7 @@ class api extends Controller
             ->limit($itemsPerPage)
             */
             ->paginate($itemsPerPage)
-            ->get()
+            ->get($currentPage)
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
