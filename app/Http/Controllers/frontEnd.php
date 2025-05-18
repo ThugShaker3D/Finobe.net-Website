@@ -192,6 +192,7 @@ class frontEnd extends Controller
 
         $user = User::find($id)->toArray();
         $user['badges'] = json_decode($user['badges'], true);
+        $user['friends'] = json_decode($user['friends'], true);
 
         $this->request['data']['badges'] = $user;
         return view($this->request['data']['user']['version'] . '/User', $this->request);
