@@ -191,6 +191,7 @@ class frontEnd extends Controller
         }
 
         $user = User::find($id)->toArray();
+        $user['places'] = [];
         $user['created'] = date('m/d/Y h:i:s A', strtotime($user['created']));
         $user['blurb'] = nl2br(str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($user['blurb'])))));
         $user['badges'] = json_decode($user['badges'], true);
@@ -209,6 +210,21 @@ class frontEnd extends Controller
         foreach($user['CurrentFriends'] as $key => $friend) {
             $user['CurrentFriends'][$key]['id'] = User::where('username', $friend['username'])->value('id');
             $user['CurrentFriends'][$key]['pfp'] = User::where('username', $friend['username'])->value('pfp');
+        }
+
+        $places = $this->db->table('assets')
+            ->where('author', $user['id'])
+            ->where('asset_type', 9)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+
+        foreach($places as $index => $place) {
+            $place['additional'] = json_decode($place['additional'], true);
+            $place['count'] = $index + 1;
+            $place['thumbnail'] = $this->db->table('assets')->select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file');
+            $user['places'][] = $place;
         }
 
         $this->request['data']['profile'] = $user;
