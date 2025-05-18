@@ -510,7 +510,7 @@ class frontEnd extends Controller
 
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
-        $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+        $post['rating'] -= $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
         $post['downvotes'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
 
         if($this->request['data']['siteusername']) {
@@ -559,7 +559,7 @@ class frontEnd extends Controller
 
             $sticked['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'l')->count();
             $sticked['upvotes'] = $sticked['rating'];
-            $sticked['rating'] = $sticked['rating'] - $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
+            $sticked['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
             $sticked['downvotes'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
 
             if($sticked['replyTo']) {
@@ -644,7 +644,7 @@ class frontEnd extends Controller
 
             $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
             $reply['upvotes'] = $reply['rating'];
-            $reply['rating'] = $reply['rating'] - $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
+            $reply['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
             $reply['downvotes'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
 
             if($reply['replyTo']) {

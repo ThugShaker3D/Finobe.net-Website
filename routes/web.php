@@ -28,6 +28,8 @@ Route::middleware([SetClientIp::class])->group(function() {
 
         Route::prefix('api')->group(function() {
             Route::get('/inventory', [api::class, 'inventory']);
+            Route::post('/rate', [api::class, 'rate']);
+            Route::post('/rating_number', [api::class, 'rating_number']);
         });
 
         Route::prefix('auth')->group(function() {

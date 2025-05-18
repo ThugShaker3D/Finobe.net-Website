@@ -135,6 +135,7 @@
                                                 data.append('type', '1');
                                                 data.append('postId', '{{ data.post.id }}');
                                                 data.append('rating', 'l');
+                                                data.append('_token', '{{ data.csrf_token }}')
 
                                                 fetch("/api/rate", {
                                                     method: 'POST',
