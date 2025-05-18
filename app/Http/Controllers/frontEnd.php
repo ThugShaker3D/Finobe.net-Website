@@ -668,7 +668,7 @@ class frontEnd extends Controller
             ];
         }
 
-        return view($this->request['data']['user']['version'] . '/Forum/Index', $this->request);
+        return view($this->request['data']['user']['version'] . '/Forum/Post', $this->request);
     }
 
     public function login(Request $request) {
