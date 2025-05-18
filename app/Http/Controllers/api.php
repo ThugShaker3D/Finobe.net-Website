@@ -49,11 +49,9 @@ class api extends Controller
 
         $this->request['data'] = [
             'items' => [
-                'data' => []
+                'data' => [] // WHY UNDEFINED WHEN NO ITEMS??
             ]
         ];
-
-        $this->request['data']['items']['data'] = [];
 
         $items = $this->db->table('purchases')
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
