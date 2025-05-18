@@ -30,11 +30,11 @@
         </a> <a href="/forum/home/10" class="link{{ (section == "10") ? " active" : "" }}"><span class="forum__color-ball" style="background: rgb(96, 104, 111);"></span>
             да (Русский)
         </a></nav></div> <div class="col-md-8 col-lg-10">
-            {% if search != false %}
-                <h3>Results for <strong>{{ search }}</h3></strong>
+            {% if data.search %}
+                <h3>Results for <strong>{{ data.search }}</h3></strong>
             {% endif %}
             <div class="forum-posts mb-4">
-            {% for thread in threads.data %}
+            {% for thread in data.threads.data %}
                 <a href="/forum/post?id={{ thread.id }}" class="forum-post overflow-hidden"><span><p class="mt-0 mb-1"><strong{{ (thread.pinned == "y") ? ' class="text-success"' : ''}}>{% if thread.locked == "y" %}<i class="far fa-lock mr-1"></i>{% endif %}{% if thread.pinned == "y" %}<i class="far fa-thumbtack mr-1"></i>{% endif %}<span>{{ thread.title | raw }}</span> <span class="badge badge-secondary forum-badge ml-1"><span class="forum-badge__color-indicator" style="background: rgb({% if thread.category == "1" %}{{ "190, 69, 69" }}{% elseif thread.category == "2" %}{{ "26, 172, 118" }}{% elseif thread.category == "3" %}{{ "166, 64, 153" }}{% elseif thread.category == "4" %}{{ "81, 56, 141" }}{% elseif thread.category == "5" %}{{ "166, 34, 101" }}{% elseif thread.category == "6" %}{{ "51, 145, 227" }}{% elseif thread.category == "7" %}{{ "96, 104, 111" }}{% elseif thread.category == "8" %}{{ "170, 113, 43" }}{% elseif thread.category == "9" %}{{ "96, 13, 13" }}{% elseif thread.category == "10" %}{{ "96, 104, 111" }}{% endif %});"></span>
                 {% if thread.category == "1" %}{{ "Announcements" }}{% elseif thread.category == "2" %}{{ "General" }}{% elseif thread.category == "3" %}{{ "Suggestions" }}{% elseif thread.category == "4" %}{{ "Off Topic" }}{% elseif thread.category == "5" %}{{ "Help" }}{% elseif thread.category == "6" %}{{ "Development" }}{% elseif thread.category == "7" %}{{ "Serious" }}{% elseif thread.category == "8" %}{{ "Serious (Real World)" }}{% elseif thread.category == "9" %}{{ "Trade Discussion" }}{% elseif thread.category == "10" %}{{ "да (Русский)" }}{% endif %}
 						</span></strong></p>
