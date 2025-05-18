@@ -245,10 +245,13 @@ class frontEnd extends Controller
                 return (array) $item;
             })->toArray();
         
+        $pages_to_show = 10;
         $results_per_page = 10;
         $number_of_pages = ceil(count($posts) / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
+        $start_page = max(1, min($page - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
         $posts = $this->db->table('forum_threads')
             ->orderBy('pinned', 'desc')
@@ -263,7 +266,14 @@ class frontEnd extends Controller
         $this->request['data']['threads'] = [
             'data' => [],
             'pages' => [
-                'info' => [],
+                'info' => [
+                    'current_page' => $currentPage,
+                    'previous_page' => max(1, $currentPage - 1),
+                    'next_page' => min($number_of_pages, $currentPage + 1),
+                    'start_page' => $start_page,
+                    'end_page' => $end_page,
+                    'number_of_pages' => $number_of_pages
+                ],
                 'data' =>[]
             ]
         ];
@@ -279,6 +289,17 @@ class frontEnd extends Controller
             $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
             $this->request['data']['threads']['data'][] = $post;
         }
+
+        for ($page = $start_page; $page <= $end_page; $page++) {
+            $this->request['data']['threads']['pages']['data'][] = ['page' => $page];
+        }
+
+        if(!count($posts)) {
+            $this->request['data']['threads']['pages']['data'][] = [
+                'page' => 1
+            ];
+        }
+
         return view($this->request['data']['user']['version'] . '/Forum/Index', $this->request);
     }
 
