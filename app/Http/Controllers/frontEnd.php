@@ -234,6 +234,10 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/User', $this->request);
     }
 
+    public function forum_home(Request $request) {
+        return view($this->request['data']['user']['version'] . '/Forum/Index', $this->request);
+    }
+
     public function login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
         $this->request['data']['errorlogin'] = Session::has('errorlogin');
