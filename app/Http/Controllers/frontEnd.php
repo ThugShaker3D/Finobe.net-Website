@@ -236,6 +236,7 @@ class frontEnd extends Controller
 
     public function forum_home(Request $request) {
         $data = $request->all();
+        $this->request['data']['section'] = false;
 
         $posts = $this->db->table('forum_threads')
             ->orderBy('pinned', 'desc')
@@ -254,6 +255,78 @@ class frontEnd extends Controller
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
         $posts = $this->db->table('forum_threads')
+            ->orderBy('pinned', 'desc')
+            ->orderBy('lastreplied', 'desc')
+            ->offset($offset)
+            ->limit($results_per_page)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        $this->request['data']['threads'] = [
+            'data' => [],
+            'pages' => [
+                'info' => [
+                    'current_page' => $currentPage,
+                    'previous_page' => max(1, $currentPage - 1),
+                    'next_page' => min($number_of_pages, $currentPage + 1),
+                    'start_page' => $start_page,
+                    'end_page' => $end_page,
+                    'number_of_pages' => $number_of_pages
+                ],
+                'data' =>[]
+            ]
+        ];
+
+        foreach($posts as $post) {
+            $post['status'] = User::where('username', $post)->value('status');
+            $post['replies'] = $this->db->table('forum_replies')->where('toid', $post['id'])->count();
+            $post['title'] = htmlspecialchars($post['title']);
+            $post['author'] = htmlspecialchars($post['author']);
+            $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
+            $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
+            $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
+            $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+            $this->request['data']['threads']['data'][] = $post;
+        }
+
+        for ($page = $start_page; $page <= $end_page; $page++) {
+            $this->request['data']['threads']['pages']['data'][] = ['page' => $page];
+        }
+
+        if(!count($posts)) {
+            $this->request['data']['threads']['pages']['data'][] = [
+                'page' => 1
+            ];
+        }
+
+        return view($this->request['data']['user']['version'] . '/Forum/Index', $this->request);
+    }
+
+    public function forum_section(Request $request, $section) {
+        $data = $request->all();
+        $this->request['data']['section'] = $section;
+
+        $posts = $this->db->table('forum_threads')
+            ->where('category', $section)
+            ->orderBy('pinned', 'desc')
+            ->orderBy('lastreplied', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        $pages_to_show = 10;
+        $results_per_page = 10;
+        $number_of_pages = ceil(count($posts) / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+        $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+
+        $posts = $this->db->table('forum_threads')
+            ->where('category', $section)
             ->orderBy('pinned', 'desc')
             ->orderBy('lastreplied', 'desc')
             ->offset($offset)
