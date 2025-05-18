@@ -47,6 +47,8 @@ class api extends Controller
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $itemsPerPage;
 
+        $this->request['data']['items']['data'] = [];
+
         $items = $this->db->table('purchases')
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
             ->where('purchases.username', $data['user'])
@@ -73,15 +75,12 @@ class api extends Controller
 
             $item['title'] = htmlspecialchars($item['title']);
             $item['author'] = htmlspecialchars($user['username'] ?? $item['additional']['oldUser']);
-            $this->response['items']['data'][] = $item;
+            $this->response['data']['items']['data'][] = $item;
         }
         
-        $this->response['data']['items'] = [
-            'data' => [],
-            'pagination' => [
-                'current_page' => $currentPage,
-                'number_of_pages' => ceil(count($this->response['data']['items']) / $itemsPerPage)
-            ]
+        $this->response['data']['items']['pagination'] = [
+            'current_page' => $currentPage,
+            'number_of_pages' => ceil(count($this->response['data']['items']) / $itemsPerPage)
         ];
 
         return response()->json($this->response, 200);
