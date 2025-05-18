@@ -585,7 +585,7 @@ class frontEnd extends Controller
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
-        $replies = $this->db->table('forum_threads')
+        $replies = $this->db->table('forum_replies')
             ->where('toid', $post['id'])
             ->offset($offset)
             ->limit($results_per_page)
@@ -594,7 +594,7 @@ class frontEnd extends Controller
                 return (array) $item;
             })->toArray();
         
-        $this->request['data']['threads'] = [
+        $this->request['data']['replies'] = [
             'data' => [],
             'pages' => [
                 'info' => [
@@ -655,15 +655,15 @@ class frontEnd extends Controller
             }
 
             $reply['online'] = User::where('username', $reply['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
-            $this->request['data']['threads']['data'][] = $reply;
+            $this->request['data']['replies']['data'][] = $reply;
         }
 
         for ($page = $start_page; $page <= $end_page; $page++) {
-            $this->request['data']['threads']['pages']['data'][] = ['page' => $page];
+            $this->request['data']['replies']['pages']['data'][] = ['page' => $page];
         }
 
         if(!count($posts)) {
-            $this->request['data']['threads']['pages']['data'][] = [
+            $this->request['data']['replies']['pages']['data'][] = [
                 'page' => 1
             ];
         }
