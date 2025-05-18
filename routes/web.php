@@ -3,10 +3,11 @@
 use App\Http\Controllers\api;
 use App\Http\Controllers\frontEnd;
 use App\Http\Middleware\SetClientIp;
+use App\Http\Middleware\ModerationMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([SetClientIp::class])->group(function() {
-    Route::domain(str_replace('https://', '', 'sitetest1.finobe.net'/*env('APP_URL')for when release replace*/))->group(function() {
+    Route::domain(str_replace('https://', '', 'sitetest1.finobe.net'/*env('APP_URL')for when release replace*/))->middleware([ModerationMiddleware::class])->group(function() {
         Route::fallback(function() {
             return response()->view('v2/404', [
                 'data' => [
