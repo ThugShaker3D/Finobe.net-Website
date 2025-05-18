@@ -66,7 +66,7 @@ class ModerationMiddleware
 
             if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email') {
                 if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
-                    return view($this->request['data']['user']['version'] . '/Verify', $this->request);
+                    return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
                 }
             }
 
@@ -78,7 +78,7 @@ class ModerationMiddleware
                     ->where('reactivated', 'n')
                     ->first();
                 
-                return view($this->request['data']['user']['version'] . '/Moderation', $this->request);
+                return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
             }
 
             if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
@@ -116,7 +116,7 @@ class ModerationMiddleware
                 $this->request['data']['expiration'] = $format;
                 $this->request['data']['expiration_formatted'] = date('Y-m-d', strtotime($this->request['data']['ban_info']['expire']));
                 
-                return view($this->request['data']['user']['version'] . '/Moderation', $this->request);
+                return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
             }
         }
 
