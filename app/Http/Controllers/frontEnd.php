@@ -510,8 +510,8 @@ class frontEnd extends Controller
         $post['downvotes'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
 
         if($this->request['data']['siteusername']) {
-            if($this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('author', $this->request['data']['user']['username'])->exists()) {
-                $post['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '1')->where('toid', $post['id'])->where('author', $this->request['data']['user']['username'])->value('rate_type');
+            if($this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('sender', $this->request['data']['user']['username'])->exists()) {
+                $post['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '1')->where('toid', $post['id'])->where('sender', $this->request['data']['user']['username'])->value('rate_type');
             }
 
             $post['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $post['id'])->exists();
@@ -563,8 +563,8 @@ class frontEnd extends Controller
             }
 
             if($this->request['data']['siteusername']) {
-                if($this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('author', $this->request['data']['user']['username'])->exists()) {
-                    $sticked['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '2')->where('toid', $sticked['id'])->where('author', $this->request['data']['user']['username'])->value('rate_type');
+                if($this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('sender', $this->request['data']['user']['username'])->exists()) {
+                    $sticked['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '2')->where('toid', $sticked['id'])->where('sender', $this->request['data']['user']['username'])->value('rate_type');
                 }
 
                 $sticked['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $sticked['id'])->exists();
@@ -648,8 +648,8 @@ class frontEnd extends Controller
             }
 
             if($this->request['data']['siteusername']) {
-                if($this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('author', $this->request['data']['user']['username'])->exists()) {
-                    $reply['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '2')->where('toid', $reply['id'])->where('author', $this->request['data']['user']['username'])->value('rate_type');
+                if($this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('sender', $this->request['data']['user']['username'])->exists()) {
+                    $reply['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '2')->where('toid', $reply['id'])->where('sender', $this->request['data']['user']['username'])->value('rate_type');
                 }
 
                 $reply['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $reply['id'])->exists();
