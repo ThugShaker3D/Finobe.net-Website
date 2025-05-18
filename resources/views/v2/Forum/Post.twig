@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 {% endif %}
-                {% if data.editing %}
+                {% if not data.editing %}
                 {% if data.siteusername %}
                     <a href="/forum/new/reply?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2{{ (data.post.locked == "y") ? " disabled" : "" }}" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>{{ (data.post.locked == "y") ? "topic locked" : "reply" }}</button></a>
                     {% if data.post.author != data.data.user.username %}
@@ -523,17 +523,17 @@
                 <div id="forum-posts">
                     <div class="card mb-4">
                         <div class="card-header bg-primary text-white">
-                            Editing to {{ post.title }}
+                            Editing to {{ data.post.title }}
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12 post-content overflow-hidden">
                                     <form role="form" method="POST" action="" enctype="multipart/form-data">
-                                        <input type="hidden" name="id" value="{{ post.id }}">
+                                        <input type="hidden" name="id" value="{{ data.post.id }}">
                                         <div class="form-group row">
                                             <label for="note" class="col-form-label text-md-right mb-2" style="margin-left:15px;">Note: Use Markdown syntax.</label>
                                             <div class="col-md-12">
-                                                {% if user.status == "admin" %}
+                                                {% if data.user.status == "admin" %}
 												<button style="margin-top: 5px;" type="button" class="btn btn-sm btn-secondary col-md-3 mb-1" onclick="addImage()">Add image</button>
 												<script>
 												function addImage() {
@@ -583,7 +583,7 @@
                                                 }
 												</script>
 												{% endif %}
-                                                <textarea rows="10" minlength="3" type="text" id="content" name="content" value="" placeholder="Enter your reply here (minimum 3 characters)." class="form-control">{{ post.comment }}</textarea>
+                                                <textarea rows="10" minlength="3" type="text" id="content" name="content" value="" placeholder="Enter your reply here (minimum 3 characters)." class="form-control">{{ data.post.comment }}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">

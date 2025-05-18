@@ -456,6 +456,10 @@ class frontEnd extends Controller
         $post = (array) $this->db->table('forum_threads')
             ->where('id', $data['id'])
             ->first();
+
+        if(isset($data['edit']) && (!$this->request['data']['siteusername'] || $post['author'] != $this->request['data']['user']['username'])) {
+            return redirect('/forum/post?id=' . $data['id']);
+        }
         
         $this->request['data']['embeds']['title'] = htmlspecialchars($post['title']) . $this->request['data']['embeds']['title'];
         $this->request['data']['editing'] = isset($data['edit']);
