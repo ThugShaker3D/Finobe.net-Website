@@ -883,6 +883,7 @@ class frontEnd extends Controller
 
         $this->request['data']['embeds']['title'] = htmlspecialchars($post['title']) . $this->request['data']['embeds']['title'];
         $this->request['data']['replying'] = isset($data['reply']) ? $data['reply'] : false;
+        $this->request['data']['csrf_token'] = csrf_token();
         $post['title'] = htmlspecialchars($post['title']);
         $this->request['data']['post'] = $post;
 
