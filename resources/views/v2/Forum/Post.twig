@@ -143,22 +143,23 @@
                                                     },
                                                     body: data
                                                 })
+                                                .then(data => {
+                                                    if (post.classList.contains('vote-selected')) {
+                                                        sync_rating("1", "0", "{{ data.post.id }}");
+                                                        post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) - 1);
+                                                    } else {
+                                                        sync_rating("1", "0", "{{ data.post.id }}");
+                                                        post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) + 1);
+                                                    }
 
-                                                if (post.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) - 1);
-                                                } else {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) + 1);
-                                                }
-
-                                                if (postdown.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    postdown.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(postdown.innerText, 10) - 1);
-                                                    postdown.classList.toggle('vote-selected');
-                                                }
-                                                
-                                                post.classList.toggle('vote-selected');
+                                                    if (postdown.classList.contains('vote-selected')) {
+                                                        sync_rating("1", "0", "{{ data.post.id }}");
+                                                        postdown.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(postdown.innerText, 10) - 1);
+                                                        postdown.classList.toggle('vote-selected');
+                                                    }
+                                                    
+                                                    post.classList.toggle('vote-selected');
+                                                });
                                             });
 
                                             document.getElementById('post-down-main').addEventListener('click', function () {
@@ -179,22 +180,23 @@
                                                     },
                                                     body: data
                                                 })
+                                                .then(data => {
+                                                    if (post.classList.contains('vote-selected')) {
+                                                        sync_rating("1", "0", "{{ data.post.id }}");
+                                                        post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) - 1);
+                                                    } else {
+                                                        sync_rating("1", "0", "{{ data.post.id }}");
+                                                        post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) + 1);
+                                                    }
 
-                                                if (post.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) - 1);
-                                                } else {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) + 1);
-                                                }
-
-                                                if (postup.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ data.post.id }}");
-                                                    postup.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(postup.innerText, 10) - 1);
-                                                    postup.classList.remove('vote-selected');
-                                                }
-                                                
-                                                post.classList.toggle('vote-selected');
+                                                    if (postup.classList.contains('vote-selected')) {
+                                                        sync_rating("1", "0", "{{ data.post.id }}");
+                                                        postup.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(postup.innerText, 10) - 1);
+                                                        postup.classList.remove('vote-selected');
+                                                    }
+                                                    
+                                                    post.classList.toggle('vote-selected');
+                                                });
                                             });
                                         });
                                     </script>
