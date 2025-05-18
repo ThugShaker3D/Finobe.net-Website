@@ -479,7 +479,7 @@ class frontEnd extends Controller
             }
 
             if($post['locked'] == 'y') {
-                Session::put('error', 'This post is locked')
+                Session::put('error', 'This post is locked');
                 return redirect('/forum/post?id=' . $data['id']);
             }
 
