@@ -239,25 +239,19 @@ class frontEnd extends Controller
         $this->request['data']['embeds']['title'] = 'Forum' . $this->request['data']['embeds']['title'];
         $this->request['data']['section'] = false;
 
-        $posts = $this->db->table('forum_threads')
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+        $posts = $this->db->table('forum_threads')->count();
         
         $pages_to_show = 10;
         $results_per_page = 10;
-        $number_of_pages = ceil(count($posts) / $results_per_page);
+        $number_of_pages = ceil($posts / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
         $posts = $this->db->table('forum_threads')
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
+            ->orderBy('pinned', 'DESC')
+            ->orderBy('lastreplied', 'DESC')
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
@@ -288,7 +282,7 @@ class frontEnd extends Controller
             $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
             $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
-            $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+            $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
             $this->request['data']['threads']['data'][] = $post;
         }
 
@@ -312,16 +306,11 @@ class frontEnd extends Controller
 
         $posts = $this->db->table('forum_threads')
             ->where('category', $section)
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+            ->count();
         
         $pages_to_show = 10;
         $results_per_page = 10;
-        $number_of_pages = ceil(count($posts) / $results_per_page);
+        $number_of_pages = ceil($posts / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
@@ -329,8 +318,8 @@ class frontEnd extends Controller
 
         $posts = $this->db->table('forum_threads')
             ->where('category', $section)
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
+            ->orderBy('pinned', 'DESC')
+            ->orderBy('lastreplied', 'DESC')
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
@@ -361,7 +350,7 @@ class frontEnd extends Controller
             $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
             $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
-            $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+            $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
             $this->request['data']['threads']['data'][] = $post;
         }
 
@@ -391,16 +380,11 @@ class frontEnd extends Controller
 
         $posts = $this->db->table('forum_threads')
             ->whereRaw('LOWER(title) LIKE ?', [$search])
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+            ->count();
         
         $pages_to_show = 10;
         $results_per_page = 10;
-        $number_of_pages = ceil(count($posts) / $results_per_page);
+        $number_of_pages = ceil($posts / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
@@ -408,8 +392,8 @@ class frontEnd extends Controller
 
         $posts = $this->db->table('forum_threads')
             ->whereRaw('LOWER(title) LIKE ?', [$search])
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
+            ->orderBy('pinned', 'DESC')
+            ->orderBy('lastreplied', 'DESC')
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
@@ -440,7 +424,7 @@ class frontEnd extends Controller
             $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
             $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
-            $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+            $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
             $this->request['data']['threads']['data'][] = $post;
         }
 
@@ -480,32 +464,129 @@ class frontEnd extends Controller
         $post['date'] = date('m/d/Y h:i A', strtotime($post['date']));
         $post['edited_date'] = date('m/d/Y h:i A', strtotime($post['edited_date']));
 
-        $user = User::where('username', $post['author'])->value('id', 'status', 'pfp', 'badges');
+        $user = (array) User::where('username', $post['author'])->select('id', 'status', 'pfp', 'badges')->first();
         $post['uuid'] = $user['id'];
         $post['status'] = $user['status'];
         $post['pfp'] = $user['pfp'];
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
-        $posts = $this->db->table('forum_threads')
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+        $phrasesToReplace = [
+            'fuck',
+            'fucking',
+            'roblox',
+            'robux',
+            'ass',
+            'asshole',
+            'shit'
+        ];
+
+        $replacements = [
+            'OBAMA BALL',
+            'sonic 06',
+            'blockland.us'
+        ];
+
+        $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+            return $replacements[array_rand($replacements)];
+        }, $post['comment']);
+
+        if($post['status'] == "admin") {
+            $post['comment'] = nl2br(preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                if (strpos($matches[0], '<img') === 0) {
+                    return $matches[0];
+                } else {
+                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                }
+            }, $post['comment']));
+        } else {
+            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment']))));
+        }
+
+        $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
+        $post['upvotes'] = $post['rating'];
+        $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+        $post['downvotes'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
+
+        if($this->request['data']['siteusername']) {
+            if($this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('author', $this->request['data']['user']['username'])->exists()) {
+                $post['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '1')->where('toid', $post['id'])->where('author', $this->request['data']['user']['username'])->value('rate_type');
+            }
+
+            $post['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $post['id'])->exists();
+        }
+
+        $post['online'] = User::where('username', $post['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
+        $this->request['data']['post'] = $post;
+
+        if($this->db->table('forum_replies')->where('toid', $post['id'])->where('sticked', 'y')->exists()) {
+            $sticked = (array) $this->db->table('forum_replies')
+                ->where('toid', $post['id'])
+                ->where('sticked', 'y')
+                ->limit(1)
+                ->first();
+            
+            $sticked['author'] = htmlspecialchars($sticked['author']);
+            $sticked['date'] = date('m/d/Y h:i A', strtotime($sticked['date']));
+            $sticked['edited_date'] = date('m/d/Y h:i A', strtotime($sticked['edited_date']));
+
+            $user = (array) User::where('username', $sticked['author'])->select('id', 'status', 'pfp', 'badges')->first();
+            $sticked['uuid'] = $user['id'];
+            $sticked['status'] = $user['status'];
+            $sticked['pfp'] = $user['pfp'];
+            $sticked['posts'] = $this->db->table('forum_threads')->where('author', $sticked['author'])->count() + $this->db->table('forum_replies')->where('author', $sticked['author'])->count();
+            $sticked['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
+            $sticked['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $sticked['comment']);
+
+            if($sticked['status'] == "admin") {
+                $sticked['comment'] = nl2br(preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                    if (strpos($matches[0], '<img') === 0) {
+                        return $matches[0];
+                    } else {
+                        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                    }
+                }, $sticked['comment']));
+            } else {
+                $sticked['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($sticked['comment']))));
+            }
+
+            $sticked['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'l')->count();
+            $sticked['upvotes'] = $sticked['rating'];
+            $sticked['rating'] = $sticked['rating'] - $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
+            $sticked['downvotes'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
+
+            if($sticked['replyTo']) {
+                $sticked['replyComment'] = $this->db->table('forum_replies')->select('comment')->where('id', $sticked['replyTo'])->value('comment');
+            }
+
+            if($this->request['data']['siteusername']) {
+                if($this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('author', $this->request['data']['user']['username'])->exists()) {
+                    $sticked['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '2')->where('toid', $sticked['id'])->where('author', $this->request['data']['user']['username'])->value('rate_type');
+                }
+
+                $sticked['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $sticked['id'])->exists();
+            }
+
+            $sticked['online'] = User::where('username', $sticked['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
+            $this->request['data']['sticked'] = $sticked;
+        }
+
+        $replies = $this->db->table('forum_replies')
+            ->where('toid', $post['id'])
+            ->count();
         
         $pages_to_show = 10;
         $results_per_page = 10;
-        $number_of_pages = ceil(count($posts) / $results_per_page);
+        $number_of_pages = ceil($replies / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
-        $posts = $this->db->table('forum_threads')
-            ->orderBy('pinned', 'desc')
-            ->orderBy('lastreplied', 'desc')
+        $replies = $this->db->table('forum_threads')
+            ->where('toid', $post['id'])
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
@@ -528,16 +609,53 @@ class frontEnd extends Controller
             ]
         ];
 
-        foreach($posts as $post) {
-            $post['status'] = User::where('username', $post)->value('status');
-            $post['replies'] = $this->db->table('forum_replies')->where('toid', $post['id'])->count();
-            $post['title'] = htmlspecialchars($post['title']);
-            $post['author'] = htmlspecialchars($post['author']);
-            $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
-            $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
-            $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
-            $post['rationg'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
-            $this->request['data']['threads']['data'][] = $post;
+        foreach($replies as $reply) {
+            $reply['author'] = htmlspecialchars($reply['author']);
+		    $reply['format_date'] = date('M d Y h:i:s A', strtotime($reply['date']));
+            $reply['date'] = date('m/d/Y h:i A', strtotime($reply['date']));
+            $reply['edited_date'] = date('m/d/Y h:i A', strtotime($reply['edited_date']));
+
+            $user = (array) User::where('username', $reply['author'])->select('id', 'status', 'pfp', 'badges')->first();
+            $reply['uuid'] = $user['id'];
+            $reply['status'] = $user['status'];
+            $reply['pfp'] = $user['pfp'];
+            $reply['posts'] = $this->db->table('forum_threads')->where('author', $reply['author'])->count() + $this->db->table('forum_replies')->where('author', $reply['author'])->count();
+            $reply['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
+            $reply['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $reply['comment']);
+
+            if($reply['status'] == "admin") {
+                $reply['comment'] = nl2br(preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                    if (strpos($matches[0], '<img') === 0) {
+                        return $matches[0];
+                    } else {
+                        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                    }
+                }, $reply['comment']));
+            } else {
+                $reply['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($reply['comment']))));
+            }
+
+            $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
+            $reply['upvotes'] = $reply['rating'];
+            $reply['rating'] = $reply['rating'] - $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
+            $reply['downvotes'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
+
+            if($reply['replyTo']) {
+                $reply['replyComment'] = $this->db->table('forum_replies')->select('comment')->where('id', $reply['replyTo'])->value('comment');
+            }
+
+            if($this->request['data']['siteusername']) {
+                if($this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('author', $this->request['data']['user']['username'])->exists()) {
+                    $reply['userRating'] = $this->db->table('forum_ratings')->select('rate_type')->where('type', '2')->where('toid', $reply['id'])->where('author', $this->request['data']['user']['username'])->value('rate_type');
+                }
+
+                $reply['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $reply['id'])->exists();
+            }
+
+            $reply['online'] = User::where('username', $reply['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
+            $this->request['data']['threads']['data'][] = $reply;
         }
 
         for ($page = $start_page; $page <= $end_page; $page++) {
