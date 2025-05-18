@@ -15,13 +15,13 @@
     <div id="app">
       {% include ('v2/Modules/nav.twig') %}
       <div class="forumContainer container mt-3">
-                <nav class="breadcrumb"><a href="/" class="breadcrumb-item">{{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}</a> <a href="/forum/home"
-                        class="breadcrumb-item">Forum Home</a> <a href="/forum/home/{{ post.category }}" class="breadcrumb-item">
-                        {% if post.category == "1" %}{{ "Announcements" }}{% elseif post.category == "2" %}{{ "General" }}{% elseif post.category == "3" %}{{ "Suggestions" }}{% elseif post.category == "4" %}{{ "Off Topic" }}{% elseif post.category == "5" %}{{ "Help" }}{% elseif post.category == "6" %}{{ "Development" }}{% elseif post.category == "7" %}{{ "Serious" }}{% elseif post.category == "8" %}{{ "Serious (Real World)" }}{% elseif post.category == "9" %}{{ "Trade Discussion" }}{% elseif post.category == "10" %}{{ "да (Русский)" }}{% endif %}
+                <nav class="breadcrumb"><a href="/" class="breadcrumb-item">{{ (data.user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}</a> <a href="/forum/home"
+                        class="breadcrumb-item">Forum Home</a> <a href="/forum/home/{{ data.post.category }}" class="breadcrumb-item">
+                        {% if data.post.category == "1" %}{{ "Announcements" }}{% elseif data.post.category == "2" %}{{ "General" }}{% elseif data.post.category == "3" %}{{ "Suggestions" }}{% elseif data.post.category == "4" %}{{ "Off Topic" }}{% elseif data.post.category == "5" %}{{ "Help" }}{% elseif data.post.category == "6" %}{{ "Development" }}{% elseif data.post.category == "7" %}{{ "Serious" }}{% elseif data.post.category == "8" %}{{ "Serious (Real World)" }}{% elseif data.post.category == "9" %}{{ "Trade Discussion" }}{% elseif data.post.category == "10" %}{{ "да (Русский)" }}{% endif %}
                     </a> <span class="breadcrumb-item overflow-hidden">
-                        {{ post.title | raw }}
+                        {{ data.post.title | raw }}
                     </span></nav>
-                {% if post.category == "7" or post.category == "8" %}
+                {% if data.post.category == "7" or data.post.category == "8" %}
                     <div class="alert alert-danger mb-4">
                         <div class="container text-white">
                             <h5 class="font-weight-light my-2"><i
@@ -30,73 +30,73 @@
                         </div>
                     </div>
                 {% endif %}
-                {% if editing == false %}
-                {% if IsLoggedIn %}
-                    <a href="/forum/new/reply?id={{ post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2{{ (post.locked == "y") ? " disabled" : "" }}" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>{{ (post.locked == "y") ? "topic locked" : "reply" }}</button></a>
-                    {% if post.author != user.username %}
-                        <a href="/forum/subscribe?id={{ post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2" style="text-transform: capitalize;">{{ (post.subscription == true) ? "Unsubscribe" : "subscribe" }}</button></a>
+                {% if data.editing %}
+                {% if data.siteusername %}
+                    <a href="/forum/new/reply?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2{{ (data.post.locked == "y") ? " disabled" : "" }}" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>{{ (data.post.locked == "y") ? "topic locked" : "reply" }}</button></a>
+                    {% if data.post.author != data.data.user.username %}
+                        <a href="/forum/subscribe?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2" style="text-transform: capitalize;">{{ (data.post.subscription) ? "Unsubscribe" : "subscribe" }}</button></a>
                     {% endif %}
                 {% endif %}
                 <div class="mt-2">
                         <ul class="pagination shadow-sm">
-                            <li class="page-item{{ (replies.pages.info.previous_page == replies.pages.info.start_page and replies.pages.info.previous_page != (replies.pages.info.start_page + 1)) ? " disabled" : "" }}"><a class="page-link" id="previous-page" href="/forum/post?id={{ post.id }}&page={{ replies.pages.info.previous_page }}" onclick="" rel="previous" aria-label="Previous <<">«</a></li>
-                                {% for page in replies.pages.data %}
-                                    <li class="page-item"><a class="page-link{{ (page.page == replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
+                            <li class="page-item{{ (data.replies.pages.info.previous_page == data.replies.pages.info.start_page and data.replies.pages.info.previous_page != (data.replies.pages.info.start_page + 1)) ? " disabled" : "" }}"><a class="page-link" id="previous-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.previous_page }}" onclick="" rel="previous" aria-label="Previous <<">«</a></li>
+                                {% for page in data.replies.pages.data %}
+                                    <li class="page-item"><a class="page-link{{ (page.page == data.replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
                                 {% endfor %}
-                            <li class="page-item{{ (replies.pages.info.next_page == replies.pages.info.end_page) ? " disabled" : "" }}"><a class="page-link" id="next-page" href="/forum/post?id={{ post.id }}&page={{ replies.pages.info.next_page + 1 }}" onclick="" rel="next" aria-label="Next >>">»</a></li>
+                            <li class="page-item{{ (data.replies.pages.info.next_page == data.replies.pages.info.end_page) ? " disabled" : "" }}"><a class="page-link" id="next-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.next_page + 1 }}" onclick="" rel="next" aria-label="Next >>">»</a></li>
                         </ul>
                     </div>
                 <div id="forum-posts">
                     <div class="card mb-4">
                         <div id="originalPost" class="card-header bg-info text-white">
-                            Original Post - {{ post.date }} {% if post.edited == "y" %}<span title="Edited {{ post.edited_date }}"><i>*(edited)</i></span>{% endif %}{% if user.status == "admin" %} - <a href="/admin/{{ (post.pinned == "n") ? "pin" : "unpin" }}?id={{ post.id }}">{{ (post.pinned == "n") ? "Pin" : "Unpin" }} Post</a> - <a href="/admin/{{ (post.locked == "n") ? "lock" : "unlock" }}?id={{ post.id }}">{{ (post.locked == "n") ? "Lock" : "Unlock" }} Post</a>{% endif %}
+                            Original Post - {{ data.post.date }} {% if data.post.edited %}<span title="Edited {{ data.post.edited_date }}"><i>*(edited)</i></span>{% endif %}{% if data.user.status == "admin" %} - <a href="/admin/{{ (data.post.pinned == "n") ? "pin" : "unpin" }}?id={{ data.post.id }}">{{ (data.post.pinned == "n") ? "Pin" : "Unpin" }} Post</a> - <a href="/admin/{{ (data.post.locked == "n") ? "lock" : "unlock" }}?id={{ data.post.id }}">{{ (data.post.locked == "n") ? "Lock" : "Unlock" }} Post</a>{% endif %}
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-2 b-right">
-                                    <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ post.online }};"></span>
-                                    <a href="/user/{{ post.uuid }}">
-                                        {% if IsLoggedIn %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if post.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ post.author }}</span>{% else %}{{ post.author }}{% endif %}
-                                    </a> {% if IsLoggedIn %}[-]{% endif %}</p>
-                                    {% if IsLoggedIn %}
-                                        {% if post.pfp == "" %}
+                                    <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ data.post.online }};"></span>
+                                    <a href="/user/{{ data.post.uuid }}">
+                                        {% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if data.post.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ data.post.author }}</span>{% else %}{{ data.post.author }}{% endif %}
+                                    </a> {% if data.siteusername %}[-]{% endif %}</p>
+                                    {% if data.siteusername %}
+                                        {% if data.post.pfp == "" %}
                                             <img src="/s/img/spinnerv2.gif" style="max-width: 75px;">
                                         {% else %}
-                                            <img src="https://cdn.finobe.net/{{ post.pfp }}" style="max-width: 75px;">
+                                            <img src="https://cdn.finobe.net/{{ data.post.pfp }}" style="max-width: 75px;">
                                         {% endif %}
                                     {% endif %}
-                                    {% if post.status == "admin" %}
+                                    {% if data.post.status == "admin" %}
                                         <p class="mb-0"><span class="badge badge-danger badge-admin"><i class="far fa-gavel fa-fw mr-1"></i> Admin</span></p>
                                     {% endif %}
-                                    <p><b>Posts:</b> {{ post.posts }}</p>
+                                    <p><b>Posts:</b> {{ data.post.posts }}</p>
                                 </div>
                                 <div class="col-md-10 post-content overflow-hidden">
                                     <div>
-                                        <p>{{ post.comment | raw }}</p>
+                                        <p>{{ data.post.comment | raw }}</p>
                                     </div>
                                     <div>
                                         <div data-v-73be696c="" class="forum-voter">
                                             <div data-v-73be696c="" id="post-number-main" class="total border">
-                                                {{ post.rating }}
+                                                {{ data.post.rating }}
                                             </div>
-                                            <div data-v-73be696c="" id="post-up-main" class="up{{ (IsLoggedIn == false) ? " disabled" : "" }}{{ (post.userRating == "l") ? " vote-selected" : "" }}"><i data-v-73be696c=""
+                                            <div data-v-73be696c="" id="post-up-main" class="up{{ (not data.siteusername) ? " disabled" : "" }}{{ (data.post.userRating == "l") ? " vote-selected" : "" }}"><i data-v-73be696c=""
                                                     class="far fa-arrow-up"></i>
-                                                {{ post.upvotes }}
+                                                {{ data.post.upvotes }}
                                             </div>
-                                            <div data-v-73be696c="" id="post-down-main" class="down{{ (IsLoggedIn == false) ? " disabled" : "" }}{{ (post.userRating == "d") ? " vote-selected" : "" }}"><i data-v-73be696c=""
+                                            <div data-v-73be696c="" id="post-down-main" class="down{{ (not data.siteusername) ? " disabled" : "" }}{{ (data.post.userRating == "d") ? " vote-selected" : "" }}"><i data-v-73be696c=""
                                                     class="far fa-arrow-down"></i>
-                                                {{ post.downvotes }}
+                                                {{ data.post.downvotes }}
                                             </div>
                                         </div>
                                         {% if post.badges|length %}
                                             <p class="mt-2 mb-0">
-                                            {% for badge in post.badges %}
+                                            {% for badge in data.post.badges %}
                                                 <span class="badge badge-{{ badge.color }} mr-1">{{ badge.message }}</span>
                                             {% endfor %}
                                             </p>
                                         {% endif %}
                                     </div>
-                                    {% if IsLoggedIn %}
+                                    {% if data.siteusername %}
                                     <script>
                                     function sync_rating(type, index, postId) {
                                                 var number = $('#post-number-main');
@@ -132,7 +132,7 @@
 
                                                 const data = new URLSearchParams();
                                                 data.append('type', '1');
-                                                data.append('postId', '{{ post.id }}');
+                                                data.append('postId', '{{ data.post.id }}');
                                                 data.append('rating', 'l');
 
                                                 fetch("/api/rate", {
@@ -144,15 +144,15 @@
                                                 })
 
                                                 if (post.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ post.id }}");
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
                                                     post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) - 1);
                                                 } else {
-                                                    sync_rating("1", "0", "{{ post.id }}");
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
                                                     post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(post.innerText, 10) + 1);
                                                 }
 
                                                 if (postdown.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ post.id }}");
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
                                                     postdown.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(postdown.innerText, 10) - 1);
                                                     postdown.classList.toggle('vote-selected');
                                                 }
@@ -167,7 +167,7 @@
 
                                                 const data = new URLSearchParams();
                                                 data.append('type', '1');
-                                                data.append('postId', '{{ post.id }}');
+                                                data.append('postId', '{{ data.post.id }}');
                                                 data.append('rating', 'd');
 
                                                 fetch("/api/rate", {
@@ -179,15 +179,15 @@
                                                 })
 
                                                 if (post.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ post.id }}");
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
                                                     post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) - 1);
                                                 } else {
-                                                    sync_rating("1", "0", "{{ post.id }}");
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
                                                     post.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-down"></i>' + (parseInt(post.innerText, 10) + 1);
                                                 }
 
                                                 if (postup.classList.contains('vote-selected')) {
-                                                    sync_rating("1", "0", "{{ post.id }}");
+                                                    sync_rating("1", "0", "{{ data.post.id }}");
                                                     postup.innerHTML = '<i data-v-73be696c="" class="far fa-arrow-up"></i>' + (parseInt(postup.innerText, 10) - 1);
                                                     postup.classList.remove('vote-selected');
                                                 }
@@ -200,61 +200,61 @@
                                 </div>
                             </div>
                         </div>
-                        {% if post.author == user.username %}
-                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/post?id={{ post.id }}&edit=1">Edit</a></div>
+                        {% if data.post.author == data.user.username %}
+                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/post?id={{ data.post.id }}&edit=1">Edit</a></div>
                         {% endif %}
                     </div>
-                    {% if sticked != false %}
+                    {% if not data.sticked %}
                         <div class="card mb-4">
                             <div id="stickyPost" class="card-header bg-success text-white"><a href="#stickyPost">Sticked Post</a> -
-                                {{ sticked.date }} {% if sticked.edited == "y" %}<span title="Edited {{ sticked.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if user.status == "admin" %} - <a href="/admin/unstick?id={{ sticked.id }}">Unstick Post</a>{% endif %}
+                                {{ data.sticked.date }} {% if data.sticked.edited == "y" %}<span title="Edited {{ data.sticked.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if data.user.status == "admin" %} - <a href="/admin/unstick?id={{ data.sticked.id }}">Unstick Post</a>{% endif %}
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2 b-right">
-                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ sticked.online }};"></span> <a
-                                                href="/user/{{ sticked.uuid }}">{% if IsLoggedIn %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if sticked.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ sticked.author }}</span>{% else %}{{ sticked.author }}{% endif %}</a> {% if IsLoggedIn %}[-]{% endif %}
+                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ data.sticked.online }};"></span> <a
+                                            href="/user/{{ data.sticked.uuid }}">{% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if data.sticked.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ data.sticked.author }}</span>{% else %}{{ data.sticked.author }}{% endif %}</a> {% if data.siteusername %}[-]{% endif %}
                                         </p>
-                                        {% if IsLoggedIn %}
-                                            {% if sticked.pfp == "" %}
+                                        {% if data.siteusername %}
+                                            {% if data.sticked.pfp == "" %}
                                                 <img src="/s/img/spinnerv2.gif" style="max-width: 75px;">
                                             {% else %}
-                                                <img src="https://cdn.finobe.net/{{ sticked.pfp }}" style="max-width: 75px;">
+                                                <img src="https://cdn.finobe.net/{{ data.sticked.pfp }}" style="max-width: 75px;">
                                             {% endif %}
                                         {% endif %}
-                                        {% if sticked.status == "admin" %}
+                                        {% if data.sticked.status == "admin" %}
                                             <p class="mb-0"><span class="badge badge-danger badge-admin"><i class="far fa-gavel fa-fw mr-1"></i> Admin</span></p>
                                         {% endif %}
-                                        <p><b>Posts:</b> {{ sticked.posts }}</p>
+                                        <p><b>Posts:</b> {{ data.sticked.posts }}</p>
                                     </div>
                                     <div class="col-md-10 post-content overflow-hidden">
                                         <div>
-                                            {% if sticked.replyTo %}
-                                            <blockquote class="greentext"><p>{{ sticked.replyComment }}</p></blockquote>
+                                            {% if data.sticked.replyTo %}
+                                            <blockquote class="greentext"><p>{{ data.sticked.replyComment }}</p></blockquote>
                                             {% endif %}
-                                            <p>{{ sticked.comment | raw }}</p>
+                                            <p>{{ data.sticked.comment | raw }}</p>
                                         </div>
                                         <div>
                                             <div data-v-73be696c="" class="forum-voter">
                                                 <div data-v-73be696c="" id="sticked-number-{{ loop.index }}" class="total border">
-                                                    {{ sticked.rating }}
+                                                    {{ data.sticked.rating }}
                                                 </div>
-                                                <div data-v-73be696c="" id="sticked-up-{{ loop.index }}" class="up{{ (IsLoggedIn == false) ? " disabled" : "" }}{{ (sticked.userRating == "l") ? " vote-selected" : "" }}" data-type="up">
+                                                <div data-v-73be696c="" id="sticked-up-{{ loop.index }}" class="up{{ (not data.siteusername) ? " disabled" : "" }}{{ (data.sticked.userRating == "l") ? " vote-selected" : "" }}" data-type="up">
                                                     <div data-v-73be696c="" class="total">
                                                         <i class="far fa-arrow-up"></i>
-                                                        {{ sticked.upvotes }}
+                                                        {{ data.sticked.upvotes }}
                                                     </div>
                                                 </div>
-                                                <div data-v-73be696c="" id="sticked-down-{{ loop.index }}" class="down{{ (IsLoggedIn == false) ? " disabled" : "" }}{{ (sticked.userRating == "d") ? " vote-selected" : "" }}" data-type="down">
+                                                <div data-v-73be696c="" id="sticked-down-{{ loop.index }}" class="down{{ (not data.siteusername) ? " disabled" : "" }}{{ (data.sticked.userRating == "d") ? " vote-selected" : "" }}" data-type="down">
                                                     <div data-v-73be696c="" class="total">
                                                         <i class="far fa-arrow-down"></i> 
-                                                        {{ sticked.downvotes }}
+                                                        {{ data.sticked.downvotes }}
                                                     </div>
                                                 </div>
                                             </div>
-                                            {% if sticked.badges|length %}
+                                            {% if data.sticked.badges|length %}
                                                 <p class="mt-2 mb-0">
-                                                {% for badge in sticked.badges %}
+                                                {% for badge in data.sticked.badges %}
                                                     <span class="badge badge-{{ badge.color }} mr-1">{{ badge.message }}</span>
                                                 {% endfor %}
                                                 </p>
@@ -269,7 +269,7 @@
 
                                                     const data = new URLSearchParams();
                                                     data.append('type', '2');
-                                                    data.append('postId', '{{ sticked.id }}');
+                                                    data.append('postId', '{{ data.sticked.id }}');
                                                     data.append('rating', 'l');
 
                                                     fetch("/api/rate", {
@@ -282,19 +282,19 @@
 
                                                     if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ sticked.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.sticked.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                     } else {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ sticked.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.sticked.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) + 1) + '</div>';
                                                     }
 
                                                     if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ sticked.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.sticked.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                         replydown{{ loop.index }}.classList.toggle('vote-selected');
@@ -310,7 +310,7 @@
 
                                                     const data = new URLSearchParams();
                                                     data.append('type', '2');
-                                                    data.append('postId', '{{ sticked.id }}');
+                                                    data.append('postId', '{{ data.sticked.id }}');
                                                     data.append('rating', 'd');
 
                                                     fetch("/api/rate", {
@@ -323,19 +323,19 @@
 
                                                     if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ sticked.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.sticked.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                     } else {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ sticked.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.sticked.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) + 1) + '</div>';
                                                     }
 
                                                     if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ sticked.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.sticked.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                         replyup{{ loop.index }}.classList.remove('vote-selected');
@@ -348,63 +348,63 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if sticked.author == user.username %}
-                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/edit?id={{ sticked.id }}">Edit</a></div>
+                            {% if data.sticked.author == data.user.username %}
+                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/edit?id={{ data.sticked.id }}">Edit</a></div>
                             {% endif %}
                         </div>
                     {% endif %}
                     <div class="forum-replies">
-                    {% for reply in replies.data %}
+                    {% for reply in data.replies.data %}
                         <div class="card mb-4">
-                            <div class="card-header bg-primary text-white"><a href="/forum/new/reply?id={{ post.id }}&reply={{ reply.id }}" class="text-white">Reply</a> -
-                                {{ reply.date }} {% if reply.edited == "y" %}<span title="Edited {{ reply.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if user.status == "admin" %} - <a href="/admin/stick?id={{ reply.id }}">Stick Post</a>{% endif %}
+                            <div class="card-header bg-primary text-white"><a href="/forum/new/reply?id={{ data.post.id }}&reply={{ data.reply.id }}" class="text-white">Reply</a> -
+                                {{ data.reply.date }} {% if data.reply.edited == "y" %}<span title="Edited {{ data.reply.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if data.user.status == "admin" %} - <a href="/admin/stick?id={{ data.reply.id }}">Stick Post</a>{% endif %}
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2 b-right">
-                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ reply.online }};"></span> <a
-                                                href="/user/{{ reply.uuid }}">{% if IsLoggedIn %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if reply.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ reply.author }}</span>{% else %}{{ reply.author }}{% endif %}</a> {% if IsLoggedIn %}[-]{% endif %}
+                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ data.reply.online }};"></span> <a
+                                                href="/user/{{ data.reply.uuid }}">{% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if data.reply.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ data.reply.author }}</span>{% else %}{{ data.reply.author }}{% endif %}</a> {% if IsLoggedIn %}[-]{% endif %}
                                         </p>
-                                        {% if IsLoggedIn %}
-                                            {% if reply.pfp == "" %}
+                                        {% if data.siteusername %}
+                                            {% if data.reply.pfp == "" %}
                                                 <img src="/s/img/spinnerv2.gif" style="max-width: 75px;">
                                             {% else %}
-                                                <img src="https://cdn.finobe.net/{{ reply.pfp }}" style="max-width: 75px;">
+                                                <img src="https://cdn.finobe.net/{{ data.reply.pfp }}" style="max-width: 75px;">
                                             {% endif %}
                                         {% endif %}
-                                        {% if reply.status == "admin" %}
+                                        {% if data.reply.status == "admin" %}
                                             <p class="mb-0"><span class="badge badge-danger badge-admin"><i class="far fa-gavel fa-fw mr-1"></i> Admin</span></p>
                                         {% endif %}
-                                        <p><b>Posts:</b> {{ reply.posts }}</p>
+                                        <p><b>Posts:</b> {{ data.reply.posts }}</p>
                                     </div>
                                     <div class="col-md-10 post-content overflow-hidden">
                                         <div>
-                                            {% if reply.replyTo %}
-                                            <blockquote class="greentext"><p>{{ reply.replyComment }}</p></blockquote>
+                                            {% if data.reply.replyTo %}
+                                            <blockquote class="greentext"><p>{{ data.reply.replyComment }}</p></blockquote>
                                             {% endif %}
-                                            <p>{{ reply.comment | raw }}</p>
+                                            <p>{{ data.reply.comment | raw }}</p>
                                         </div>
                                         <div>
                                             <div data-v-73be696c="" class="forum-voter">
                                                 <div data-v-73be696c="" id="reply-number-{{ loop.index }}" class="total border">
-                                                    {{ reply.rating }}
+                                                    {{ data.reply.rating }}
                                                 </div>
-                                                <div data-v-73be696c="" id="reply-up-{{ loop.index }}" class="up{{ (IsLoggedIn == false) ? " disabled" : "" }}{{ (reply.userRating == "l") ? " vote-selected" : "" }}" data-type="up">
+                                                <div data-v-73be696c="" id="reply-up-{{ loop.index }}" class="up{{ (not data.siteusername) ? " disabled" : "" }}{{ (data.reply.userRating == "l") ? " vote-selected" : "" }}" data-type="up">
                                                     <div data-v-73be696c="" class="total">
                                                         <i class="far fa-arrow-up"></i>
-                                                        {{ reply.upvotes }}
+                                                        {{ data.reply.upvotes }}
                                                     </div>
                                                 </div>
-                                                <div data-v-73be696c="" id="reply-down-{{ loop.index }}" class="down{{ (IsLoggedIn == false) ? " disabled" : "" }}{{ (reply.userRating == "d") ? " vote-selected" : "" }}" data-type="down">
+                                                <div data-v-73be696c="" id="reply-down-{{ loop.index }}" class="down{{ (not data.siteusername) ? " disabled" : "" }}{{ (reply.userRating == "d") ? " vote-selected" : "" }}" data-type="down">
                                                     <div data-v-73be696c="" class="total">
                                                         <i class="far fa-arrow-down"></i> 
-                                                        {{ reply.downvotes }}
+                                                        {{ data.reply.downvotes }}
                                                     </div>
                                                 </div>
                                             </div>
-                                            {% if reply.badges|length %}
+                                            {% if data.reply.badges|length %}
                                                 <p class="mt-2 mb-0">
-                                                {% for badge in reply.badges %}
+                                                {% for badge in data.reply.badges %}
                                                     <span class="badge badge-{{ badge.color }} mr-1">{{ badge.message }}</span>
                                                 {% endfor %}
                                                 </p>
@@ -419,7 +419,7 @@
 
                                                     const data = new URLSearchParams();
                                                     data.append('type', '2');
-                                                    data.append('postId', '{{ reply.id }}');
+                                                    data.append('postId', '{{ data.reply.id }}');
                                                     data.append('rating', 'l');
 
                                                     fetch("/api/rate", {
@@ -432,19 +432,19 @@
 
                                                     if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                     } else {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) + 1) + '</div>';
                                                     }
 
                                                     if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                         replydown{{ loop.index }}.classList.toggle('vote-selected');
@@ -460,7 +460,7 @@
 
                                                     const data = new URLSearchParams();
                                                     data.append('type', '2');
-                                                    data.append('postId', '{{ reply.id }}');
+                                                    data.append('postId', '{{ data.reply.id }}');
                                                     data.append('rating', 'd');
 
                                                     fetch("/api/rate", {
@@ -473,19 +473,19 @@
 
                                                     if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                     } else {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) + 1) + '</div>';
                                                     }
 
                                                     if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                         replyup{{ loop.index }}.classList.remove('vote-selected');
@@ -498,8 +498,8 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if reply.author == user.username %}
-                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/edit?id={{ reply.id }}">Edit</a></div>
+                            {% if data.reply.author == data.user.username %}
+                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/edit?id={{ data.reply.id }}">Edit</a></div>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -511,11 +511,11 @@
                     </center>
                     <div class="mt-2">
                         <ul class="pagination shadow-sm">
-                            <li class="page-item{{ (replies.pages.info.previous_page == replies.pages.info.start_page) ? " disabled" : "" }}"><a class="page-link" id="previous-page" href="/forum/post?id={{ post.id }}&page={{ replies.pages.info.previous_page }}" onclick="" rel="previous" aria-label="Previous <<">«</a></li>
-                                {% for page in replies.pages.data %}
-                                    <li class="page-item"><a class="page-link{{ (page.page == replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
+                            <li class="page-item{{ (data.replies.pages.info.previous_page == data.replies.pages.info.start_page) ? " disabled" : "" }}"><a class="page-link" id="previous-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.previous_page }}" onclick="" rel="previous" aria-label="Previous <<">«</a></li>
+                                {% for page in data.replies.pages.data %}
+                                    <li class="page-item"><a class="page-link{{ (page.page == data.replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ data.post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
                                 {% endfor %}
-                            <li class="page-item{{ (replies.pages.info.next_page == replies.pages.info.end_page) ? " disabled" : "" }}"><a class="page-link" id="next-page" href="/forum/post?id={{ post.id }}&page={{ replies.pages.info.next_page + 1 }}" onclick="" rel="next" aria-label="Next >>">»</a></li>
+                            <li class="page-item{{ (data.replies.pages.info.next_page == data.replies.pages.info.end_page) ? " disabled" : "" }}"><a class="page-link" id="next-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.next_page + 1 }}" onclick="" rel="next" aria-label="Next >>">»</a></li>
                         </ul>
                     </div>
                 </div>

@@ -458,6 +458,7 @@ class frontEnd extends Controller
             ->first();
         
         $this->request['data']['embeds']['title'] = htmlspecialchars($post['title']) . $this->request['data']['embeds']['title'];
+        $this->request['data']['editing'] = isset($data['edit']);
         $post['title'] = htmlspecialchars($post['title']);
         $post['author'] = htmlspecialchars($post['author']);
         $post['format_date'] = date('M d Y h:i:s A', strtotime($post['date']));
