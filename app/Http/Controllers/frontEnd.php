@@ -705,7 +705,7 @@ class frontEnd extends Controller
                 return redirect('/auth/login');
             }
 
-            Auth::login($user);
+            Auth::login($user, isset($data['remember']));
             Session::put('success', 'Successfully logged in.');
             return redirect('/');
         }
