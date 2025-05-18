@@ -78,8 +78,8 @@
         </a>
       </li>
     {% endfor %}
-    {% if threads.pages.info.end_page < threads.pages.info.number_of_page %}
-      {% if threads.pages.info.end_page + 1 < threads.pages.info.number_of_page %}
+    {% if data.threads.pages.info.end_page < data.threads.pages.info.number_of_page %}
+      {% if data.threads.pages.info.end_page + 1 < data.threads.pages.info.number_of_page %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
       <li class="page-item">
