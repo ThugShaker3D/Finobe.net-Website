@@ -186,7 +186,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        if(!User::find($id)->exists()) {
+        if(!User::where('id', $id)->exists()) {
             return view('404', [], 404);
         }
 
@@ -199,7 +199,7 @@ class frontEnd extends Controller
 
         $user['friends'] = array_reverse($user['friends']);
 
-        $this->request['data']['badges'] = $user;
+        $this->request['data']['profile'] = $user;
         return view($this->request['data']['user']['version'] . '/User', $this->request);
     }
 
