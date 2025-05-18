@@ -474,7 +474,7 @@ class frontEnd extends Controller
                 ->first();
             
             if($post['author'] != $this->request['data']['user']['username']) {
-                Session::put('error', 'You do not own this post')
+                Session::put('error', 'You do not own this post');
                 return redirect('/forum/post?id=' . $data['id']);
             }
 
