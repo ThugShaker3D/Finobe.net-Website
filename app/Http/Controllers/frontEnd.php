@@ -200,6 +200,16 @@ class frontEnd extends Controller
 
         $user['friends'] = array_reverse($user['friends']);
 
+        foreach($user['friends'] as $key => $friend) {
+            $user['friends'][$key]['id'] = User::where('username', $friend['username'])->value('id');
+            $user['friends'][$key]['pfp'] = User::where('username', $friend['username'])->value('pfp');
+        }
+
+        foreach($user['CurrentFriends'] as $key => $friend) {
+            $user['CurrentFriends'][$key]['id'] = User::where('username', $friend['username'])->value('id');
+            $user['CurrentFriends'][$key]['pfp'] = User::where('username', $friend['username'])->value('pfp');
+        }
+
         $this->request['data']['profile'] = $user;
         return view($this->request['data']['user']['version'] . '/User', $this->request);
     }
