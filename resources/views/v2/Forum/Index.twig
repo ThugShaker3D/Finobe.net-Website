@@ -78,15 +78,15 @@
         </a>
       </li>
     {% endfor %}
-    {% if data.threads.pages.info.end_page < data.threads.pages.info.number_of_page %}
-      {% if data.threads.pages.info.end_page + 1 < data.threads.pages.info.number_of_page %}
+    {% if data.threads.pages.info.end_page < data.threads.pages.info.number_of_pages %}
+      {% if data.threads.pages.info.end_page + 1 < data.threads.pages.info.number_of_pages %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
       <li class="page-item">
-        <a class="page-link" href="/forum/{{ (not data.search) ? "home" : "search" }}{{ (data.section != "0") ? "/" ~ data.section : "" }}{{ (data.search) ? "?q=" ~ data.search : "" }}{{ (data.search) ? "&" : "?" }}page={{ data.threads.pages.info.number_of_page - 1 }}">{{ data.threads.pages.info.number_of_page - 1 }}</a>
+        <a class="page-link" href="/forum/{{ (not data.search) ? "home" : "search" }}{{ (data.section != "0") ? "/" ~ data.section : "" }}{{ (data.search) ? "?q=" ~ data.search : "" }}{{ (data.search) ? "&" : "?" }}page={{ data.threads.pages.info.number_of_pages - 1 }}">{{ data.threads.pages.info.number_of_pages - 1 }}</a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="/forum/{{ (not data.search) ? "home" : "search" }}{{ (data.section != "0") ? "/" ~ data.section : "" }}{{ (data.search) ? "?q=" ~ data.search : "" }}{{ (data.search) ? "&" : "?" }}page={{ data.threads.pages.info.number_of_page }}">{{ data.threads.pages.info.number_of_page }}</a>
+        <a class="page-link" href="/forum/{{ (not data.search) ? "home" : "search" }}{{ (data.section != "0") ? "/" ~ data.section : "" }}{{ (data.search) ? "?q=" ~ data.search : "" }}{{ (data.search) ? "&" : "?" }}page={{ data.threads.pages.info.number_of_pages }}">{{ data.threads.pages.info.number_of_pages }}</a>
       </li>
     {% endif %}
     <li class="page-item{{ (data.threads.pages.info.next_page == data.threads.pages.info.end_page) ? " disabled" : "" }}">
