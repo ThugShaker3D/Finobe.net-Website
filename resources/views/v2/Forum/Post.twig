@@ -204,7 +204,7 @@
                             <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/post?id={{ data.post.id }}&edit=1">Edit</a></div>
                         {% endif %}
                     </div>
-                    {% if not data.sticked %}
+                    {% if data.sticked %}
                         <div class="card mb-4">
                             <div id="stickyPost" class="card-header bg-success text-white"><a href="#stickyPost">Sticked Post</a> -
                                 {{ data.sticked.date }} {% if data.sticked.edited == "y" %}<span title="Edited {{ data.sticked.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if data.user.status == "admin" %} - <a href="/admin/unstick?id={{ data.sticked.id }}">Unstick Post</a>{% endif %}
