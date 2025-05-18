@@ -662,7 +662,7 @@ class frontEnd extends Controller
             $this->request['data']['replies']['pages']['data'][] = ['page' => $page];
         }
 
-        if(!count($posts)) {
+        if(!count($replies)) {
             $this->request['data']['replies']['pages']['data'][] = [
                 'page' => 1
             ];
