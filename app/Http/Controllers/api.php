@@ -54,12 +54,9 @@ class api extends Controller
             ->where('assets.asset_type', $assetTypes[$data['type']])
             ->orderBy('purchases.date', 'desc')
             ->select('assets.id', 'assets.title', 'assets.author', 'assets.asset_type', 'assets.additional')
-            /*
             ->offset($offset)
             ->limit($itemsPerPage)
-            */
-            ->paginate($itemsPerPage)
-            ->get($currentPage)
+            ->get()
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
