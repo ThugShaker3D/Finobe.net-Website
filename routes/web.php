@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api;
 use App\Http\Controllers\frontEnd;
 use App\Http\Middleware\SetClientIp;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,10 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/', [frontEnd::class, 'index']);
         Route::get('/user/{id}', [frontEnd::class, 'user']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
+
+        Route::prefix('api')->group(function() {
+            Route::get('/inventory', [api::class, 'inventory']);
+        });
 
         Route::prefix('auth')->group(function() {
             Route::match(['post', 'get'], '/login', [frontEnd::class, 'login']);
