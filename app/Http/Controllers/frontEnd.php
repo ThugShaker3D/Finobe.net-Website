@@ -451,7 +451,7 @@ class frontEnd extends Controller
 
             $validator = Validator::make($data, [
                 'id' => 'required|integer',
-                'content' => 'required|string|min:5|max:16384'
+                'content' => 'required|string|min:3|max:16384'
             ]);
 
             if(!filter_var(env('FINOBE_FORUM_POST'), FILTER_VALIDATE_BOOLEAN)) {
@@ -750,7 +750,7 @@ class frontEnd extends Controller
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'id' => 'required|integer',
-                'content' => 'required|string|min:5|max:16384'
+                'content' => 'required|string|min:3|max:16384'
             ]);
 
             if(!filter_var(env('FINOBE_FORUM_POST'), FILTER_VALIDATE_BOOLEAN)) {
