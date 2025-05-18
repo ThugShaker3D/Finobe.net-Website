@@ -19,6 +19,7 @@
                     {% else %}
                     <p>You are able to reactivate your account.</p>
                     <form role="form" method="POST" action="/">
+                        <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                         <button type="submit" class="btn btn-primary ">reactivate account</button>
                     </form>
                     {% endif %}
@@ -30,6 +31,7 @@
                     <p>You are able to reactivate your account.</p>
                     <form role="form" method="POST" action="/">
                         <input type="hidden" name="warning" value="">
+                        <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                         <button type="submit" class="btn btn-primary ">reactivate account</button>
                     </form>
                     {% endif %}
