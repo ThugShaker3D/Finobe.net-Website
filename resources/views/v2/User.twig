@@ -304,43 +304,45 @@
 
                                     let inventoryHTML = "";
                                     let count = 1;
-                                    data.forEach(function(item) {
-                                        var itemName = item.title;
-                                        var creatorName = item.author;
-                                        var creatorId = item.details.uid;
+                                    if(data) {
+                                        data.forEach(function(item) {
+                                            var itemName = item.title;
+                                            var creatorName = item.author;
+                                            var creatorId = item.details.uid;
 
-                                        if(count % 3 === 0 && count >= 3 && count <= 12) {
-                                            inventoryHTML += `
-                                                <div class="card p-0 mb-4" style="width: 31%;">
-                                                    <a href="/item/${item.id}" style="text-decoration: none; color: inherit;">
-                                                        <div class="card-body">
-                                                            <div class="d-flex justify-content-center align-items-center mb-3">
-                                                                <img src="${item.thumbnail}" height="95" width="95">
+                                            if(count % 3 === 0 && count >= 3 && count <= 12) {
+                                                inventoryHTML += `
+                                                    <div class="card p-0 mb-4" style="width: 31%;">
+                                                        <a href="/item/${item.id}" style="text-decoration: none; color: inherit;">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                                                    <img src="${item.thumbnail}" height="95" width="95">
+                                                                </div>
+                                                                <p class="mb-0">${itemName}</p>
+                                                                <p class="text-muted mb-0">by ${item.details.uid != false ? `<a href="/user/${creatorId}">${creatorName}</a>` : creatorName}</p>
                                                             </div>
-                                                            <p class="mb-0">${itemName}</p>
-                                                            <p class="text-muted mb-0">by ${item.details.uid != false ? `<a href="/user/${creatorId}">${creatorName}</a>` : creatorName}</p>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            `;
-                                        } else {
-                                            inventoryHTML += `
-                                                <div class="card p-0 mb-4" style="width: 31%; margin-right: 3.5%;">
-                                                    <a href="/item/${item.id}" style="text-decoration: none; color: inherit;">
-                                                        <div class="card-body">
-                                                            <div class="d-flex justify-content-center align-items-center mb-3">
-                                                                <img src="${item.thumbnail}" height="95" width="95">
+                                                        </a>
+                                                    </div>
+                                                `;
+                                            } else {
+                                                inventoryHTML += `
+                                                    <div class="card p-0 mb-4" style="width: 31%; margin-right: 3.5%;">
+                                                        <a href="/item/${item.id}" style="text-decoration: none; color: inherit;">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-center align-items-center mb-3">
+                                                                    <img src="${item.thumbnail}" height="95" width="95">
+                                                                </div>
+                                                                <p class="mb-0">${itemName}</p>
+                                                                <p class="text-muted mb-0">by ${item.details.uid != false ? `<a href="/user/${creatorId}">${creatorName}</a>` : creatorName}</p>
                                                             </div>
-                                                            <p class="mb-0">${itemName}</p>
-                                                            <p class="text-muted mb-0">by ${item.details.uid != false ? `<a href="/user/${creatorId}">${creatorName}</a>` : creatorName}</p>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            `;
-                                        }
-                                        
-                                        count++;
-                                    });
+                                                        </a>
+                                                    </div>
+                                                `;
+                                            }
+                                            
+                                            count++;
+                                        });
+                                    }
 
                                     if(data.length == 0) {
                                         inventoryHTML = "<p>No results</p>";
