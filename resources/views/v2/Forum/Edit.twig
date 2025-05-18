@@ -1,10 +1,10 @@
 <html>
   <head>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+    {% include ('v2/Modules/head.twig') %}
   </head>
   <body>
     <div id="app">
-      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      {% include ('v2/Modules/nav.twig') %}
       <div class="forumContainer container mt-3">
                 <nav class="breadcrumb"><a href="/" class="breadcrumb-item">{{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}</a> <a href="/forum/home"
                         class="breadcrumb-item">Forum Home</a> <a href="/forum/home/{{ post.category }}" class="breadcrumb-item">
@@ -99,6 +99,6 @@
                 </div>
             </div>
     </div>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+    {% include ('v2/Modules/footer.twig') %}
   </body>
 </html>

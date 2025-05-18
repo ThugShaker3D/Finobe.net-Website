@@ -1,6 +1,6 @@
 <html>
   <head>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+    {% include ('v2/Modules/head.twig') %}
 	<style>
 		.video-index__thumbnail {
 		    width: 100%;
@@ -21,7 +21,7 @@
   </head>
   <body>
     <div id="app">
-   {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+   {% include ('v2/Modules/nav.twig') %}
    <div class="container mt-3">
       <h3 class="font-weight-light mb-0">Videos</h3>
 	  {% if not IsLoggedIn %}
@@ -201,6 +201,6 @@
         </div>
    </div>
 </div>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+    {% include ('v2/Modules/footer.twig') %}
   </body>
 </html>

@@ -6,7 +6,7 @@ def process_twig_file(file_path):
         content = f.read()
 
     # Use regular expression to find and replace the specified text
-    modified_content = re.sub(r'templates/Aesthetiful/Main/Modules/', 'templates/Aesthetiful/Main/v2/Modules/', content)
+    modified_content = re.sub(r'templates/Aesthetiful/Main/', '', content)
 
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(modified_content)
@@ -19,7 +19,7 @@ def find_and_replace(directory):
                 process_twig_file(file_path)
 
 if __name__ == "__main__":
-    find_and_replace("C:/nginx/web/finobe.net/templates/Aesthetiful/Main/v2/")
+    find_and_replace("C:/Users/patbr/Downloads/finoob/sitetest1finobenet/resources/views/v2/")
     print("Replacement complete.")
 
 # this was used to replace template text thing

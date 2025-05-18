@@ -1,6 +1,6 @@
 <html>
   <head>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/head.twig') %}
+    {% include ('v2/Modules/head.twig') %}
     <style>
             .badge-shen {
                 background: #f5c177;
@@ -580,7 +580,7 @@
   </head>
   <body>
     <div id="app">
-      {% include ('templates/Aesthetiful/Main/v2/Modules/nav.twig') %}
+      {% include ('v2/Modules/nav.twig') %}
       <div class="banner mb-4">
                 <div class="container d-flex justify-content-center align-items-center">
                     <div class="mb-2"><img src="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}" class="mb-4" style="max-width: 120px;">
@@ -713,6 +713,6 @@
                 </div>
             </div>
         </div>
-    {% include ('templates/Aesthetiful/Main/v2/Modules/footer.twig') %}
+    {% include ('v2/Modules/footer.twig') %}
   </body>
 </html>
