@@ -464,7 +464,7 @@ class frontEnd extends Controller
         $post['date'] = date('m/d/Y h:i A', strtotime($post['date']));
         $post['edited_date'] = date('m/d/Y h:i A', strtotime($post['edited_date']));
 
-        $user = (array) User::where('username', $post['author'])->select('id', 'status', 'pfp', 'badges')->first();
+        $user = User::where('username', $post['author'])->select('id', 'status', 'pfp', 'badges')->first()?->toArray();
         $post['uuid'] = $user['id'];
         $post['status'] = $user['status'];
         $post['pfp'] = $user['pfp'];
@@ -530,7 +530,7 @@ class frontEnd extends Controller
             $sticked['date'] = date('m/d/Y h:i A', strtotime($sticked['date']));
             $sticked['edited_date'] = date('m/d/Y h:i A', strtotime($sticked['edited_date']));
 
-            $user = (array) User::where('username', $sticked['author'])->select('id', 'status', 'pfp', 'badges')->first();
+            $user = User::where('username', $sticked['author'])->select('id', 'status', 'pfp', 'badges')->first()?->toArray();
             $sticked['uuid'] = $user['id'];
             $sticked['status'] = $user['status'];
             $sticked['pfp'] = $user['pfp'];
@@ -615,7 +615,7 @@ class frontEnd extends Controller
             $reply['date'] = date('m/d/Y h:i A', strtotime($reply['date']));
             $reply['edited_date'] = date('m/d/Y h:i A', strtotime($reply['edited_date']));
 
-            $user = (array) User::where('username', $reply['author'])->select('id', 'status', 'pfp', 'badges')->first();
+            $user = User::where('username', $reply['author'])->select('id', 'status', 'pfp', 'badges')->first()?->toArray();
             $reply['uuid'] = $user['id'];
             $reply['status'] = $user['status'];
             $reply['pfp'] = $user['pfp'];
