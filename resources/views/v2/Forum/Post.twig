@@ -356,55 +356,55 @@
                     <div class="forum-replies">
                     {% for reply in data.replies.data %}
                         <div class="card mb-4">
-                            <div class="card-header bg-primary text-white"><a href="/forum/new/reply?id={{ data.post.id }}&reply={{ data.reply.id }}" class="text-white">Reply</a> -
-                                {{ data.reply.date }} {% if data.reply.edited == "y" %}<span title="Edited {{ data.reply.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if data.user.status == "admin" %} - <a href="/admin/stick?id={{ data.reply.id }}">Stick Post</a>{% endif %}
+                            <div class="card-header bg-primary text-white"><a href="/forum/new/reply?id={{ data.post.id }}&reply={{ reply.id }}" class="text-white">Reply</a> -
+                                {{ reply.date }} {% if reply.edited == "y" %}<span title="Edited {{ reply.edited_date }}"><i>*(edited)</i></span>{% endif %} {% if user.status == "admin" %} - <a href="/admin/stick?id={{ reply.id }}">Stick Post</a>{% endif %}
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2 b-right">
-                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ data.reply.online }};"></span> <a
-                                                href="/user/{{ data.reply.uuid }}">{% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if data.reply.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ data.reply.author }}</span>{% else %}{{ data.reply.author }}{% endif %}</a> {% if IsLoggedIn %}[-]{% endif %}
+                                        <p><span class="forum__color-ball ml-0 mr-1" style="background: {{ reply.online }};"></span> <a
+                                                href="/user/{{ reply.uuid }}">{% if data.siteusername %}<i class='fal fa-mars fa-1x'></i>{% endif %} {% if reply.status == "admin" %}<span style="color: rgb(255, 82, 82); font-weight: bold;">{{ reply.author }}</span>{% else %}{{ reply.author }}{% endif %}</a> {% if data.siteusername %}[-]{% endif %}
                                         </p>
                                         {% if data.siteusername %}
-                                            {% if data.reply.pfp == "" %}
+                                            {% if reply.pfp == "" %}
                                                 <img src="/s/img/spinnerv2.gif" style="max-width: 75px;">
                                             {% else %}
-                                                <img src="https://cdn.finobe.net/{{ data.reply.pfp }}" style="max-width: 75px;">
+                                                <img src="https://cdn.finobe.net/{{ reply.pfp }}" style="max-width: 75px;">
                                             {% endif %}
                                         {% endif %}
-                                        {% if data.reply.status == "admin" %}
+                                        {% if reply.status == "admin" %}
                                             <p class="mb-0"><span class="badge badge-danger badge-admin"><i class="far fa-gavel fa-fw mr-1"></i> Admin</span></p>
                                         {% endif %}
-                                        <p><b>Posts:</b> {{ data.reply.posts }}</p>
+                                        <p><b>Posts:</b> {{ reply.posts }}</p>
                                     </div>
                                     <div class="col-md-10 post-content overflow-hidden">
                                         <div>
-                                            {% if data.reply.replyTo %}
-                                            <blockquote class="greentext"><p>{{ data.reply.replyComment }}</p></blockquote>
+                                            {% if reply.replyTo %}
+                                            <blockquote class="greentext"><p>{{ reply.replyComment }}</p></blockquote>
                                             {% endif %}
-                                            <p>{{ data.reply.comment | raw }}</p>
+                                            <p>{{ reply.comment | raw }}</p>
                                         </div>
                                         <div>
                                             <div data-v-73be696c="" class="forum-voter">
                                                 <div data-v-73be696c="" id="reply-number-{{ loop.index }}" class="total border">
-                                                    {{ data.reply.rating }}
+                                                    {{ reply.rating }}
                                                 </div>
-                                                <div data-v-73be696c="" id="reply-up-{{ loop.index }}" class="up{{ (not data.siteusername) ? " disabled" : "" }}{{ (data.reply.userRating == "l") ? " vote-selected" : "" }}" data-type="up">
+                                                <div data-v-73be696c="" id="reply-up-{{ loop.index }}" class="up{{ (not data.siteusername) ? " disabled" : "" }}{{ (reply.userRating == "l") ? " vote-selected" : "" }}" data-type="up">
                                                     <div data-v-73be696c="" class="total">
                                                         <i class="far fa-arrow-up"></i>
-                                                        {{ data.reply.upvotes }}
+                                                        {{ reply.upvotes }}
                                                     </div>
                                                 </div>
                                                 <div data-v-73be696c="" id="reply-down-{{ loop.index }}" class="down{{ (not data.siteusername) ? " disabled" : "" }}{{ (reply.userRating == "d") ? " vote-selected" : "" }}" data-type="down">
                                                     <div data-v-73be696c="" class="total">
                                                         <i class="far fa-arrow-down"></i> 
-                                                        {{ data.reply.downvotes }}
+                                                        {{ reply.downvotes }}
                                                     </div>
                                                 </div>
                                             </div>
-                                            {% if data.reply.badges|length %}
+                                            {% if reply.badges|length %}
                                                 <p class="mt-2 mb-0">
-                                                {% for badge in data.reply.badges %}
+                                                {% for badge in reply.badges %}
                                                     <span class="badge badge-{{ badge.color }} mr-1">{{ badge.message }}</span>
                                                 {% endfor %}
                                                 </p>
@@ -419,7 +419,7 @@
 
                                                     const data = new URLSearchParams();
                                                     data.append('type', '2');
-                                                    data.append('postId', '{{ data.reply.id }}');
+                                                    data.append('postId', '{{ reply.id }}');
                                                     data.append('rating', 'l');
 
                                                     fetch("/api/rate", {
@@ -432,19 +432,19 @@
 
                                                     if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                     } else {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) + 1) + '</div>';
                                                     }
 
                                                     if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                         replydown{{ loop.index }}.classList.toggle('vote-selected');
@@ -460,7 +460,7 @@
 
                                                     const data = new URLSearchParams();
                                                     data.append('type', '2');
-                                                    data.append('postId', '{{ data.reply.id }}');
+                                                    data.append('postId', '{{ reply.id }}');
                                                     data.append('rating', 'd');
 
                                                     fetch("/api/rate", {
@@ -473,19 +473,19 @@
 
                                                     if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                     } else {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
                                                         }, 250);
                                                         replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) + 1) + '</div>';
                                                     }
 
                                                     if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
                                                         setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ data.reply.id }}");
+                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
                                                         }, 250);
                                                         replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
                                                         replyup{{ loop.index }}.classList.remove('vote-selected');
@@ -498,8 +498,8 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if data.reply.author == data.user.username %}
-                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/edit?id={{ data.reply.id }}">Edit</a></div>
+                            {% if reply.author == data.user.username %}
+                            <div class="card-footer"><a class="btn btn-primary text-white" href="/forum/edit?id={{ reply.id }}">Edit</a></div>
                             {% endif %}
                         </div>
                     {% endfor %}
