@@ -195,7 +195,8 @@ class frontEnd extends Controller
         $user['friends'] = json_decode($user['friends'], true);
 
         $this->request['data']['badges'] = $user;
-        return view($this->request['data']['user']['version'] . '/User', $this->request);
+        //return view($this->request['data']['user']['version'] . '/User', $this->request);
+        return json_encode($user);
     }
 
     public function login(Request $request) {
