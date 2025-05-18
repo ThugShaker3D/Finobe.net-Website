@@ -47,7 +47,9 @@ class api extends Controller
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $itemsPerPage;
 
-        $this->request['data']['items']['data'] = [];
+        $this->request['data']['items'] = [
+            'data' => []
+        ];
 
         $items = $this->db->table('purchases')
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
