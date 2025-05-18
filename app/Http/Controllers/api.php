@@ -47,8 +47,10 @@ class api extends Controller
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $itemsPerPage;
 
-        $this->request['data']['items'] = [
-            'data' => []
+        $this->request['data'] = [
+            'items' => [
+                'data' => []
+            ]
         ];
 
         $items = $this->db->table('purchases')
@@ -82,7 +84,7 @@ class api extends Controller
         
         $this->response['data']['items']['pagination'] = [
             'current_page' => $currentPage,
-            'number_of_pages' => ceil(count($this->response['data']['items']) / $itemsPerPage)
+            'number_of_pages' => ceil(count($this->response['data']['items']['data']) / $itemsPerPage)
         ];
 
         return response()->json($this->response, 200);
