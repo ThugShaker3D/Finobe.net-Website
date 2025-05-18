@@ -884,6 +884,7 @@ class frontEnd extends Controller
         $this->request['data']['embeds']['title'] = htmlspecialchars($post['title']) . $this->request['data']['embeds']['title'];
         $this->request['data']['replying'] = isset($data['reply']) ? $data['reply'] : false;
         $post['title'] = htmlspecialchars($post['title']);
+        $this->request['data']['post'] = $post;
 
         return view($this->request['data']['user']['version'] . '/Forum/Reply', $this->request);
     }
