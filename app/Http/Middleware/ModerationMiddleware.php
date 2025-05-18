@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\User;
+use App\Http\Controllers\dataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +20,11 @@ class ModerationMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(dataController $dataService, Request $request, Closure $next): Response
     {
         if(Auth::check()) {
             $this->db = DB::connection('finobe');
+            $this->dataService = 
             $this->request = [
                 'data' => [
                     'embeds' => [
