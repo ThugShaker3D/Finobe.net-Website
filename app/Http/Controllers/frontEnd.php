@@ -191,6 +191,9 @@ class frontEnd extends Controller
         }
 
         $user = User::find($id)->toArray();
+
+        $this->request['data']['embeds']['title'] = htmlspecialchars($user['username']) . $this->request['data']['embeds']['title'];
+
         $user['places'] = [];
         $user['created'] = date('m/d/Y h:i:s A', strtotime($user['created']));
         $user['blurb'] = nl2br(str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($user['blurb'])))));
