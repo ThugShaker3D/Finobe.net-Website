@@ -8,7 +8,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([SetClientIp::class])->group(function() {
     Route::domain(str_replace('https://', '', 'sitetest1.finobe.net'/*env('APP_URL')for when release replace*/))->group(function() {
         Route::fallback(function() {
-            return response()->view('v2/404', [], 404);
+            return response()->view('v2/404', [
+                'data' => [
+                    'embeds' => [
+                        'title' => '404 - Finobe',
+                        'image' => env('APP_URL') . '/s/img/finnobe3logo.png'
+                    ]
+                ]
+            ], 404);
         });
 
         Route::get('/', [frontEnd::class, 'index']);
