@@ -53,6 +53,8 @@ class api extends Controller
             ]
         ];
 
+        $this->request['data']['items']['data'] = [];
+
         $items = $this->db->table('purchases')
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
             ->where('purchases.username', $data['user'])
