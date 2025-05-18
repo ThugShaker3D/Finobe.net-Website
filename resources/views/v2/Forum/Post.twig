@@ -41,7 +41,7 @@
                         <ul class="pagination shadow-sm">
                             <li class="page-item{{ (data.replies.pages.info.previous_page == data.replies.pages.info.start_page and data.replies.pages.info.previous_page != (data.replies.pages.info.start_page + 1)) ? " disabled" : "" }}"><a class="page-link" id="previous-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.previous_page }}" onclick="" rel="previous" aria-label="Previous <<">«</a></li>
                                 {% for page in data.replies.pages.data %}
-                                    <li class="page-item"><a class="page-link{{ (page.page == data.replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
+                                    <li class="page-item"><a class="page-link{{ (page.page == data.replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ data.post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
                                 {% endfor %}
                             <li class="page-item{{ (data.replies.pages.info.next_page == data.replies.pages.info.end_page) ? " disabled" : "" }}"><a class="page-link" id="next-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.next_page + 1 }}" onclick="" rel="next" aria-label="Next >>">»</a></li>
                         </ul>

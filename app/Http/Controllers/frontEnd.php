@@ -81,7 +81,7 @@ class frontEnd extends Controller
             
             $this->request['data']['notifications'] = [
                 'data' => [],
-                'ads' => env('FINOBE_ADS', true),
+                'ads' => filter_var(env('FINOBE_ADS'), FILTER_VALIDATE_BOOLEAN),
                 'info' => [
                     'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
                     'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
@@ -444,6 +444,61 @@ class frontEnd extends Controller
     public function forum_post(Request $request) {
         $data = $request->all();
 
+        if($request->isMethod('post')) {
+            if(!$this->request['data']['siteusername']) {
+                return redirect('/');
+            }
+
+            $validator = Validator::make($data, [
+                'id' => 'required|integer',
+                'content' => 'required|string|min:5|max:16384'
+            ]);
+
+            if(!filter_var(env('FINOBE_FORUM_POST'), FILTER_VALIDATE_BOOLEAN)) {
+                Session::put('error', 'Posting on the forums have been disabled');
+                return redirect('/forum/post?id=' . $data['id']);
+            }
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/forum/home')
+            }
+
+            if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+                Session::put('error', 'This post doesn\'t exist');
+                return redirect('/forum/home');
+            }
+
+            $post = (array) $this->db->table('forum_threads')
+                ->where('id', $data['id'])
+                ->first();
+            
+            if($post['author'] != $this->request['data']['user']['username']) {
+                Session::put('error', 'You do not own this post')
+                return redirect('/forum/post?id=' . $data['id']);
+            }
+
+            if($post['locked'] == 'y') {
+                Session::put('error', 'This post is locked')
+                return redirect('/forum/post?id=' . $data['id']);
+            }
+
+            $this->db->table('forum_threads')
+                ->where('id', $data['id'])
+                ->update([
+                    'comment' => trim($data['content'])
+                ]);
+            
+            $this->db->table('users')
+                ->where('username', $this->request['data']['username'])
+                ->update([
+                    'post_cooldown' => DB::raw('CURRENT_TIMESTAMP()')
+                ]);
+            
+            Session::put('success', 'Successfully edited.');
+            return redirect('/forum/post?id=' . $data['id']);
+        }
+
         if(!isset($data['id']) || empty($data['id'])) {
             return redirect('/forum/home');
         }
@@ -674,6 +729,163 @@ class frontEnd extends Controller
         }
 
         return view($this->request['data']['user']['version'] . '/Forum/Post', $this->request);
+    }
+
+    public function forum_reply(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This post does not exist');
+            return redirect('/forum/home');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'id' => 'required|integer',
+                'content' => 'required|string|min:5|max:16384'
+            ]);
+
+            if(!filter_var(env('FINOBE_FORUM_POST'), FILTER_VALIDATE_BOOLEAN)) {
+                Session::put('error', 'Posting on the forums have been disabled');
+                return redirect('/forum/post?id=' . $data['id']);
+            }
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/forum/home')
+            }
+
+            if($this->db->table('users')->where('username', $this->request['data']['user']['username'])->where('post_cooldown', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
+                Session::put('error', 'You cannot make another post within 5 minutes of your last one.');
+                return redirect('/forum/post?id=' . $data['id']);
+            }
+
+            if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+                Session::put('error', 'This post doesn\'t exist');
+                return redirect('/forum/home');
+            }
+
+            $post = (array) $this->db->table('forum_threads')
+                ->where('id', $data['id'])
+                ->first();
+            
+            if($post['locked'] == 'y') {
+                Session::put('error', 'This post is locked');
+                return redirect('/forum/home');
+            }
+            
+            if($this->db->table('forum_threads')->where('id', $data['id'])->where(DB::raw('DATE(lastreplied)'), '<=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 WEEK)'))->exists() && $this->request['data']['user']['status'] != 'admin') {
+                if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 MONTH)'))->count() >= 2) {
+                    $this->db->table('bans')->insert([
+                        'username' => $this->request['data']['username'],
+                        'reason' => 'You are not allowed to necrobump threads that have been inactive for 3 weeks.',
+                        'expire' => date('Y-m-d H:i:s', strtotime('+1 week')),
+                        'moderator' => 'Auto'
+                    ]);
+                } else {
+                    $this->db->table('warning')->insert([
+                        'username' => $this->request['data']['username'],
+                        'reason' => 'You are not allowed to necrobump threads that have been inactive for 3 weeks.',
+                        'moderator' => 'Auto'
+                    ]);
+                }
+            }
+
+            $id = $this->db->table('forum_replies')->select('id')->where('toid', $data['id'])->value('id') + 1;
+
+            $this->db->table('forum_replies')->insert([
+                'toid' => $data['id'],
+                'author' => $this->request['data']['user']['username'],
+                'comment' => $data['content']
+            ]);
+
+            if($post['author'] != $this->request['data']['user']['username']) {
+                $this->db->table('pms')->insert([
+                    'owner' => $this->request['data']['user']['username'],
+                    'subject' => '',
+                    'touser' => $post['author'],
+                    'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
+                    'forum_id' => $data['id'],
+                    'reply_id' => $id
+                ]);
+            }
+
+            $subscriptions = $this->db->table('subscriptions')
+                ->where('forumId', $data['id'])
+                ->get()
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
+            
+            foreach($subscriptions as $subscription) {
+                $this->db->table('pms')->insert([
+                    'owner' => $this->request['data']['user']['username'],
+                    'subject' => '',
+                    'touser' => $subscription['author'],
+                    'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
+                    'forum_id' => $data['id'],
+                    'reply_id' => $id
+                ]);
+            }
+
+            if(isset($data['reply']) && $this->db->table('forum_replies')->where('id', $data['reply'])->exists()) {
+                $this->db->table('pms')->insert([
+                    'owner' => $this->request['data']['user']['username'],
+                    'subject' => '',
+                    'touser' => $this->db->table('forum_replies')->select('author')->where('id', $data['reply'])->value('author'),
+                    'message' => $this->request['data']['user']['username'] . ' replied to your reply on ' . $post['title'],
+                    'forum_id' => $data['id']
+                ]);
+
+                $this->db->table('forum_replies')
+                    ->where('id', $id)
+                    ->update([
+                        'replyTo' => $data['reply']
+                    ]);
+            }
+
+            $this->db->table('users')
+                ->where('username', $this->request['data']['username'])
+                ->update([
+                    'post_cooldown' => DB::raw('CURRENT_TIMESTAMP()')
+                ]);
+            
+            $this->db->table('forum_threads')
+                ->where('id', $data['id'])
+                ->update([
+                    'lastreplied' => DB::raw('CURRENT_TIMESTAMP()')
+                ]);
+            
+            $results_per_page = 12;
+            $position_in_list = $this->db->table('forum_replies')->where('id', '<=', $id)->where('toid', $data['id'])->count();
+            $page_of_reply = ceil($position_in_list / $results_per_page);
+
+            Session::put('success', 'Successfully created.');
+            return redirect('/forum/post?id=' . $data['id'] . '&page=' . $page_of_reply);
+        }
+
+        $post = (array) $this->db->table('forum_threads')
+            ->where('id', $data['id'])
+            ->first();
+        
+        if($post['locked'] == 'y') {
+            Session::put('error', 'This post is locked');
+            return redirect('/forum/post?id=' . $data['id']);
+        }
+
+        $this->request['data']['embeds']['title'] = htmlspecialchars($post['title']) . $this->request['data']['embeds']['title'];
+        $this->request['data']['replying'] = isset($data['reply']) ? $data['reply'] : false;
+        $post['title'] = htmlspecialchars($post['title']);
+
+        return view($this->request['data']['user']['version'] . '/Forum/Reply', $this->request);
     }
 
     public function login(Request $request) {
