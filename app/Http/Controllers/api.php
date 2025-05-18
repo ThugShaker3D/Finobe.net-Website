@@ -190,6 +190,6 @@ class api extends Controller
             ->count();
         
         $this->response['rating'] = $rating;
-        return reponse()->json($this->response, 200);
+        return response()->json($this->response, 200);
     }
 }
