@@ -92,6 +92,8 @@ class api extends Controller
     }
 
     public function rate(Request $request) {
+        $data = $request->all();
+        
         if(!Auth::check()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
@@ -154,6 +156,8 @@ class api extends Controller
     }
 
     public function rating_number(Request $request) {
+        $data = $request->all();
+
         if(!Auth::check()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
