@@ -93,7 +93,7 @@ class api extends Controller
 
     public function rate(Request $request) {
         $data = $request->all();
-        
+
         if(!Auth::check()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
@@ -107,7 +107,7 @@ class api extends Controller
             'rating' => 'required|string|size:1',
         ]);
 
-        if(!$validator->fails()) {
+        if($validator->fails()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
             $this->response['errors'] = $validator->errors();
@@ -170,7 +170,7 @@ class api extends Controller
             'postId' => 'required|integer',
         ]);
 
-        if(!$validator->fails()) {
+        if($validator->fails()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
             $this->response['errors'] = $validator->errors();
