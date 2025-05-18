@@ -20,11 +20,11 @@ class ModerationMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(dataController $dataService, Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response
     {
         if(Auth::check()) {
             $this->db = DB::connection('finobe');
-            $this->dataService = 
+            $this->dataService = new dataController();
             $this->request = [
                 'data' => [
                     'embeds' => [
