@@ -103,6 +103,7 @@
                                                 var data = new URLSearchParams();
                                                 data.append('postId', postId);
                                                 data.append('type', type);
+                                                data.append('_token', '{{ data.csrf_token }}');
 
                                                 if(type == "2") {
                                                     number = $('#reply-number-' + index);
@@ -169,6 +170,7 @@
                                                 data.append('type', '1');
                                                 data.append('postId', '{{ data.post.id }}');
                                                 data.append('rating', 'd');
+                                                data.append('_token', '{{ data.csrf_token }}');
 
                                                 fetch("/api/rate", {
                                                     method: 'POST',
@@ -271,6 +273,7 @@
                                                     data.append('type', '2');
                                                     data.append('postId', '{{ data.sticked.id }}');
                                                     data.append('rating', 'l');
+                                                    data.append('_token', '{{ data.csrf_token }}');
 
                                                     fetch("/api/rate", {
                                                         method: 'POST',
@@ -312,6 +315,7 @@
                                                     data.append('type', '2');
                                                     data.append('postId', '{{ data.sticked.id }}');
                                                     data.append('rating', 'd');
+                                                    data.append('_token', '{{ data.csrf_token }}');
 
                                                     fetch("/api/rate", {
                                                         method: 'POST',
@@ -421,6 +425,7 @@
                                                     data.append('type', '2');
                                                     data.append('postId', '{{ reply.id }}');
                                                     data.append('rating', 'l');
+                                                    data.append('_token', '{{ data.csrf_token }}');
 
                                                     fetch("/api/rate", {
                                                         method: 'POST',
@@ -462,6 +467,7 @@
                                                     data.append('type', '2');
                                                     data.append('postId', '{{ reply.id }}');
                                                     data.append('rating', 'd');
+                                                    data.append('_token', '{{ data.csrf_token }}');
 
                                                     fetch("/api/rate", {
                                                         method: 'POST',
@@ -530,6 +536,7 @@
                                 <div class="col-md-12 post-content overflow-hidden">
                                     <form role="form" method="POST" action="" enctype="multipart/form-data">
                                         <input type="hidden" name="id" value="{{ data.post.id }}">
+                                        <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                         <div class="form-group row">
                                             <label for="note" class="col-form-label text-md-right mb-2" style="margin-left:15px;">Note: Use Markdown syntax.</label>
                                             <div class="col-md-12">
