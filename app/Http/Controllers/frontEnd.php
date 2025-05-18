@@ -461,7 +461,7 @@ class frontEnd extends Controller
 
             if($validator->fails()) {
                 Session::put('error', $validator->errors()->first());
-                return redirect('/forum/home')
+                return redirect('/forum/home');
             }
 
             if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
