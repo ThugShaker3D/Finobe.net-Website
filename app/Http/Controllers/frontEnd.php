@@ -420,10 +420,29 @@ class frontEnd extends Controller
             ]
         ];
 
+        $phrasesToReplace = [
+            'fuck',
+            'fucking',
+            'roblox',
+            'robux',
+            'ass',
+            'asshole',
+            'shit'
+        ];
+
+        $replacements = [
+            'OBAMA BALL',
+            'sonic 06',
+            'blockland.us'
+        ];
+
         foreach($posts as $post) {
             $post['status'] = User::where('username', $post)->value('status');
             $post['replies'] = $this->db->table('forum_replies')->where('toid', $post['id'])->count();
             $post['title'] = htmlspecialchars($post['title']);
+            $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['title']);
             $post['author'] = htmlspecialchars($post['author']);
             $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
@@ -562,10 +581,29 @@ class frontEnd extends Controller
             ]
         ];
 
+        $phrasesToReplace = [
+            'fuck',
+            'fucking',
+            'roblox',
+            'robux',
+            'ass',
+            'asshole',
+            'shit'
+        ];
+
+        $replacements = [
+            'OBAMA BALL',
+            'sonic 06',
+            'blockland.us'
+        ];
+
         foreach($posts as $post) {
             $post['status'] = User::where('username', $post)->value('status');
             $post['replies'] = $this->db->table('forum_replies')->where('toid', $post['id'])->count();
             $post['title'] = htmlspecialchars($post['title']);
+            $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['title']);
             $post['author'] = htmlspecialchars($post['author']);
             $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
