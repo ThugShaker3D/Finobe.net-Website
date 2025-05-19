@@ -30,6 +30,10 @@ Route::middleware([SetClientIp::class])->group(function() {
             });
         });
 
+        Route::prefix('catalog')->group(function() {
+            Route::get('/{section}', [frontEnd::class, 'catalog_index']);
+        })
+
         Route::prefix('user')->group(function() {
             Route::get('/{id}', [frontEnd::class, 'user']);
             Route::get('/{id}/add', [frontEnd::class, 'user_add']);
@@ -48,8 +52,10 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('api')->group(function() {
+            Route::get('/mark', [api::class, 'mark']);
             Route::get('/inventory', [api::class, 'inventory']);
             Route::post('/rate', [api::class, 'rate']);
+            Route::post('/purchase', [api::class, 'purchase']);
             Route::post('/rating_number', [api::class, 'rating_number']);
         });
 

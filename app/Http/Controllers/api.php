@@ -192,4 +192,109 @@ class api extends Controller
         $this->response['rating'] = $rating;
         return response()->json($this->response, 200);
     }
+
+    public function mark(Request $request) {
+        $data = $request->all();
+
+        if(!Auth::check()) {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            Session::put('error', 'Bad request!');
+            return redirect('/');
+        }
+
+        $user = Auth::user()->toArray();
+
+        if($data['id'] == 'all') {
+            $this->db->table('pms')
+                ->where('touser', $user['username'])
+                ->update([
+                    'readed' => 'y'
+                ]);
+            
+            return redirect('/');
+        }
+
+        if(!$this->db->table('pms')->where('id', $data['id'])->exists()) {
+            return redirect('/');
+        }
+
+        $this->db->table('pms')
+            ->where('id', $data['id'])
+            ->update([
+                'readed' => 'y'
+            ]);
+        
+        $notification = (array) $this->db->table('pms')
+            ->where('id', $data['id'])
+            ->first();
+        
+        $results_per_page = 10;
+        $total_replies_before = $this->db->table('forum_replies')->where('toid', $notification['forum_id'])->where('id', $notification['reply_id'])->count();
+        $page_number = ceil($total_replies_before / $results_per_page);
+        $page_number = max(1, $page_number);
+
+        return redirect('/forum/post?id=' . $notification['forum_id'] . ($page_number < 1 ? '&page=' . $page_number : ''));
+    }
+
+    public function purchase(Request $request) {
+        $data = $request->all();
+
+        if(!Auth::check()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
+        if(!isset($data['asset_id'])) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
+        if(!$this->db->table('assets')->where('id', $data['assetid'])->exists()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Asset does not exist';
+
+            return response()->json($this->response, 400);
+        }
+
+        $user = Auth::user();
+        $item = (array) $this->db->table('assets')
+            ->where('id', $data['assetid'])
+            ->first();
+
+        $item['additional'] = json_decode($item['additional'], true);
+        
+        if($user['Dius'] - $item['additional']['price'] < 0) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Not enough Dius';
+
+            return response()->json($this->response, 400);
+        }
+
+        if($this->db->table('purchases')->where('username', $user['username'])->where('assetid', $data['id'])->where('serial', isset($data['serial']) ? $data['serial'] : 0)->exists()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'This item has already been purchased';
+
+            return response()->json($this->response, 400);
+        }
+
+        $this->db->table('purchases')->insert([
+            'username' => $user['username'],
+            'assetid' => $data['id'],
+            'serial' => isset($data['serial']) ? $data['serial'] : 0,
+            'author' => $item['author'],
+            'amount' => -1 * $item['additional']['price']
+        ]);
+
+        $user->Dius -= $item['additional']['price'];
+        $user->save();
+        
+        return response()->json($this->response, 200);
+    }
 }

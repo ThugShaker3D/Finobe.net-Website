@@ -1497,6 +1497,116 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Forum/New/Post', $this->request);
     }
 
+    public function catalog_index(Request $request, $section) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $sections = [
+            "hats" => 8,
+            "t-shirts" => 2,
+            "shirts" => 11,
+            "pants" => 12,
+            "gears" => 19,
+            "faces" => 18,
+            "heads" => 17,
+            "packages" => 32,
+            "audio" => 3,
+            "model" => 10
+        ];
+
+        if(!in_array($section, $sections)) {
+            return redirect('/catalog/hats');
+        }
+
+        $items = [];
+        $pages_to_show = 10;
+        $results_per_page = 16;
+
+        if(isset($data['q'])) {
+            $search = '%' . htmlspecialchars($data['search']) . '%';
+            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+                ->where('asset_type', $sections[$section])
+                ->where('visibility', 'n')
+                ->orderBy('lastlogin', 'desc')
+                ->count();
+        } else {
+            $results = User::where('asset_type', $sections[$section])
+                ->where('visibility', 'n')
+                ->orderBy('lastlogin', 'desc')
+                ->count();
+        }
+
+        $number_of_pages = ceil($results / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+        $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+
+        if(isset($data['q'])) {
+            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+                ->where('asset_type', $sections[$section])
+                ->where('visibility', 'n')
+                ->orderBy('lastlogin', 'desc')
+                ->offset($offset)
+                ->limit($results_per_page)
+                ->get()
+                ->toArray();
+        } else {
+            $results = User::where('asset_type', $sections[$section])
+                ->where('visibility', 'n')
+                ->orderBy('lastlogin', 'desc')
+                ->offset($offset)
+                ->limit($results_per_page)
+                ->get()
+                ->toArray();
+        }
+
+        foreach($results as $result) {
+            $result['additional'] = json_decode($result['additional'], true);
+            $result['title'] = htmlspecialchars($result['title']);
+
+            if($result['asset_type'] == 3) {
+                $result['duration'] = $this->dataService->timestamp($row['additional']['duration']);
+            }
+
+            $user = User::where('id', $result['author']);
+            $result['uuid'] = $user ? $user['id'] : false;
+            $result['author'] = htmlspecialchars($user['username'] ?? $result['additional']['oldUser']);
+            $items[] = $result;
+        }
+
+        $this->request['data']['pagination'] = [
+            'pages' => [
+                'info' => [
+                    'current_page' => $currentPage,
+                    'previous_page' => max(1, $currentPage - 1),
+                    'next_page' => min($number_of_pages, $currentPage + 1),
+                    'start_page' => $start_page,
+                    'end_page' => $end_page,
+                    'number_of_pages' => $number_of_pages
+                ],
+                'data' =>[]
+            ]
+        ];
+
+        for ($page = $start_page; $page <= $end_page; $page++) {
+            $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
+        }
+
+        if(!count($users)) {
+            $this->request['data']['pagination']['pages']['data'][] = [
+                'page' => 1
+            ];
+        }
+
+        $this->request['data']['items'] = $items;
+
+        return view($this->request['data']['user']['version'] . '/Catalog/Index', $this->request);
+    }
+
     public function login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
         $this->request['data']['errorlogin'] = Session::has('errorlogin');
