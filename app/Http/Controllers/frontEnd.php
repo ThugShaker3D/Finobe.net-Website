@@ -283,6 +283,15 @@ class frontEnd extends Controller
             $user['places'][] = $place;
         }
 
+        if($this->db->table('bans')->where('username', $user['username'])->where('perm', 'y')->exists()) {
+            $user['ban'] = [
+                'IsBanned' => true,
+                'data' => [
+                    'reason' => $this->db->table('bans')->select('reason')->where('username', $user['username'])->where('perm', 'y')->value('reason')
+                ]
+            ];
+        }
+
         $this->request['data']['profile'] = $user;
         return view($this->request['data']['user']['version'] . '/User', $this->request);
     }
