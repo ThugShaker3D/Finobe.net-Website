@@ -52,13 +52,13 @@
                 <div class="mt-2" style="display: flex; justify-content: center;">
   <ul class="pagination shadow-sm">
     <li class="page-item">
-      <a class="page-link" id="previous-page" href="/users?page={{ data.pagination.info.current_page - 1 }}" rel="previous" aria-label="Previous <<" {{ (data.pagination.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
+      <a class="page-link" id="previous-page" href="/users?page={{ data.pagination.pages.info.current_page - 1 }}" rel="previous" aria-label="Previous <<" {{ (data.pagination.pages.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
     </li>
-    {% if data.pagination.info.start_page > 1 %}
+    {% if data.pagination.pages.info.start_page > 1 %}
       <li class="page-item">
         <a class="page-link" href="/users?page=1">1</a>
       </li>
-      {% if data.pagination.info.start_page > 2 %}
+      {% if data.pagination.pages.info.start_page > 2 %}
         <li class="page-item">
           <a class="page-link" href="/users?page=2">2</a>
         </li>
@@ -67,24 +67,24 @@
     {% endif %}
     {% for page in data.pagination.pages.data %}
       <li class="page-item">
-        <a class="page-link{{ (page.page == data.pagination.info.current_page) ? " selected" : "" }}" href="/users?page={{ page.page }}">
+        <a class="page-link{{ (page.page == data.pagination.pages.info.current_page) ? " selected" : "" }}" href="/users?page={{ page.page }}">
           {{ page.page }}
         </a>
       </li>
     {% endfor %}
-    {% if data.pagination.info.end_page < data.pagination.info.number_of_page %}
-      {% if data.pagination.info.end_page + 1 < data.pagination.info.number_of_page %}
+    {% if data.pagination.pages.info.end_page < data.pagination.pages.info.number_of_page %}
+      {% if data.pagination.pages.info.end_page + 1 < data.pagination.pages.info.number_of_page %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
       <li class="page-item">
-        <a class="page-link" href="/users?page={{ data.pagination.info.number_of_page - 1 }}">{{ data.pagination.info.number_of_page - 1 }}</a>
+        <a class="page-link" href="/users?page={{ data.pagination.pages.info.number_of_page - 1 }}">{{ data.pagination.pages.info.number_of_page - 1 }}</a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="/users?page={{ data.pagination.info.number_of_page }}">{{ data.pagination.info.number_of_page }}</a>
+        <a class="page-link" href="/users?page={{ data.pagination.pages.info.number_of_page }}">{{ data.pagination.pages.info.number_of_page }}</a>
       </li>
     {% endif %}
     <li class="page-item">
-      <a class="page-link" id="next-page" href="/users?page={{ data.pagination.info.next_page }}" rel="next" aria-label="Next >>" {{ (data.pagination.info.current_page >= data.pagination.info.number_of_page) ? "style='pointer-events: none;'" : "" }}>»</a>
+      <a class="page-link" id="next-page" href="/users?page={{ data.pagination.pages.info.next_page }}" rel="next" aria-label="Next >>" {{ (data.pagination.pages.info.current_page >= data.pagination.pages.info.number_of_page) ? "style='pointer-events: none;'" : "" }}>»</a>
     </li>
   </ul>
 </div>
