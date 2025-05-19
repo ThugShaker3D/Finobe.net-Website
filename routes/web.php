@@ -66,7 +66,9 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('auth')->group(function() {
-            Route::match(['post', 'get'], '/login', [frontEnd::class, 'login']);
+            Route::get('/form', [frontEnd::class, 'auth_form']);
+            Route::match(['post', 'get'], '/login', [frontEnd::class, 'auth_login']);
+            Route::match(['post', 'get'], '/register', [frontEnd::class, 'auth_register']);
         });
     });
 });

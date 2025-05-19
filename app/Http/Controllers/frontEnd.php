@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
@@ -1668,7 +1669,7 @@ class frontEnd extends Controller
             ->where('id', $id)
             ->first();
         
-            $this->request['data']['embeds']['title'] = htmlspecialchars($item['title']) . $this->request['data']['embeds']['title'];
+        $this->request['data']['embeds']['title'] = htmlspecialchars($item['title']) . $this->request['data']['embeds']['title'];
         
         if($item['asset_type'] == 9) {
             return redirect('/place/' . $id);
@@ -1707,7 +1708,83 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
     }
 
-    public function login(Request $request) {
+    public function auth_form(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
+        $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
+        $data = $request->all();
+
+        if($this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Form', $this->request);
+    }
+
+    public function auth_register(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Register' . $this->request['data']['embeds']['title'];
+        $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
+        $data = $request->all();
+
+        if($this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'name' => 'required|string|alpha_dash|unique:finobe.users,username|min:3|max:20',
+                'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
+                'email' => 'required|email|confirmed|unique:finobe.users,email'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/auth/form');
+            }
+
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+				'secret' => env('GOOGLE_RECAPTCHA_SECRET'),
+				'response' => $data['g-recaptcha-response']
+			])->json();
+
+            if(!$response['success']) {
+                Session::put('error', 'reCAPTCHA failed.');
+                return redirect('/auth/form');
+            }
+
+            if((bool) env('FINOBE_INVITE_KEYS') && isset($data['invite_key']) && !$this->db->table('inviteKeys')->where('IID', $data['invite_key'])->where('used', 'n')->exists()) {
+                Session::put('error', 'Invalid invite key.');
+                return redirect('/auth/form');
+            }
+
+            User::insert([
+                'username' => trim($data['name']),
+                'email' => trim($data['email']),
+                'password' => password_hash($data['password'], PASSWORD_BCRYPT),
+                'friends' => '[]',
+                'inventory' => '[]',
+                'badges' => '[]',
+                'avatar' => '[{"resolvedAvatarType":"R6","equippedGearVersionIds":[],"backpackGearVersionIds":[],"assetAndAssetTypeIds":[],"bodyColors":{"headColorId":24,"torsoColorId":"23","rightArmColorId":24,"leftArmColorId":24,"rightLegColorId":"119","leftLegColorId":"119"},"scales":{"height":1,"width":1,"head":1,"depth":1,"proportion":0,"bodyType":0}}]',
+                'token' => bin2hex(random_bytes(30))
+            ]);
+
+            if((bool) env('FINOBE_INVITE_KEYS') && isset($data['invite_key'])) {
+                $this->db->table('inviteKeys')
+                    ->where('IID', $data['invite_key'])
+                    ->update([
+                        'used' => 'y',
+                        'dateUsed' => now(),
+                        'usedBy' => trim($data['name'])
+                    ]);
+            }
+
+            Auth::login(trim($data['name']));
+            return redirect('/legal/welcome');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Register', $this->request['data']);
+    }
+
+    public function auth_login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
         $this->request['data']['errorlogin'] = Session::has('errorlogin');
         $data = $request->all();

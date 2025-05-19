@@ -18,10 +18,7 @@
                             </div>
                             <div class="card-body">
                                 <form role="form" method="POST" action="/auth/register">
-                                    {% if next != false %}
-                                    <input type="hidden" name="next" value="{{ next }}">
-                                    {% endif %}
-                                    <input type="hidden" name="_token" value="oo1nGcSQqdQkCYgKUEpYicfFLx7S6NG3KUUE4GGJ">
+                                    <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                     <div class="form-group row"><label for="name"
                                             class="col-md-3 col-form-label text-md-right">Username</label>
                                         <div class="col-md-9"><input type="text" id="name" name="name" value=""
@@ -47,7 +44,7 @@
                                                 confirmation fields, but we don't like typos even more.</small>
                                         </div>
                                     </div>
-                                    {% if inviteKeys == true %}
+                                    {% if data.inviteKeys %}
                                     <div class="form-group row"><label for="invite_key"
                                             class="col-md-3 col-form-label text-md-right">Invite Key</label>
                                         <div class="col-md-9"><input type="text" id="invite_key" name="invite_key" value=""
