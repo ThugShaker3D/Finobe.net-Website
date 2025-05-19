@@ -538,7 +538,7 @@ class frontEnd extends Controller
                 ]);
             
             $this->db->table('users')
-                ->where('username', $this->request['data']['username'])
+                ->where('username', $this->request['data']['user']['username'])
                 ->update([
                     'post_cooldown' => DB::raw('CURRENT_TIMESTAMP()')
                 ]);
@@ -833,14 +833,14 @@ class frontEnd extends Controller
             if($this->db->table('forum_threads')->where('id', $data['id'])->where(DB::raw('DATE(lastreplied)'), '<=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 WEEK)'))->exists() && $this->request['data']['user']['status'] != 'admin') {
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 MONTH)'))->count() >= 2) {
                     $this->db->table('bans')->insert([
-                        'username' => $this->request['data']['username'],
+                        'username' => $this->request['data']['user']['username'],
                         'reason' => 'You are not allowed to necrobump threads that have been inactive for 3 weeks.',
                         'expire' => date('Y-m-d H:i:s', strtotime('+1 week')),
                         'moderator' => 'Auto'
                     ]);
                 } else {
                     $this->db->table('warning')->insert([
-                        'username' => $this->request['data']['username'],
+                        'username' => $this->request['data']['user']['username'],
                         'reason' => 'You are not allowed to necrobump threads that have been inactive for 3 weeks.',
                         'moderator' => 'Auto'
                     ]);
@@ -901,7 +901,7 @@ class frontEnd extends Controller
             }
 
             $this->db->table('users')
-                ->where('username', $this->request['data']['username'])
+                ->where('username', $this->request['data']['user']['username'])
                 ->update([
                     'post_cooldown' => DB::raw('CURRENT_TIMESTAMP()')
                 ]);
