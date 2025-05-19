@@ -436,28 +436,29 @@
                                                         },
                                                         body: data
                                                     })
+                                                    .then(() => {
+                                                        if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
+                                                            setTimeout(() => {
+                                                                sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            }, 250);
+                                                            replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
+                                                        } else {
+                                                            setTimeout(() => {
+                                                                sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            }, 250);
+                                                            replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) + 1) + '</div>';
+                                                        }
 
-                                                    if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
-                                                        setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
-                                                        }, 250);
-                                                        replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
-                                                    } else {
-                                                        setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
-                                                        }, 250);
-                                                        replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) + 1) + '</div>';
-                                                    }
-
-                                                    if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
-                                                        setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
-                                                        }, 250);
-                                                        replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
-                                                        replydown{{ loop.index }}.classList.toggle('vote-selected');
-                                                    }
-                                                    
-                                                    replyup{{ loop.index }}.classList.toggle('vote-selected');
+                                                        if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
+                                                            setTimeout(() => {
+                                                                sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            }, 250);
+                                                            replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
+                                                            replydown{{ loop.index }}.classList.toggle('vote-selected');
+                                                        }
+                                                        
+                                                        replyup{{ loop.index }}.classList.toggle('vote-selected');
+                                                    });
                                                 });
 
                                                 document.getElementById('reply-down-{{ loop.index }}').addEventListener('click', function () {
@@ -478,28 +479,29 @@
                                                         },
                                                         body: data
                                                     })
+                                                    .then(() => {
+                                                        if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
+                                                            setTimeout(() => {
+                                                                sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            }, 250);
+                                                            replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
+                                                        } else {
+                                                            setTimeout(() => {
+                                                                sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            }, 250);
+                                                            replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) + 1) + '</div>';
+                                                        }
 
-                                                    if (replydown{{ loop.index }}.classList.contains('vote-selected')) {
-                                                        setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
-                                                        }, 250);
-                                                        replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) - 1) + '</div>';
-                                                    } else {
-                                                        setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
-                                                        }, 250);
-                                                        replydown{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-down"></i> ' + (parseInt(replydown{{ loop.index }}.innerText, 10) + 1) + '</div>';
-                                                    }
-
-                                                    if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
-                                                        setTimeout(() => {
-                                                            sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
-                                                        }, 250);
-                                                        replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
-                                                        replyup{{ loop.index }}.classList.remove('vote-selected');
-                                                    }
-                                                    
-                                                    replydown{{ loop.index }}.classList.toggle('vote-selected');
+                                                        if (replyup{{ loop.index }}.classList.contains('vote-selected')) {
+                                                            setTimeout(() => {
+                                                                sync_rating("2", "{{ loop.index }}", "{{ reply.id }}");
+                                                            }, 250);
+                                                            replyup{{ loop.index }}.innerHTML = '<div data-v-73be696c="" class="total"><i data-v-73be696c="" class="far fa-arrow-up"></i> ' + (parseInt(replyup{{ loop.index }}.innerText, 10) - 1) + '</div>';
+                                                            replyup{{ loop.index }}.classList.remove('vote-selected');
+                                                        }
+                                                        
+                                                        replydown{{ loop.index }}.classList.toggle('vote-selected');
+                                                    });
                                                 })
                                             });
                                         </script>
