@@ -1731,7 +1731,7 @@ class frontEnd extends Controller
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
-                'name' => 'required|string|alpha_dash|unique:finobe.users,username|min:3|max:20',
+                'username' => 'required|string|alpha_dash|unique:finobe.users,username|min:3|max:20',
                 'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
                 'email' => 'required|email|confirmed|unique:finobe.users,email'
             ]);
@@ -1757,7 +1757,7 @@ class frontEnd extends Controller
             }
 
             $user = User::create([
-                'username' => trim($data['name']),
+                'username' => trim($data['username']),
                 'email' => trim($data['email']),
                 'password' => password_hash($data['password'], PASSWORD_BCRYPT),
                 'friends' => '[]',
@@ -1773,7 +1773,7 @@ class frontEnd extends Controller
                     ->update([
                         'used' => 'y',
                         'dateUsed' => now(),
-                        'usedBy' => trim($data['name'])
+                        'usedBy' => trim($data['username'])
                     ]);
             }
 
