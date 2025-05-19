@@ -31,6 +31,10 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('catalog')->group(function() {
+            Route::get('/', function() {
+                return redirect('/catalog/hats');
+            });
+            
             Route::get('/{section}', [frontEnd::class, 'catalog_index']);
         });
 
