@@ -99,7 +99,9 @@ class frontEnd extends Controller
                 ->where('touser', $this->request['data']['user']['username'])
                 ->orderBy('date', 'DESC')
                 ->get()
-                ->toArray();
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
             
             foreach($notifications as $notification) {
                 $this->request['data']['notifications']['data'][] = [
@@ -144,7 +146,9 @@ class frontEnd extends Controller
             ->where('expire', '>', 'now()')
             ->orderBy('id', 'DESC')
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
     }
 
     public function index(Request $request) {
@@ -189,7 +193,9 @@ class frontEnd extends Controller
                     ->orderByDesc('total_players')
                     ->limit(6)
                     ->get()
-                    ->toArray();
+                    ->map(function ($item) {
+                        return (array) $item;
+                    })->toArray();
             });
             
             foreach($games as $key => $game) {
@@ -200,7 +206,9 @@ class frontEnd extends Controller
                     ->select('players')
                     ->where('placeid', $game['id'])
                     ->get()
-                    ->toArray();
+                    ->map(function ($item) {
+                        return (array) $item;
+                    })->toArray();
                 
                 foreach($servers as $server) {
                     $players += count(json_decode($server['players']));
@@ -264,7 +272,9 @@ class frontEnd extends Controller
             ->where('author', $user['id'])
             ->where('asset_type', 9)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
 
         foreach($places as $index => $place) {
             $place['additional'] = json_decode($place['additional'], true);
@@ -381,7 +391,9 @@ class frontEnd extends Controller
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
         
         $this->request['data']['threads'] = [
             'data' => [],
@@ -447,7 +459,9 @@ class frontEnd extends Controller
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
         
         $this->request['data']['threads'] = [
             'data' => [],
@@ -519,7 +533,9 @@ class frontEnd extends Controller
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
         
         $this->request['data']['threads'] = [
             'data' => [],
@@ -776,7 +792,9 @@ class frontEnd extends Controller
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
         
         $this->request['data']['replies'] = [
             'data' => [],
@@ -943,7 +961,9 @@ class frontEnd extends Controller
             $subscriptions = $this->db->table('subscriptions')
                 ->where('forumId', $data['id'])
                 ->get()
-                ->toArray();
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
             
             foreach($subscriptions as $subscription) {
                 $this->db->table('pms')->insert([
