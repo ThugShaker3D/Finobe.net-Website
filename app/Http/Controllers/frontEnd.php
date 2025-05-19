@@ -1708,6 +1708,50 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
     }
 
+    public function character(Request $request) {
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $purchases = [];
+        $results = $this->db->table('purchases')
+            ->where('username', $this->request['data']['user']['username'])
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        foreach($results as $result) {
+            if(!$this->db->table('assets')->where('id', $result['assetid'])->exists()) {
+                continue;
+            }
+            
+            $item = (array) $this->db->table('assets')
+                ->where('id', $result['assetid'])
+                ->first();
+
+            if(!in_array($item['asset_type'], [8, 11, 12, 18])) {
+                continue;
+            }
+
+            $item['additional'] = json_decode($item['additional'], true);
+            $result['asset_type'] = $item['asset_type'];
+            $result['title'] = htmlspecialchars($item['title']);
+            $result['uuid'] = $item['author'];
+            $result['author'] = User::select('username')->where('id', $item['author'])->value('username');
+            $result['equipped'] = in_array($result['assetid'], $this->request['data']['user']['avatar'][0]['equippedGearVersionIds']);
+
+            if($result['equipped']) {
+                $result['thumbnail'] = $item['additional']['media']['thumbnail'];
+            }
+
+            $purchases[] = $result;
+        }
+        
+        return view($this->request['data']['user']['version'] . '/Character', $this->request);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');

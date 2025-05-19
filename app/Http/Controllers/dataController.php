@@ -9,7 +9,7 @@ class dataController extends Controller
     public function time_elapsed_string($datetime) {
         $now = new \DateTime();
         $ago = new \DateTime($datetime);
-        $ago->add(new \DateInterval('PT7H'));
+        //$ago->add(new \DateInterval('PT7H'));
         $diff = $now->diff($ago);
 
         $years = $diff->y;

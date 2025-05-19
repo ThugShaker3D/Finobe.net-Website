@@ -26,17 +26,19 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
 
         Route::prefix('app')->group(function() {
+            Route::get('/character', [frontEnd::class, 'character']);
+
             Route::prefix('forum')->group(function() {
                 Route::match(['post', 'get'], '/new/post', [frontEnd::class, 'forum_new_post']);
             });
         });
 
         Route::prefix('catalog')->group(function() {
+            Route::get('/{section}', [frontEnd::class, 'catalog_index']);
+
             Route::get('/', function() {
                 return redirect('/catalog/hats');
             });
-
-            Route::get('/{section}', [frontEnd::class, 'catalog_index']);
         });
 
         Route::prefix('user')->group(function() {
@@ -62,6 +64,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/inventory', [api::class, 'inventory']);
             Route::post('/rate', [api::class, 'rate']);
             Route::post('/purchase', [api::class, 'purchase']);
+            Route::post('/character', [api::class, 'character']);
             Route::post('/rating_number', [api::class, 'rating_number']);
         });
 
