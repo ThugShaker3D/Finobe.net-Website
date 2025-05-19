@@ -31,11 +31,11 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('forum')->group(function() {
-            Route::get('/edit', [frontEnd::class, 'forum_edit_reply']);
             Route::get('/home', [frontEnd::class, 'forum_home']);
             Route::get('/home/{section}', [frontEnd::class, 'forum_section']);
             Route::get('/search', [frontEnd::class, 'forum_search']);
             Route::match(['post', 'get'], '/post', [frontEnd::class, 'forum_post']);
+            Route::match(['post', 'get'], '/edit', [frontEnd::class, 'forum_edit_reply']);
             Route::match(['post', 'get'], '/new/reply', [frontEnd::class, 'forum_reply']);
         });
 
