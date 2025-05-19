@@ -249,7 +249,7 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
-        if(!isset($data['asset_id'])) {
+        if(!isset($data['assetid'])) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
 
