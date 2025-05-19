@@ -1581,7 +1581,7 @@ class frontEnd extends Controller
                 $result['duration'] = $this->dataService->timestamp($row['additional']['duration']);
             }
 
-            $user = User::where('id', $result['author']);
+            $user = User::where('id', $result['author'])->toArray();
             $result['uuid'] = $user ? $user['id'] : false;
             $result['author'] = htmlspecialchars($user['username'] ?? $result['additional']['oldUser']);
             $items[] = $result;
