@@ -1528,13 +1528,15 @@ class frontEnd extends Controller
 
         if(isset($data['q'])) {
             $search = '%' . htmlspecialchars($data['search']) . '%';
-            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+            $results = $this->db->table('assets')
+                ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
                 ->orderBy('lastlogin', 'desc')
                 ->count();
         } else {
-            $results = User::where('asset_type', $sections[$section])
+            $results = $this->db->table('assets')
+                ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
                 ->orderBy('lastlogin', 'desc')
                 ->count();
@@ -1547,7 +1549,8 @@ class frontEnd extends Controller
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
         if(isset($data['q'])) {
-            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+            $results = $this->db->table('assets')
+                ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
                 ->orderBy('lastlogin', 'desc')
@@ -1556,7 +1559,8 @@ class frontEnd extends Controller
                 ->get()
                 ->toArray();
         } else {
-            $results = User::where('asset_type', $sections[$section])
+            $results = $this->db->table('assets')
+                ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
                 ->orderBy('lastlogin', 'desc')
                 ->offset($offset)
