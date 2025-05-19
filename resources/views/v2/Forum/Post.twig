@@ -592,7 +592,7 @@
                                                 }
 												</script>
 												{% endif %}
-                                                <textarea rows="10" minlength="3" type="text" id="content" name="content" value="" placeholder="Enter your reply here (minimum 3 characters)." class="form-control">{{ data.post.comment }}</textarea>
+                                                <textarea rows="10" minlength="3" type="text" id="content" name="content" value="" placeholder="Enter your reply here (minimum 3 characters)." class="form-control">{{ data.post.comment|raw }}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
