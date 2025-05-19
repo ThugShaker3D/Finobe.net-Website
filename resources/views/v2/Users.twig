@@ -65,7 +65,7 @@
       {% endif %}
       <li class="page-item"><span class="page-link">...</span></li>
     {% endif %}
-    {% for page in data.pagination.data %}
+    {% for page in data.pagination.pages.data %}
       <li class="page-item">
         <a class="page-link{{ (page.page == data.pagination.info.current_page) ? " selected" : "" }}" href="/users?page={{ page.page }}">
           {{ page.page }}
