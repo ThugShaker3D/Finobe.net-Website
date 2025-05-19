@@ -1497,6 +1497,40 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Forum/New/Post', $this->request);
     }
 
+    public function forum_subscribe(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+            return redirect('/forum/home');
+        }
+
+        if($this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $data['id'])->exists()) {
+            $this->db->table('subscriptions')
+                ->where('username', $this->request['data']['user']['username'])
+                ->where('forumId', $data['id'])
+                ->delete();
+            
+            Session::put('success', 'Successfully removed subscription.');
+        } else {
+            $this->db->table('subscriptions')->insert([
+                'username' => $this->request['data']['user']['username'],
+                'forumId' => $data['id']
+            ]);
+
+            Session::put('success', 'Successfully added subscription.');
+        }
+
+        return redirect('/forum/post?id=' . $data['id']);
+    }
+
     public function catalog_index(Request $request, $section) {
         $this->request['data']['embeds']['title'] = 'Catalog' . $this->request['data']['embeds']['title'];
         $data = $request->all();
