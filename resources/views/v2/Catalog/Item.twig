@@ -59,7 +59,7 @@
                         <div class="card-body text-center">
                             <h2>Purchase item</h2>
                             <br>
-                            <div class="d-flex align-items-center justify-content-center"><div class="d-flex flex-row"><p>Are you sure you want to buy <strong>{{ item.title }}</strong> for <div class="nav-item nav-link n-money-text" data-placement="bottom" style="padding:0px;margin-left: 5px;"><a><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> {{ item.additional.price }}</a></div>?</p></div></div><br>
+                            <div class="d-flex align-items-center justify-content-center"><div class="d-flex flex-row"><p>Are you sure you want to buy <strong>{{ data.item.title|raw }}</strong> for <div class="nav-item nav-link n-money-text" data-placement="bottom" style="padding:0px;margin-left: 5px;"><a><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> {{ data.item.additional.price }}</a></div>?</p></div></div><br>
                             <button class="btn text-danger" id="btn-cancel">cancel</button>
                             <button class="btn btn-outline-primary" id="purchase-confirm">purchase</button>
                         </div>
