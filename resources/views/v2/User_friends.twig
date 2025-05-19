@@ -6,7 +6,7 @@
     <div id="app">
       {% include ('v2/Modules/nav.twig') %}
       <div class="container mt-4">
-                <h3 class="text-center">{{ (data.profile.username == user.username) ? "Your" : data.profile.username ~ "'s"}} Friends ({{ data.profile.friends|length }})</h3>
+                <h3 class="text-center">{{ (data.profile.username == data.user.username) ? "Your" : data.profile.username ~ "'s"}} Friends ({{ data.profile.friends|length }})</h3>
                 <div class="mt-2" style="display: flex; justify-content: center;">
                     <ul class="pagination shadow-sm">
                         <li class="page-item">
