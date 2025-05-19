@@ -577,7 +577,7 @@ class frontEnd extends Controller
                 'username' => $result['username'],
                 'pfp' => $result['pfp'],
                 'lastlogin' => date('m/d/Y h:i A', strtotime($result['lastlogin'])),
-                'IsOnline' => Carbon::parse($result['lastlogin'])->gt(Carbon::now()->subMinutes(2)) ? true : false
+                'IsOnline' => Carbon::parse($result['lastlogin'])->gt(Carbon::now()->subMinutes(2))
             ];
         }
 
