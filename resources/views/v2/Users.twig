@@ -9,14 +9,14 @@
                 <h3 style="font-weight: 300;">User List</h3>
                 <form method="get" action="/users" class="mt-2 mb-3 col-mb-3">
                     <div class="input-group input-group-lg search-input">
-                        <input type="text" name="search" placeholder="Search..." value="{{ (search != false) ? search : "" }}" class="form-control form-control-lg border-right-0 border">
+                        <input type="text" name="search" placeholder="Search..." value="{{ (data.search) ? data.search : "" }}" class="form-control form-control-lg border-right-0 border">
                         <span class="input-group-append">
                             <button type="submit" class="btn btn-secondary  border-left-0 border"><i class="far fa-search"></i></button>
                         </span>
                     </div>
                 </form>
                 <div class="row">
-                    {% for user in users %}
+                    {% for user in data.users %}
                     <div class="col-md-3">
                         <div class="col-16 mt-3 ml-1">
                             <a href="/user/{{ user.id }}" class="catalog-card">
@@ -32,7 +32,7 @@
                                             </div>
                                             <div class="offset-md-1">
                                                 <p class="mb-0">{{ user.username }}</p>
-                                                {% if user.IsOnline == true %}
+                                                {% if user.IsOnline %}
                                                 <p class="mb-0 text-success">Online</p>
                                                 {% else %}
                                                 <p class="mb-0">{{ user.lastlogin }}</p>
@@ -45,46 +45,46 @@
                         </div>
                     </div>
                     {% endfor %}
-                    {% if not users|length %}
+                    {% if not data.users|length %}
                     <p>No results</p>
                     {% endif %}
                 </div>
                 <div class="mt-2" style="display: flex; justify-content: center;">
   <ul class="pagination shadow-sm">
     <li class="page-item">
-      <a class="page-link" id="previous-page" href="/users?page={{ pagination.info.current_page - 1 }}" rel="previous" aria-label="Previous <<" {{ (pagination.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
+      <a class="page-link" id="previous-page" href="/users?page={{ data.pagination.info.current_page - 1 }}" rel="previous" aria-label="Previous <<" {{ (data.pagination.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
     </li>
-    {% if pagination.info.start_page > 1 %}
+    {% if data.pagination.info.start_page > 1 %}
       <li class="page-item">
         <a class="page-link" href="/users?page=1">1</a>
       </li>
-      {% if pagination.info.start_page > 2 %}
+      {% if data.pagination.info.start_page > 2 %}
         <li class="page-item">
           <a class="page-link" href="/users?page=2">2</a>
         </li>
       {% endif %}
       <li class="page-item"><span class="page-link">...</span></li>
     {% endif %}
-    {% for page in pagination.data %}
+    {% for page in data.pagination.data %}
       <li class="page-item">
-        <a class="page-link{{ (page.page == pagination.info.current_page) ? " selected" : "" }}" href="/users?page={{ page.page }}">
+        <a class="page-link{{ (page.page == data.pagination.info.current_page) ? " selected" : "" }}" href="/users?page={{ page.page }}">
           {{ page.page }}
         </a>
       </li>
     {% endfor %}
-    {% if pagination.info.end_page < pagination.info.number_of_page %}
-      {% if pagination.info.end_page + 1 < pagination.info.number_of_page %}
+    {% if data.pagination.info.end_page < data.pagination.info.number_of_page %}
+      {% if data.pagination.info.end_page + 1 < data.pagination.info.number_of_page %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
       <li class="page-item">
-        <a class="page-link" href="/users?page={{ pagination.info.number_of_page - 1 }}">{{ pagination.info.number_of_page - 1 }}</a>
+        <a class="page-link" href="/users?page={{ data.pagination.info.number_of_page - 1 }}">{{ data.pagination.info.number_of_page - 1 }}</a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="/users?page={{ pagination.info.number_of_page }}">{{ pagination.info.number_of_page }}</a>
+        <a class="page-link" href="/users?page={{ data.pagination.info.number_of_page }}">{{ data.pagination.info.number_of_page }}</a>
       </li>
     {% endif %}
     <li class="page-item">
-      <a class="page-link" id="next-page" href="/users?page={{ pagination.info.next_page }}" rel="next" aria-label="Next >>" {{ (pagination.info.current_page >= pagination.info.number_of_page) ? "style='pointer-events: none;'" : "" }}>»</a>
+      <a class="page-link" id="next-page" href="/users?page={{ data.pagination.info.next_page }}" rel="next" aria-label="Next >>" {{ (data.pagination.info.current_page >= data.pagination.info.number_of_page) ? "style='pointer-events: none;'" : "" }}>»</a>
     </li>
   </ul>
 </div>

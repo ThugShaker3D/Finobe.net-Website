@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Controllers\dataController;
 use Illuminate\Http\Request;
@@ -284,6 +285,87 @@ class frontEnd extends Controller
 
         $this->request['data']['profile'] = $user;
         return view($this->request['data']['user']['version'] . '/User', $this->request);
+    }
+
+    public function users(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Users' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $users = [];
+        $pages_to_show = 10;
+        $results_per_page = 10;
+
+        if(isset($data['search'])) {
+            $search = '%' . htmlspecialchars($data['search']) . '%';
+            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+                ->orderBy('lastlogin', 'desc')
+                ->count();
+        } else {
+            $results = User::orderBy('lastlogin', 'desc')
+                ->count();
+        }
+
+        $number_of_pages = ceil($results / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+        $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+
+        if(isset($data['search'])) {
+            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+                ->orderBy('lastlogin', 'desc')
+                ->offset($offset)
+                ->limit($results_per_page)
+                ->count();
+        } else {
+            $results = User::orderBy('lastlogin', 'desc')
+                ->offset($offset)
+                ->limit($results_per_page)
+                ->count();
+        }
+
+        foreach($results as $result) {
+            $users[] = [
+                'id' => $result['id'],
+                'username' => $result['username'],
+                'pfp' => $result['pfp'],
+                'lastlogin' => date('m/d/Y h:i A', strtotime($result['lastlogin'])),
+                'IsOnline' => Carbon::parse($result['lastlogin'])->gt(Carbon::now()->subMinutes(2)) ? true : false
+            ];
+        }
+
+        $this->request['data']['pagination'] = [
+            'data' => [],
+            'pages' => [
+                'info' => [
+                    'current_page' => $currentPage,
+                    'previous_page' => max(1, $currentPage - 1),
+                    'next_page' => min($number_of_pages, $currentPage + 1),
+                    'start_page' => $start_page,
+                    'end_page' => $end_page,
+                    'number_of_pages' => $number_of_pages
+                ],
+                'data' =>[]
+            ]
+        ];
+
+        for ($page = $start_page; $page <= $end_page; $page++) {
+            $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
+        }
+
+        if(!count($users)) {
+            $this->request['data']['pagination']['pages']['data'][] = [
+                'page' => 1
+            ];
+        }
+
+        $this->request['data']['users'] = $users;
+
+        return view($this->request['data']['user']['version'] . '/Users', $this->request);
     }
 
     public function forum_home(Request $request) {
