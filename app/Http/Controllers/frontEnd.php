@@ -1756,7 +1756,7 @@ class frontEnd extends Controller
                 return redirect('/auth/form');
             }
 
-            User::insert([
+            $user = User::create([
                 'username' => trim($data['name']),
                 'email' => trim($data['email']),
                 'password' => password_hash($data['password'], PASSWORD_BCRYPT),
@@ -1777,7 +1777,7 @@ class frontEnd extends Controller
                     ]);
             }
 
-            Auth::login(trim($data['name']));
+            Auth::login($user->id);
             return redirect('/legal/welcome');
         }
 
