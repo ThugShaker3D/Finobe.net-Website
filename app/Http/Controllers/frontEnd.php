@@ -297,7 +297,7 @@ class frontEnd extends Controller
 
         $users = [];
         $pages_to_show = 10;
-        $results_per_page = 10;
+        $results_per_page = 16;
 
         if(isset($data['search'])) {
             $search = '%' . htmlspecialchars($data['search']) . '%';
