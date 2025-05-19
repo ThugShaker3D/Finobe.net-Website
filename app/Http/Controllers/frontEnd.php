@@ -240,7 +240,7 @@ class frontEnd extends Controller
         }
 
         if(!User::where('id', $id)->exists()) {
-            return view($this->request['data']['user']['version'] . '404', [], 404);
+            return view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
         $user = User::find($id)->toArray();
@@ -455,7 +455,7 @@ class frontEnd extends Controller
         }
 
         if(!User::where('id', $id)->exists()) {
-            return view($this->request['data']['user']['version'] . '404', [], 404);
+            return view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
         $user = User::find($id)->toArray();
