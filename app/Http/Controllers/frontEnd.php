@@ -1498,6 +1498,7 @@ class frontEnd extends Controller
     }
 
     public function catalog_index(Request $request, $section) {
+        $this->request['data']['embeds']['title'] = 'Catalog' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
         if(!$this->request['data']['siteusername']) {
@@ -1578,7 +1579,8 @@ class frontEnd extends Controller
             $items[] = $result;
         }
 
-        $this->request['data']['pagination'] = [
+        $this->request['data']['items'] = [
+            'data' => [],
             'pages' => [
                 'info' => [
                     'current_page' => $currentPage,
@@ -1593,16 +1595,18 @@ class frontEnd extends Controller
         ];
 
         for ($page = $start_page; $page <= $end_page; $page++) {
-            $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
+            $this->request['data']['items']['pages']['data'][] = ['page' => $page];
         }
 
         if(!count($users)) {
-            $this->request['data']['pagination']['pages']['data'][] = [
+            $this->request['data']['items']['pages']['data'][] = [
                 'page' => 1
             ];
         }
 
-        $this->request['data']['items'] = $items;
+        $this->request['data']['items']['data'] = $items;
+        $this->request['data']['section'] = $section;
+        $this->request['data']['search'] = isset($data['q']) ? $data['q'] : false;
 
         return view($this->request['data']['user']['version'] . '/Catalog/Index', $this->request);
     }

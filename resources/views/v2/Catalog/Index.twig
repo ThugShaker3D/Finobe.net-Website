@@ -14,34 +14,34 @@
                         </a>
                         <nav class="finobe-basic-nav">
                             <p class="header ">Type</p> <a href="/catalog/hats"
-                                class="link{{ (section == "hats") ? " active" : "" }}">
+                                class="link{{ (data.section == "hats") ? " active" : "" }}">
                                 Hats
                             </a> <a href="/catalog/t-shirts"
-                                class="link{{ (section == "t-shirts") ? " active" : "" }}">
+                                class="link{{ (data.section == "t-shirts") ? " active" : "" }}">
                                 T-Shirts
                             </a> <a href="/catalog/shirts"
-                                class="link{{ (section == "shirts") ? " active" : "" }}">
+                                class="link{{ (data.section == "shirts") ? " active" : "" }}">
                                 Shirts
                             </a> <a href="/catalog/pants"
-                                class="link{{ (section == "pants") ? " active" : "" }}">
+                                class="link{{ (data.section == "pants") ? " active" : "" }}">
                                 Pants
                             </a> <a href="/catalog/gears"
-                                class="link{{ (section == "gears") ? " active" : "" }}">
+                                class="link{{ (data.section == "gears") ? " active" : "" }}">
                                 Gears
                             </a> <a href="/catalog/faces"
-                                class="link{{ (section == "faces") ? " active" : "" }}">
+                                class="link{{ (data.section == "faces") ? " active" : "" }}">
                                 Faces
                             </a> <a href="/catalog/heads"
-                                class="link{{ (section == "heads") ? " active" : "" }}">
+                                class="link{{ (data.section == "heads") ? " active" : "" }}">
                                 Heads
                             </a> <a href="/catalog/packages"
-                                class="link{{ (section == "packages") ? " active" : "" }}">
+                                class="link{{ (data.section == "packages") ? " active" : "" }}">
                                 Packages
                             </a> <a href="/catalog/audio"
-                                class="link{{ (section == "audio") ? " active" : "" }}">
+                                class="link{{ (data.section == "audio") ? " active" : "" }}">
                                 Audio
                             </a> <a href="/catalog/models"
-                                class="link{{ (section == "models") ? " active" : "" }}">
+                                class="link{{ (data.section == "models") ? " active" : "" }}">
                                 Models
                             </a>
                         </nav>
@@ -49,20 +49,20 @@
             <div class="mb-4">
             <form method="get" action="" class="mt-2 mb-3 col-mb-3">
                     <div class="input-group input-group-lg search-input">
-                        <input type="text" name="q" placeholder="Search..." value="{{ (search != false) ? search : "" }}" class="form-control form-control-lg border-right-0 border">
+                        <input type="text" name="q" placeholder="Search..." value="{{ (data.search) ? data.search : "" }}" class="form-control form-control-lg border-right-0 border">
                         <span class="input-group-append">
                             <button type="submit" class="btn btn-secondary  border-left-0 border"><i class="far fa-search"></i></button>
                         </span>
                     </div>
                 </form>
-            {% if section == "audio" %}
+            {% if data.section == "audio" %}
             <div class="d-flex flex-row">
-                <p class="mb-2{{ (user.theme == 0) ? " text-black" : "" }}">Audio Name</p>
-                <p class="mb-2{{ (user.theme == 0) ? " text-black" : "" }}" style="margin-left: auto;">Uploader</p>
+                <p class="mb-2{{ (data.user.theme == 0) ? " text-black" : "" }}">Audio Name</p>
+                <p class="mb-2{{ (data.user.theme == 0) ? " text-black" : "" }}" style="margin-left: auto;">Uploader</p>
             </div>
             {% endif %}
             <div class="row catalog-items">
-                {% for item in items.data %}
+                {% for item in data.items.data %}
                   {% if item.asset_type == 3 %}
                     <div class="col-md-12 mb-2">
                         <a href="/item/{{ item.id }}" class="catalog-card">
@@ -98,7 +98,7 @@
                     </div>
                   {% endif %}
                 {% endfor %}
-                {% if not items.data|length %}
+                {% if not data.items.data|length %}
                     <p>No results.</p>
                 {% endif %}
             </div>
@@ -110,42 +110,42 @@
             </center>
             <div class="mt-2" style="display: flex; justify-content: center;">
                 <ul class="pagination shadow-sm">
-                    <li class="page-item{{ (items.pages.info.previous_page == items.pages.info.start_page) ? " disabled" : "" }}">
-                      <a class="page-link" id="previous-page" href="/catalog/{{ section }}?page={{ items.pages.info.current_page }}{{ (search != false) ? "&q=" ~ search : "" }}" rel="previous" aria-label="Previous <<" {{ (items.pages.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
-                    </li>
-                    {% if items.pages.info.start_page > 1 %}
-                      <li class="page-item">
-                        <a class="page-link" href="/catalog/{{ section }}?page=1{{ (search != false) ? "&q=" ~ search : "" }}">1</a>
-                      </li>
-                      {% if items.pages.info.start_page > 2 %}
-                        <li class="page-item">
-                          <a class="page-link" href="/catalog/{{ section }}?page=2{{ (search != false) ? "&q=" ~ search : "" }}">2</a>
-                        </li>
-                      {% endif %}
-                      <li class="page-item"><span class="page-link">...</span></li>
-                    {% endif %}
-                    {% for page in items.pages.data %}
-                      <li class="page-item">
-                        <a class="page-link{{ (page.page == items.pages.info.current_page) ? " selected" : "" }}" href="/catalog/{{ section }}?page={{ page.page }}{{ (search != false) ? "&q=" ~ search : "" }}">
-                          {{ page.page }}
-                        </a>
-                      </li>
-                    {% endfor %}
-                    {% if items.pages.info.end_page < items.pages.info.number_of_page %}
-                      {% if items.pages.info.end_page + 1 < items.pages.info.number_of_page %}
-                        <li class="page-item"><span class="page-link">...</span></li>
-                      {% endif %}
-                      <li class="page-item">
-                        <a class="page-link" href="/catalog/{{ section }}?page={{ items.pages.info.number_of_page - 1 }}{{ (search != false) ? "&q=" ~ search : "" }}">{{ items.pages.info.number_of_page - 1 }}</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="/catalog/{{ section }}?page={{ items.pages.info.number_of_page }}{{ (search != false) ? "&q=" ~ search : "" }}">{{ items.pages.info.number_of_page }}</a>
-                      </li>
-                    {% endif %}
-                    <li class="page-item{{ (items.pages.info.next_page == items.pages.info.end_page) ? " disabled" : "" }}">
-                      <a class="page-link" id="next-page" href="/catalog/{{ section }}?page={{ items.pages.info.next_page }}{{ (search != false) ? "&q=" ~ search : "" }}" rel="next" aria-label="Next >>" >»</a>
-                    </li>
-                </ul>
+    <li class="page-item">
+      <a class="page-link" id="previous-page" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.current_page - 1 }}{{ (data.search) ? "&q=" ~ data.search : "" }}" rel="previous" aria-label="Previous <<" {{ (data.items.pages.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
+    </li>
+    {% if data.items.pages.info.start_page > 1 %}
+      <li class="page-item">
+        <a class="page-link" href="/catalog/{{ data.section }}?page=1{{ (data.search) ? "&q=" ~ data.search : "" }}">1</a>
+      </li>
+      {% if data.items.pages.info.start_page > 2 %}
+        <li class="page-item">
+          <a class="page-link" href="/catalog/{{ data.section }}?page=2{{ (data.search) ? "&q=" ~ data.search : "" }}">2</a>
+        </li>
+      {% endif %}
+      <li class="page-item"><span class="page-link">...</span></li>
+    {% endif %}
+    {% for page in data.items.pages.data %}
+      <li class="page-item">
+        <a class="page-link{{ (page.page == data.items.pages.info.current_page) ? " selected" : "" }}" href="/catalog/{{ data.section }}?page={{ page.page }}{{ (data.search) ? "&q=" ~ data.search : "" }}">
+          {{ page.page }}
+        </a>
+      </li>
+    {% endfor %}
+    {% if data.items.pages.info.end_page < data.items.pages.info.number_of_pages %}
+      {% if data.items.pages.info.end_page + 1 < data.items.pages.info.number_of_pages %}
+        <li class="page-item"><span class="page-link">...</span></li>
+      {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.number_of_pages - 1 }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ data.items.pages.info.number_of_pages - 1 }}</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.number_of_pages }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ data.items.pages.info.number_of_pages }}</a>
+      </li>
+    {% endif %}
+    <li class="page-item">
+      <a class="page-link" id="next-page" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.next_page }}{{ (data.search) ? "&q=" ~ data.search : "" }}" rel="next" aria-label="Next >>" {{ (data.items.pages.info.current_page >= data.items.pages.info.number_of_pages) ? "style='pointer-events: none;'" : "" }}>»</a>
+    </li>
+  </ul>
             </div>
     </div>
     {% include ('v2/Modules/footer.twig') %}
