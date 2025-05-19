@@ -937,6 +937,41 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Forum/Reply', $this->request);
     }
 
+    public function forum_new_post(Request $request) {
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($this->request['data']['user']['status'] == 'admin') {
+            function displayDirectory($dir) {
+                $files = scandir($dir);
+                $html = '<ul>';
+                foreach($files as $file) {
+                    if($file != '.' && $file != '..') {
+                        $path = $dir . '/' . $file;
+                        $path2 = 'https://cdn.finobe.net/forum/media/' . $file;
+                        $html .= '<li>';
+                        if(is_dir($path)) {
+                            $html .= '<strong>' . $file . '</strong>';
+                            displayDirectory($path);
+                        } else {
+                            $html .= '<a href="' . $path2 . '" target="_blank">' . $file . '</a>';
+                        }
+
+                        $html .= '</li>';
+                    }
+                }
+
+                $html .= '</ul>';
+                return $html;
+            }
+
+            $this->request['data']['list'] = displayDirectory('/var/www/cdn.finobe.net/forum/media');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Forum/New/Post', $this->request);
+    }
+
     public function login(Request $request) {
         $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
         $this->request['data']['errorlogin'] = Session::has('errorlogin');

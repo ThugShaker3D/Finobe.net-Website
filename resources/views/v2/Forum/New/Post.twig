@@ -14,13 +14,13 @@
                                 <h4 style="margin:2.5px 0 0 5px"><strong>New Post</strong></h4>
                             </div>
                             <form role="form" method="POST" action="" enctype="multipart/form-data">
-                                <input type="hidden" name="_token" value="oo1nGcSQqdQkCYgKUEpYicfFLx7S6NG3KUUE4GGJ">    
+                                <input type="hidden" name="_token" value="{{ data.csrf_token }}">    
                                 <div class="form-group row">
                                     <label for="type" class="col-form-label text-md-right" style="margin-left:15px;">Type</label>
                                     <div class="col-md-12">
                                         <select id="section" name="section" class="form-control mt-2" required>
-                                            {% if user.status == "admin" %}
-                                            <option value="1">Annoucements</option>
+                                            {% if data.user.status == "admin" %}
+                                                <option value="1">Annoucements</option>
                                             {% endif %}
                                             <option value="2">General</option>
                                             <option value="3">Suggestions</option>
@@ -52,7 +52,7 @@
                                                 <button type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addTag('strong')" disabled><strong>**bold**</strong></button>
                                                 <button type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addTag('em')" disabled><em>_italic_</em></button>
                                                 <button type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addTag('strike')" disabled><strike>~~striked out~~</strike></button>
-												{% if user.status == "admin" %}
+												{% if data.user.status == "admin" %}
 												<button style="margin-top: 5px;" type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addImage()">Add image</button>
                                                 <button style="margin-top: 5px;" type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addVideo()">Add video</button>
 												<script>
@@ -120,7 +120,7 @@
                             </form>
                         </div>
                     </div>
-					{% if user.status == "admin" %}
+					{% if data.user.status == "admin" %}
 					<div class="row">
 						<div class="col-md-9">
                             <div class="card" style="margin: 10px 0px 10px 0px;">
@@ -147,7 +147,7 @@
                                 <div class="card-body mt-2">
                                     <div class="row">
                                         <div class="col-md-8">
-                                        {{ list | raw }}
+                                        {{ data.list | raw }}
                                         </div>
                                     </div>
                                 </div>
