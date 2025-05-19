@@ -37,7 +37,7 @@
                                 <div class="form-group row">
                                     <label for="title" class="col-form-label text-md-right" style="margin-left:15px;">Title</label>
                                     <div class="col-md-12">
-                                        <input type="text" id="title" name="title" value="" placeholder="Title" minlength="5" class="form-control" required></input>
+                                        <input type="text" id="title" name="title" value="" placeholder="Title" minlength="3" class="form-control" required></input>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -47,7 +47,7 @@
                                             <div class="card-header">
                                                 <strong>Tip:</strong> Use Markdown syntax.
                                             </div>
-                                            <textarea type="text" id="content" name="content" value="" placeholder="Content" minlength="5" class="form-control" style="border-radius:0;border:0;" required></textarea>
+                                            <textarea type="text" id="content" name="content" value="" placeholder="Content" minlength="3" class="form-control" style="border-radius:0;border:0;" required></textarea>
                                             <div class="card-footer text-center disabled">
                                                 <button type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addTag('strong')" disabled><strong>**bold**</strong></button>
                                                 <button type="button" class="btn btn-sm btn-secondary col-md-3" onclick="addTag('em')" disabled><em>_italic_</em></button>
@@ -130,6 +130,7 @@
                                     <div class="row">
                                         <div class="col-md-8">
                                             <form method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                                 <input type="file" name="file" />
                                                 <input type="submit" value="Upload" />
                                             </form>
