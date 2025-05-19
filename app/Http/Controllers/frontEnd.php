@@ -503,8 +503,29 @@ class frontEnd extends Controller
         }
 
         $this->request['data']['profile'] = $user;
+        $this->request['data']['embeds']['title'] = htmlspecialchars($user['username']) . '\'s Friends' . $this->request['data']['embeds']['title'];
 
         return view($this->request['data']['user']['version'] . '/User_friends', $this->request);
+    }
+
+    public function friends_incoming(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Friends Incoming' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $this->request['data']['user']['friends'] = array_reverse(array_filter($this->request['data']['user']['friends'], function ($friend) {
+            return $friend['status'] == 'friends';
+        }));
+
+        foreach($this->request['data']['user']['friends'] as $key => $friend) {
+            $this->request['data']['user']['friends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
+            $this->request['data']['user']['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+        }
+
+        return view($this->request['data']['user']['version'] . '/User_friends_incoming', $this->request);
     }
 
     public function users(Request $request) {

@@ -8,7 +8,7 @@
       <div class="container mt-4">
                 <h3 class="text-center">Incoming Friend Requests</h3>
                 <div class="row">
-                    {% for user in user_profile.friends %}
+                    {% for user in data.user.friends %}
                     <div class="col-md-3">
                         <div class="col-16 mt-3 ml-1">
                             <div class="card">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     {% endfor %}
-                    {% if not user_profile.friends|length %}
+                    {% if not data.user.friends|length %}
                     <p>No results</p>
                     {% endif %}
                 </div>
