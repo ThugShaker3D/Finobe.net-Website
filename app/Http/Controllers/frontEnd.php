@@ -366,12 +366,13 @@ class frontEnd extends Controller
             }
         }
 
-        $user->friends[] = [
+        $friends = $user->friends;
+        $friends[] = [
             'username' => $this->request['data']['user']['username'],
             'status' => 'friends'
         ];
 
-        $user->friends = json_encode($user->friends, JSON_FORCE_OBJECT);
+        $user->friends = json_encode($friends, JSON_FORCE_OBJECT);
         $user->save();
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
@@ -415,14 +416,16 @@ class frontEnd extends Controller
             }
         }
 
-        foreach($user->friends as $friend) {
+        $friends = $user->friends;
+
+        foreach($friends as $friend) {
             if($friend['username'] == $this->request['data']['user']['username']) {
-                unset($user->friends[$key]);
+                unset($friends[$key]);
                 break;
             }
         }
 
-        $user->friends = json_encode($user->friends, JSON_FORCE_OBJECT);
+        $user->friends = json_encode($friends, JSON_FORCE_OBJECT);
         $user->save();
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
