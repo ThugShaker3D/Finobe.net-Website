@@ -116,20 +116,24 @@ class frontEnd extends Controller
                 }
             }
 
-            $this->db->table('users')
-                ->where('username', $this->request['data']['user']['username'])
-                ->update([
-                    'ip' => hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'),
-                    'lastlogin' => DB::raw('now()')
-                ]);
+            $user = User::find($this->request['data']['user']['id']);
+            $user->ip = hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip');
+            $user->lastlogin = now();
+            $user->save();
             
             if(strtotime($this->request['data']['user']['lastdiu']) <= time() && $this->request['data']['user']['diubanned'] == 'n') {
+                /*
                 $this->db->table('users')
                     ->where('username', $this->request['data']['user']['username'])
                     ->update([
                         'Dius' => $this->request['data']['user']['Dius'] + 25,
                         'lastdiu' => DB::raw('DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 1 DAY)')
                     ]);
+                */
+                
+                $user->Dius = $this->request['data']['user']['Dius'] + 25;
+                $user->lastdiu = now()->addDay();
+                $user->save();
             }
         } else {
             $this->request['data']['embeds']['title'] .= 'Aesthetiful';
@@ -537,11 +541,17 @@ class frontEnd extends Controller
                     'comment' => trim($data['content'])
                 ]);
             
+            /*
             $this->db->table('users')
                 ->where('username', $this->request['data']['user']['username'])
                 ->update([
                     'post_cooldown' => DB::raw('CURRENT_TIMESTAMP()')
                 ]);
+
+            */
+            $user = User::find($this->request['data']['user']['id']);
+            $user->post_cooldown = now();
+            $user->save();
             
             Session::put('success', 'Successfully edited.');
             return redirect('/forum/post?id=' . $data['id']);
@@ -811,7 +821,7 @@ class frontEnd extends Controller
                 return redirect('/forum/home');
             }
 
-            if($this->db->table('users')->where('username', $this->request['data']['user']['username'])->where('post_cooldown', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
+            if(User::where('username', $this->request['data']['user']['username'])->where('post_cooldown', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
                 Session::put('error', 'You cannot make another post within 5 minutes of your last one.');
                 return redirect('/forum/post?id=' . $data['id']);
             }
@@ -847,9 +857,7 @@ class frontEnd extends Controller
                 }
             }
 
-            $id = $this->db->table('forum_replies')->select('id')->where('toid', $data['id'])->value('id') + 1;
-
-            $this->db->table('forum_replies')->insert([
+            $id = $this->db->table('forum_replies')->insertGetId([
                 'toid' => $data['id'],
                 'author' => $this->request['data']['user']['username'],
                 'comment' => $data['content']
@@ -899,12 +907,10 @@ class frontEnd extends Controller
                         'replyTo' => $data['reply']
                     ]);
             }
-
-            $this->db->table('users')
-                ->where('username', $this->request['data']['user']['username'])
-                ->update([
-                    'post_cooldown' => DB::raw('CURRENT_TIMESTAMP()')
-                ]);
+            
+            $user = User::find($this->request['data']['user']['id']);
+            $user->post_cooldown = now();
+            $user->save();
             
             $this->db->table('forum_threads')
                 ->where('id', $data['id'])
@@ -938,8 +944,74 @@ class frontEnd extends Controller
     }
 
     public function forum_new_post(Request $request) {
+        $data = $request->all();
+
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            if($request->hasFile('file')) {
+                if($this->request['data']['user']['status'] == 'admin') {
+                    return redirect('/app/forum/new/post');
+                }
+
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,mp4,mov,gif,exe,ttf,webm,webp'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/forum/new/post');
+                }
+
+                $file = $request->file('file');
+                $fileUrl = 'https://cdn.finobe.net/forum/media/' . $file->getClientOriginalName();
+
+                if(file_exists('/var/www/cdn.finobe.net/forum/media/' . $file->getClientOriginalName())) {
+                    Session::put('error', 'File already exists. Here is the link: ' . $fileUrl);
+                    return redirect('/app/forum/new/post');
+                }
+
+                try {
+                    $file->move('/var/www/cdn.finobe.net/forum/media', $file->getClientOriginalName());
+                    Session::put('success', 'File uploaded successfully. Here is the link: ' . $fileUrl);
+                    return redirect('/app/forum/new/post');
+                } catch(\Exception $e) {
+                    Session::put('error', 'Error uploading file. Check your server configurations.');
+                    return redirect('/app/forum/new/post');
+                }
+            } else {
+                $validator = Validator::make($data, [
+                    'title' => 'required|string|min:3',
+                    'content' => 'required|string|min:3|max:8192',
+                    'section' => 'required|integer|size:1'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/forum/new/post');
+                }
+
+                if($data['section'] == '1' && $this->request['data']['user']['status'] != 'admin') {
+                    Session::put('error', 'Not enough permissions');
+                    return redirect('/app/forum/new/post');
+                }
+
+                $id = $this->db->table('forum_threads')->insertGetId([
+                    'category' => $data['section'],
+                    'author' => $this->request['data']['user']['username'],
+                    'title' => $data['title'],
+                    'comment' => $data['content']
+                ]);
+
+                $user = User::find($this->request['data']['user']['id']);
+                $user->post_cooldown = now();
+                $user->save();
+
+                Session::put('success', 'Successfully created.');
+                return redirect('/forum/post?id=' . $id);
+            }
         }
 
         if($this->request['data']['user']['status'] == 'admin') {
