@@ -1204,7 +1204,7 @@ class frontEnd extends Controller
                 return redirect('/forum/home');
             }
             
-            if($this->db->table('forum_threads')->where('id', $data['id'])->where(DB::raw('DATE(lastreplied)'), '<=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 WEEK)'))->exists() && $this->request['data']['user']['status'] != 'admin') {
+            if(Carbon::parse($post['lastreplied'])->lt(now()->subWeeks(3)) && $this->request['data']['user']['status'] != 'admin') {
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 MONTH)'))->count() >= 2) {
                     $this->db->table('bans')->insert([
                         'username' => $this->request['data']['user']['username'],
