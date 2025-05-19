@@ -471,7 +471,7 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
-        $user['friends'] = array_slice($user['friends'], $startIndex, $results_per_page);
+        $user['friends'] = array_slice($user['friends'], $offset, $results_per_page);
         
         $this->request['data']['pagination'] = [
             'data' => [],
