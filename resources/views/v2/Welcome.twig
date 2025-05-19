@@ -10,8 +10,8 @@
                     <div class="col-md-9 mt-3 mb-3" style="margin-left:auto;margin-right:auto;">
                         <div class="card" style="margin: 10px 0px 10px 0px;">
                             <div class="card-header bg-primary text-white text-center">
-                                Welcome to {{ (user.branding == "finobe" ? "Finobe" : "Aesthetiful") }} </div>
-                                <img src="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" class="mt-4 mb-3" style="max-width:100px;margin-right:auto;margin-left:auto;">
+                                Welcome to {{ (data.user.branding == "finobe" ? "Finobe" : "Aesthetiful") }} </div>
+                                <img src="/s/img/{% if data.user.branding == "finobe" %}{% if data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" class="mt-4 mb-3" style="max-width:100px;margin-right:auto;margin-left:auto;">
                                 <div class="content-container" style="margin-right:auto;margin-left:auto;">
                                     <p>This is a friendly reminder to read our <a href="/legal/rules">rules</a>. Some key takeaway points:</p>
                                     <ul>
