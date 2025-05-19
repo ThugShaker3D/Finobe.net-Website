@@ -418,7 +418,7 @@ class frontEnd extends Controller
 
         $friends = $user->friends;
 
-        foreach($friends as $friend) {
+        foreach($friends as $key => $friend) {
             if($friend['username'] == $this->request['data']['user']['username']) {
                 unset($friends[$key]);
                 break;
