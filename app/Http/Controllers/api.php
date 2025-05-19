@@ -297,4 +297,15 @@ class api extends Controller
         
         return response()->json($this->response, 200);
     }
+
+    public function character(Request $request) {
+        $data = $request->all();
+
+        if(!Auth::check()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+    }
 }
