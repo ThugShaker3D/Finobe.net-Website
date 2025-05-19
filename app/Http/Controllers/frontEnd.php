@@ -1777,7 +1777,7 @@ class frontEnd extends Controller
                     ]);
             }
 
-            Auth::login($user->id);
+            Auth::login($user);
             return redirect('/legal/welcome');
         }
 
