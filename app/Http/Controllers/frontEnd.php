@@ -488,6 +488,16 @@ class frontEnd extends Controller
             ]
         ];
 
+        for ($page = $start_page; $page <= $end_page; $page++) {
+            $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
+        }
+
+        if(!count($users)) {
+            $this->request['data']['pagination']['pages']['data'][] = [
+                'page' => 1
+            ];
+        }
+
         $this->request['data']['profile'] = $user;
 
         return view($this->request['data']['user']['version'] . '/User_friends', $this->request);
