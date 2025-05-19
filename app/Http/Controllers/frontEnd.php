@@ -366,6 +366,7 @@ class frontEnd extends Controller
         }
 
         $this->request['data']['users'] = $users;
+        $this->request['data']['search'] = isset($data['search']) ? $data['search'] : false;
 
         return view($this->request['data']['user']['version'] . '/Users', $this->request);
     }
