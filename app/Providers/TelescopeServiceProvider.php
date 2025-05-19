@@ -31,7 +31,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                    $entry->isScheduledTask() ||
                    $entry->hasMonitoredTag();
             */
-            if ($entry->type == 'request' && isset($entry->content['uri']) && str_starts_with($entry->content['uri'], '/s')) {
+            if ($entry->type == 'request' && isset($entry->content['uri']) && (str_starts_with($entry->content['uri'], '/s') || str_starts_with($entry->content['uri'], '/web') || str_starts_with($entry->content['uri'], '/fonts'))) {
                 return false;
             }
 
