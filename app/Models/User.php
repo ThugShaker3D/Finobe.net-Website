@@ -22,7 +22,16 @@ class User extends Authenticatable
     protected $connection = 'finobe';
     protected $table = 'users';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'username',
+        'email',
+        'password',
+        'friends',
+        'inventory',
+        'badges',
+        'avatar',
+        'token'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
