@@ -1130,7 +1130,7 @@ class frontEnd extends Controller
             $position_in_list = $this->db->table('forum_replies')->where('id', '<=', $data['id'])->where('toid', $data['postId'])->count();
             $page_of_reply = ceil($position_in_list / $results_per_page);
 
-            Session::put('success', 'Successfully edited.')
+            Session::put('success', 'Successfully edited.');
             return redirect('/forum/post?id=' . $data['postId'] . '&page=' . $page_of_reply);
         }
 
