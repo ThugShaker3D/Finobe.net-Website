@@ -1518,7 +1518,7 @@ class frontEnd extends Controller
             "model" => 10
         ];
 
-        if(!in_array($section, $sections)) {
+        if(!isset($sections[$section])) {
             return redirect('/catalog/hats');
         }
 
