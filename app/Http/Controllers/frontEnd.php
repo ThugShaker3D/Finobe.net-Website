@@ -1557,7 +1557,9 @@ class frontEnd extends Controller
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
-                ->toArray();
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
         } else {
             $results = $this->db->table('assets')
                 ->where('asset_type', $sections[$section])
@@ -1566,7 +1568,9 @@ class frontEnd extends Controller
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
-                ->toArray();
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
         }
 
         foreach($results as $result) {
