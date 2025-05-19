@@ -1532,13 +1532,13 @@ class frontEnd extends Controller
                 ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
-                ->orderBy('lastlogin', 'desc')
+                ->orderBy('id', 'DESC')
                 ->count();
         } else {
             $results = $this->db->table('assets')
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
-                ->orderBy('lastlogin', 'desc')
+                ->orderBy('id', 'DESC')
                 ->count();
         }
 
@@ -1553,7 +1553,7 @@ class frontEnd extends Controller
                 ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
-                ->orderBy('lastlogin', 'desc')
+                ->orderBy('id', 'DESC')
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
@@ -1562,7 +1562,7 @@ class frontEnd extends Controller
             $results = $this->db->table('assets')
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
-                ->orderBy('lastlogin', 'desc')
+                ->orderBy('id', 'DESC')
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
