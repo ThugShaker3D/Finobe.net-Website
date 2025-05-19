@@ -492,7 +492,7 @@ class frontEnd extends Controller
             $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
         }
 
-        if(!count($users)) {
+        if(!count($user['friends'])) {
             $this->request['data']['pagination']['pages']['data'][] = [
                 'page' => 1
             ];
