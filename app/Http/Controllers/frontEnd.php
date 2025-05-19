@@ -321,17 +321,13 @@ class frontEnd extends Controller
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
-                ->map(function ($item) {
-                    return (array) $item;
-                })->toArray();
+                ->toArray();
         } else {
             $results = User::orderBy('lastlogin', 'desc')
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
-                ->map(function ($item) {
-                    return (array) $item;
-                })->toArray();
+                ->toArray();
         }
 
         foreach($results as $result) {
