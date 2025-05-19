@@ -53,33 +53,35 @@
                                                     </a>
                                                 </p>
                                                 {% for friend in data.user.friends %}
-                                                    {% if friend.username == user.username and friend.status == "pending" %}
-                                                    <p>
-                                                        <a class="btn btn-theme mr-2 nowrap disabled">
-                                                            pending...
-                                                        </a>
-                                                    </p>
-                                                    {% elseif friend.username == data.profile.username and friend.status == "pending" %}
-                                                    <div class="btn-group" role="group" style="display: block;">
-                                                        <a href="/user/{{ data.profile.id }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
-                                                            accept
-                                                        </a>
-                                                        <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap ">
-                                                            decline
-                                                        </a>
-                                                    </div>
-                                                    {% elseif friend.username == data.profile.username and friend.status == "friends" %}
-                                                    <p>
-                                                        <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap">
-                                                            remove friend
-                                                        </a>
-                                                    </p>{#
-                                                    {% elseif not user.friends|filter(user => user.status != "pending")|length %}
-                                                            <p>
-                                                                <a href="/user/{{ data.profile.id }}/add" class="btn btn-primary mr-2 nowrap">
-                                                                    Send Friend Request
-                                                                </a>
-                                                            </p>#}
+                                                    {% if friend.username == data.profile.username %}
+                                                        {% if friend.status == "pending" %}
+                                                        <p>
+                                                            <a class="btn btn-theme mr-2 nowrap disabled">
+                                                                pending...
+                                                            </a>
+                                                        </p>
+                                                        {% elseif friend.status == "pending" %}
+                                                        <div class="btn-group" role="group" style="display: block;">
+                                                            <a href="/user/{{ data.profile.id }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
+                                                                accept
+                                                            </a>
+                                                            <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap ">
+                                                                decline
+                                                            </a>
+                                                        </div>
+                                                        {% elseif friend.status == "friends" %}
+                                                        <p>
+                                                            <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap">
+                                                                remove friend
+                                                            </a>
+                                                        </p>{#
+                                                        {% elseif not user.friends|filter(user => user.status != "pending")|length %}
+                                                                <p>
+                                                                    <a href="/user/{{ data.profile.id }}/add" class="btn btn-primary mr-2 nowrap">
+                                                                        Send Friend Request
+                                                                    </a>
+                                                                </p>#}
+                                                        {% endif %}
                                                     {% endif %}
                                                 {% endfor %}
                                                 {% for friend in data.profile.friends %}

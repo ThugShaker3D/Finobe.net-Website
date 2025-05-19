@@ -296,6 +296,203 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/User', $this->request);
     }
 
+    public function user_add(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!User::where('id', $id)->exists()) {
+            Session::put('error', 'User does not exist');
+            return redirect('/');
+        }
+
+        $user = User::find($id);
+        $user->friends = json_decode($user->friends, true);
+        
+        if($user->username == $this->request['data']['user']['username']) {
+            return redirect('/user/' . $id);
+        }
+
+        foreach($user->friends as $friend) {
+            if($friend['username'] == $this->request['data']['user']['username']) {
+                return redirect('/user/' . $id);
+            }
+        }
+
+        $user->friends[] = [
+            'username' => $this->request['data']['user']['username'],
+            'status' => 'pending'
+        ];
+
+        $user->friends = json_encode($user->friends, JSON_FORCE_OBJECT);
+        $user->save();
+
+        return redirect('/user/' . $id);
+    }
+
+    public function user_accept(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!User::where('id', $id)->exists()) {
+            Session::put('error', 'User does not exist');
+            return redirect('/');
+        }
+
+        $user = User::find($id);
+        $user->friends = json_decode($user->friends, true);
+        
+        if($user->username == $this->request['data']['user']['username']) {
+            if(isset($data['feature'])) {
+                return redirect('/friends/incoming');
+            } else {
+                return redirect('/user/' . $id);
+            }
+        }
+
+        foreach($user->friends as $friend) {
+            if($friend['username'] == $this->request['data']['user']['username']) {
+                Session::put('error', 'You already added this user');
+                if(isset($data['feature'])) {
+                    return redirect('/friends/incoming');
+                } else {
+                    return redirect('/user/' . $id);
+                }
+            }
+        }
+
+        $user->friends[] = [
+            'username' => $this->request['data']['user']['username'],
+            'status' => 'friends'
+        ];
+
+        $user->friends = json_encode($user->friends, JSON_FORCE_OBJECT);
+        $user->save();
+
+        foreach($this->request['data']['user']['friends'] as $key => $friend) {
+            if($friend['username'] == $user->username) {
+                $this->request['data']['user']['friends'][$key]['status'] = 'friends';
+                break;
+            }
+        }
+
+        User::where('id', $this->request['data']['user']['id'])->update([
+            'friends' => json_encode($this->request['data']['user']['friends'], JSON_FORCE_OBJECT)
+        ]);
+
+        if(isset($data['feature'])) {
+            return redirect('/friends/incoming');
+        } else {
+            return redirect('/user/' . $id);
+        }
+    }
+
+    public function user_remove(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!User::where('id', $id)->exists()) {
+            Session::put('error', 'User does not exist');
+            return redirect('/');
+        }
+
+        $user = User::find($id);
+        $user->friends = json_decode($user->friends, true);
+        
+        if($user->username == $this->request['data']['user']['username']) {
+            if(isset($data['feature'])) {
+                return redirect('/friends/incoming');
+            } else {
+                return redirect('/user/' . $id);
+            }
+        }
+
+        foreach($user->friends as $friend) {
+            if($friend['username'] == $this->request['data']['user']['username']) {
+                unset($user->friends[$key]);
+                break;
+            }
+        }
+
+        $user->friends = json_encode($user->friends, JSON_FORCE_OBJECT);
+        $user->save();
+
+        foreach($this->request['data']['user']['friends'] as $key => $friend) {
+            if($friend['username'] == $user->username) {
+                unset($this->request['data']['user']['friends'][$key]);
+                break;
+            }
+        }
+
+        User::where('id', $this->request['data']['user']['id'])->update([
+            'friends' => json_encode($this->request['data']['user']['friends'], JSON_FORCE_OBJECT)
+        ]);
+
+        if(isset($data['feature'])) {
+            return redirect('/friends/incoming');
+        } else {
+            return redirect('/user/' . $id);
+        }
+    }
+
+    public function user_friends(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!User::where('id', $id)->exists()) {
+            return view('404', [], 404);
+        }
+
+        $user = User::find($id)->toArray();
+        $user['friends'] = array_reverse(array_filter(json_decode($user['friends'], true), function ($friend) {
+            return $friend['status'] == 'friends';
+        }));
+
+        foreach($user['friends'] as $key => $friend) {
+            $user['friends'][$key]['id'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+        }
+
+        $pages_to_show = 10;
+        $results_per_page = 12;
+        $number_of_pages = ceil(count($user['friends']) / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+        $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+        $user['friends'] = array_slice($user['friends'], $startIndex, $results_per_page);
+        
+        $this->request['data']['pagination'] = [
+            'data' => [],
+            'pages' => [
+                'info' => [
+                    'current_page' => $currentPage,
+                    'previous_page' => max(1, $currentPage - 1),
+                    'next_page' => min($number_of_pages, $currentPage + 1),
+                    'start_page' => $start_page,
+                    'end_page' => $end_page,
+                    'number_of_pages' => $number_of_pages
+                ],
+                'data' =>[]
+            ]
+        ];
+
+        $this->request['data']['profile'] = $user;
+
+        return view($this->request['data']['user']['version'] . '/User_friends', $this->request);
+    }
+
     public function users(Request $request) {
         $this->request['data']['embeds']['title'] = 'Users' . $this->request['data']['embeds']['title'];
         $data = $request->all();

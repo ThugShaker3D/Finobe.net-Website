@@ -20,7 +20,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::get('/users', [frontEnd::class, 'users']);
-        Route::get('/user/{id}', [frontEnd::class, 'user']);
+        Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
 
@@ -28,6 +28,14 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::prefix('forum')->group(function() {
                 Route::match(['post', 'get'], '/new/post', [frontEnd::class, 'forum_new_post']);
             });
+        });
+
+        Route::prefix('user')->group(function() {
+            Route::get('/{id}', [frontEnd::class, 'user']);
+            Route::get('/{id}/add', [frontEnd::class, 'user_add']);
+            Route::get('/{id}/accept', [frontEnd::class, 'user_accept']);
+            Route::get('/{id}/remove', [frontEnd::class, 'user_remove']);
+            Route::get('/{id}/friends', [frontEnd::class, 'user_friends']);
         });
 
         Route::prefix('forum')->group(function() {

@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     public $timestamps = false;
-    
+
     protected $connection = 'finobe';
     protected $table = 'users';
 
