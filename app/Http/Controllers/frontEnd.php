@@ -946,7 +946,7 @@ class frontEnd extends Controller
         $post['date'] = date('m/d/Y h:i A', strtotime($post['date']));
         $post['edited_date'] = date('m/d/Y h:i A', strtotime($post['edited_date']));
 
-        $user = User::where('username', $post['author'])->select('id', 'status', 'pfp', 'badges')->first()?->toArray();
+        $user = User::where('username', $post['author'])->select('id', 'status', 'pfp', 'lastlogin', 'badges')->first()?->toArray();
         $post['uuid'] = $user['id'];
         $post['status'] = $user['status'];
         $post['pfp'] = $user['pfp'];
@@ -998,7 +998,7 @@ class frontEnd extends Controller
             $post['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $post['id'])->exists();
         }
 
-        $post['online'] = User::where('username', $post['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
+        $post['online'] = Carbon::parse($user['lastlogin'])->gt(Carbon::now()->subMinutes(2));
         $this->request['data']['post'] = $post;
 
         if($this->db->table('forum_replies')->where('toid', $post['id'])->where('sticked', 'y')->exists()) {
@@ -1012,7 +1012,7 @@ class frontEnd extends Controller
             $sticked['date'] = date('m/d/Y h:i A', strtotime($sticked['date']));
             $sticked['edited_date'] = date('m/d/Y h:i A', strtotime($sticked['edited_date']));
 
-            $user = User::where('username', $sticked['author'])->select('id', 'status', 'pfp', 'badges')->first()?->toArray();
+            $user = User::where('username', $sticked['author'])->select('id', 'status', 'pfp', 'lastlogin', 'badges')->first()?->toArray();
             $sticked['uuid'] = $user['id'];
             $sticked['status'] = $user['status'];
             $sticked['pfp'] = $user['pfp'];
@@ -1051,7 +1051,7 @@ class frontEnd extends Controller
                 $sticked['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $sticked['id'])->exists();
             }
 
-            $sticked['online'] = User::where('username', $sticked['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
+            $sticked['online'] = Carbon::parse($user['lastlogin'])->gt(Carbon::now()->subMinutes(2));
             $this->request['data']['sticked'] = $sticked;
         }
 
@@ -1097,7 +1097,7 @@ class frontEnd extends Controller
             $reply['date'] = date('m/d/Y h:i A', strtotime($reply['date']));
             $reply['edited_date'] = date('m/d/Y h:i A', strtotime($reply['edited_date']));
 
-            $user = User::where('username', $reply['author'])->select('id', 'status', 'pfp', 'badges')->first()?->toArray();
+            $user = User::where('username', $reply['author'])->select('id', 'status', 'pfp', 'lastlogin', 'badges')->first()?->toArray();
             $reply['uuid'] = $user['id'];
             $reply['status'] = $user['status'];
             $reply['pfp'] = $user['pfp'];
@@ -1136,7 +1136,7 @@ class frontEnd extends Controller
                 $reply['subscription'] = $this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $reply['id'])->exists();
             }
 
-            $reply['online'] = User::where('username', $reply['author'])->where('lastlogin', '>=', DB::raw('NOW() - INTERVAL 2 MINUTE'))->exists();
+            $reply['online'] = Carbon::parse($user['lastlogin'])->gt(Carbon::now()->subMinutes(2));
             $this->request['data']['replies']['data'][] = $reply;
         }
 
