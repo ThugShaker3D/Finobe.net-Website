@@ -1075,6 +1075,94 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Forum/Reply', $this->request);
     }
 
+    public function forum_edit_reply(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Edit Reply' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'id' => 'required|integer',
+                'postId' => 'required|integer',
+                'content' => 'required|string|min:3|max:8192'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/forum/edit?id=' . $data['id']);
+            }
+
+            if(!$this->db->table('forum_threads')->where('id', $data['postId'])->exists() || !$this->db->table('forum_replies')->where('id', $data['id'])->exists()) {
+                Session::put('error', 'This post or reply does not exist');
+                return redirect('/forum/home');
+            }
+
+            $reply = (array) $this->db->table('forum_replies')
+            ->where('id', $data['id'])
+            ->first();
+        
+            if($reply['author'] != $this->request['data']['user']['username']) {
+                Session::put('error', 'You do not own this reply');
+                return redirect('/forum/home');
+            }
+
+            $post = (array) $this->db->table('forum_threads')
+                ->where('id', $reply['toid'])
+                ->first();
+            
+            if($post['locked'] == 'y') {
+                Session::put('error', 'This post is locked');
+                return redirect('/forum/edit?id=' . $data['id']);
+            }
+
+            $this->db->table('forum_replies')
+                ->where('id', $data['id'])
+                ->update([
+                    'comment' => $data['content'],
+                    'edited' => 'y',
+                    'edited_date' => DB::raw('CURRENT_TIMESTAMP()')
+                ]);
+            
+            $results_per_page = 12;
+            $position_in_list = $this->db->table('forum_replies')->where('id', '<=', $data['id'])->where('toid', $data['postId'])->count();
+            $page_of_reply = ceil($position_in_list / $results_per_page);
+
+            Session::put('success', 'Successfully edited.')
+            return redirect('/forum/post?id=' . $data['postId'] . '&page=' . $page_of_reply);
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_replies')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This reply doesn\'t exist or was deleted');
+            return redirect('/forum/home');
+        }
+
+        $reply = (array) $this->db->table('forum_replies')
+            ->where('id', $data['id'])
+            ->first();
+        
+        if($reply['author'] != $this->request['data']['user']['username']) {
+            Session::put('error', 'You do not own this reply');
+            return redirect('/forum/home');
+        }
+
+        $post = (array) $this->db->table('forum_threads')
+            ->where('id', $reply['toid'])
+            ->first();
+
+        $post['title'] = htmlspecialchars($post['title']);
+        $this->request['data']['post'] = $post;
+        $this->request['data']['reply'] = $reply;
+
+        return view($this->request['data']['user']['version'] . '/Forum/Edit', $this->request);
+    }
+
     public function forum_new_post(Request $request) {
         $this->request['data']['embeds']['title'] = 'New Post' . $this->request['data']['embeds']['title'];
         $data = $request->all();

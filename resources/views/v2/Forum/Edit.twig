@@ -6,13 +6,13 @@
     <div id="app">
       {% include ('v2/Modules/nav.twig') %}
       <div class="forumContainer container mt-3">
-                <nav class="breadcrumb"><a href="/" class="breadcrumb-item">{{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}</a> <a href="/forum/home"
-                        class="breadcrumb-item">Forum Home</a> <a href="/forum/home/{{ post.category }}" class="breadcrumb-item">
-                        {% if post.category == "1" %}{{ "Announcements" }}{% elseif post.category == "2" %}{{ "General" }}{% elseif post.category == "3" %}{{ "Suggestions" }}{% elseif post.category == "4" %}{{ "Off Topic" }}{% elseif post.category == "5" %}{{ "Help" }}{% elseif post.category == "6" %}{{ "Development" }}{% elseif post.category == "7" %}{{ "Serious" }}{% elseif post.category == "8" %}{{ "Serious (Real World)" }}{% elseif post.category == "9" %}{{ "Trade Discussion" }}{% elseif post.category == "10" %}{{ "да (Русский)" }}{% endif %}
-                    </a> <a href="/forum/post?id={{ post.id }}" class="breadcrumb-item">{{ post.title }}</a> <span class="breadcrumb-item overflow-hidden">
+                <nav class="breadcrumb"><a href="/" class="breadcrumb-item">{{ (data.user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }}</a> <a href="/forum/home"
+                        class="breadcrumb-item">Forum Home</a> <a href="/forum/home/{{ data.post.category }}" class="breadcrumb-item">
+                        {% if data.post.category == "1" %}{{ "Announcements" }}{% elseif data.post.category == "2" %}{{ "General" }}{% elseif data.post.category == "3" %}{{ "Suggestions" }}{% elseif data.post.category == "4" %}{{ "Off Topic" }}{% elseif data.post.category == "5" %}{{ "Help" }}{% elseif data.post.category == "6" %}{{ "Development" }}{% elseif data.post.category == "7" %}{{ "Serious" }}{% elseif data.post.category == "8" %}{{ "Serious (Real World)" }}{% elseif data.post.category == "9" %}{{ "Trade Discussion" }}{% elseif data.post.category == "10" %}{{ "да (Русский)" }}{% endif %}
+                    </a> <a href="/forum/post?id={{ data.post.id }}" class="breadcrumb-item">{{ data.post.title }}</a> <span class="breadcrumb-item overflow-hidden">
                         Editing Reply
                     </span></nav>
-                {% if post.category == "7" or post.category == "8" %}
+                {% if data.post.category == "7" or data.post.category == "8" %}
                     <div class="alert alert-danger mb-4">
                         <div class="container">
                             <h5 class="font-weight-light my-2"><i
@@ -24,18 +24,19 @@
                 <div id="forum-posts">
                     <div class="card mb-4">
                         <div class="card-header bg-primary text-white">
-                            Editing to {{ post.title }}
+                            Editing to {{ data.post.title }}
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12 post-content overflow-hidden">
                                     <form role="form" method="POST" action="" enctype="multipart/form-data">
-                                        <input type="hidden" name="id" value="{{ reply.id }}">
-                                        <input type="hidden" name="postid" value="{{ post.id }}">
+                                        <input type="hidden" name="_token" value="{{ data.csrf_token }}">
+                                        <input type="hidden" name="id" value="{{ data.reply.id }}">
+                                        <input type="hidden" name="postid" value="{{ data.post.id }}">
                                         <div class="form-group row">
                                             <label for="note" class="col-form-label text-md-right mb-2" style="margin-left:15px;">Note: Use Markdown syntax.</label>
                                             <div class="col-md-12">
-                                                {% if user.status == "admin" %}
+                                                {% if data.user.status == "admin" %}
 												<button style="margin-top: 5px;" type="button" class="btn btn-sm btn-secondary col-md-3 mb-1" onclick="addImage()">Add image</button>
 												<script>
 												function addImage() {
@@ -85,7 +86,7 @@
                                                 }
 												</script>
 												{% endif %}
-                                                <textarea rows="10" minlength="3" type="text" id="content" name="content" value="" placeholder="Enter your reply here (minimum 3 characters)." class="form-control">{{ reply.comment }}</textarea>
+                                                <textarea rows="10" minlength="3" type="text" id="content" name="content" value="" placeholder="Enter your reply here (minimum 3 characters)." class="form-control">{{ data.reply.comment }}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
