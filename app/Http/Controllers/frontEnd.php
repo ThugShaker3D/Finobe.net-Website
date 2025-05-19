@@ -279,7 +279,7 @@ class frontEnd extends Controller
         foreach($places as $index => $place) {
             $place['additional'] = json_decode($place['additional'], true);
             $place['count'] = $index + 1;
-            $place['thumbnail'] = Cache::remember('thumbnail_' . $place['id'], 60 * 60, function() use ($place) { return $this->db->table('assets')->select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file'); });
+            $place['thumbnail'] = Cache::remember('thumbnail_' . $place['additional']['media']['imageAssetId'], 60 * 60, function() use ($place) { return $this->db->table('assets')->select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file'); });
             $user['places'][] = $place;
         }
 
@@ -1524,7 +1524,7 @@ class frontEnd extends Controller
 
         $items = [];
         $pages_to_show = 10;
-        $results_per_page = 16;
+        $results_per_page = 12;
 
         if(isset($data['q'])) {
             $search = '%' . htmlspecialchars($data['search']) . '%';
@@ -1617,6 +1617,58 @@ class frontEnd extends Controller
         $this->request['data']['search'] = isset($data['q']) ? $data['q'] : false;
 
         return view($this->request['data']['user']['version'] . '/Catalog/Index', $this->request);
+    }
+
+    public function item(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!$this->db->table('assets')->where('id', $id)->exists()) {
+            return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
+        }
+
+        $item = (array) $this->db->table('assets')
+            ->where('id', $id)
+            ->first();
+        
+        if($item['asset_type'] == 9) {
+            return redirect('/place/' . $id);
+        }
+
+        if($item['asset_type'] == 1) {
+            return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
+        }
+
+        $item['additional'] = json_decode($item['additional'], true);
+        $item['title'] = htmlspecialchars($item['title']);
+        
+        if(User::where('id', $item['author'])->exists()) {
+            $item['uuid'] = $item['author'];
+        }
+
+        $item['author'] = htmlspecialchars(User::where('id', $item['author'])->value('id') ?? $item['additional']['oldUser']);
+        $item['description'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($item['description'])));
+        $item['publish'] = date('m/d/Y', strtotime($item['created']));
+	    $item['updated'] = date('m/d/Y', strtotime($item['updated']));
+
+        if($item['asset_type'] == 3) {
+            $item['thumbnail'] = Cache::remember('thumbnail_' . $item['additional']['media']['imageAssetId'], 60 * 60, function() use ($item) { return $this->db->table('assets')->select('file')->where('id', $item['additional']['media']['imageAssetId'])->value('file'); });
+        }
+
+        $item['isOwned'] = $this->db->table('purchases')->where('username', $this->request['data']['user']['username'])->where('assetid', $id)->exists();
+        $item['sales'] = number_format($this->db->table('purchases')->where('assetid', $id)->count());
+
+        if($item['visibility'] == 'd') {
+            $item['title'] = "[Not Approved]";
+            $item['description'] = "[Not Approved]";
+        }
+
+        $this->request['data']['item'] = $item;
+
+        return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
     }
 
     public function login(Request $request) {

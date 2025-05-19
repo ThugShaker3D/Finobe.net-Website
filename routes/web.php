@@ -20,6 +20,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::get('/users', [frontEnd::class, 'users']);
+        Route::get('/item/{id}', [frontEnd::class, 'item']);
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
@@ -34,7 +35,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/', function() {
                 return redirect('/catalog/hats');
             });
-            
+
             Route::get('/{section}', [frontEnd::class, 'catalog_index']);
         });
 

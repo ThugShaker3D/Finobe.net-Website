@@ -72,28 +72,28 @@
       <div class="container">
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
-                        {% if (item.visibility == "r" and item.author == user.username) or item.visibility == "d" %}
+                        {% if (data.item.visibility == "r" and data.item.author == user.username) or data.item.visibility == "d" %}
                             <div class="alert alert-warning rounded text-center" style="color:white;margin:20px 0 20px 0;background-color:rgb(245, 69, 69);">
-								{{ (item.visibility != 'd') ? "This item is under review." : "This item was not approved" }}
+								{{ (data.item.visibility != 'd') ? "This item is under review." : "This item was not approved" }}
                             </div>
                         {% endif %}
                         <div class="card" style="margin: 10px 0px 10px 0px;">
                                 <div class="card-header">
-                                    {{ (user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }} {{ (item.asset_type == 3) ? "Audio" : (item.asset_type == 8) ? "Hat" : "" }}
+                                    {{ (data.user.branding == "aesthetiful") ? "Aesthetiful" : "Finobe" }} {{ (data.item.asset_type == 3) ? "Audio" : (data.item.asset_type == 8) ? "Hat" : "" }}
                                 </div>
                                 <div class="card-body mt-2">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <h4>{{ item.title | raw }}</h4>
-                                            <p style="margin-bottom:0px;">by {% if item.uuid matches '/^[0-9]+$/'%}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% else %}{{item.author}}{% endif %}</p>
-                                            <img src="{% if item.asset_type == 3 %}/s/img/{{ ((item.visibility == "r" and item.author == user.username) or item.visibility == "d") ? "spinnerv2.gif" : item.thumbnail }}{% else %}{% if item.visibility == 'd' or item.visibility == 'r' %}/s/img/spinnerv2.gif{% else %}{{ item.additional.media.thumbnail }}{% endif %}{% endif %}" class="mt-2" style="max-width:200px; display: block;">
-                                            {% if item.asset_type == 3 %}
-                                            <audio src="https://www.finobe.net/asset/?id={{ item.id }}" controls="controls" controlslist="nodownload">
+                                            <h4>{{ data.item.title | raw }}</h4>
+                                            <p style="margin-bottom:0px;">by {% if data.item.uuid matches '/^[0-9]+$/'%}<a href="/user/{{ data.item.uuid }}">{{ data.item.author }}</a>{% else %}{{ data.item.author }}{% endif %}</p>
+                                            <img src="{% if data.item.asset_type == 3 %}/s/img/{{ ((data.item.visibility == "r" and data.item.author == data.user.username) or data.item.visibility == "d") ? "spinnerv2.gif" : data.item.thumbnail }}{% else %}{% if data.item.visibility == 'd' or data.item.visibility == 'r' %}/s/img/spinnerv2.gif{% else %}{{ data.item.additional.media.thumbnail }}{% endif %}{% endif %}" class="mt-2" style="max-width:200px; display: block;">
+                                            {% if data.item.asset_type == 3 %}
+                                            <audio src="https://www.finobe.net/asset/?id={{ data.item.id }}" controls="controls" controlslist="nodownload">
                                             Your browser does not support the audio element.
                                             </audio>
                                             {% endif %}
                                             <p class="mt-3 mb-0"><strong>Description:</strong></p>
-                                            <p>{{ (item.description|length) ? item.description|raw : 'No description' }}</p>
+                                            <p>{{ (data.item.description|length) ? data.item.description|raw : 'No description' }}</p>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="card">
@@ -104,27 +104,27 @@
                                                         </div>
                                                         <div class="col-auto">
                                                             <li class="nav-item nav-link n-money-text" style="padding-top:0px;" data-placement="bottom" style="padding-left:0px;">
-                                                                <a><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle"> {{ item.additional.price }}</a>
+                                                                <a><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle"> {{ data.item.additional.price }}</a>
                                                             </li>
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-center">
                                                         <div class="col-auto">
-                                                            <p>Sold: {{ item.sales }}</p>
+                                                            <p>Sold: {{ data.item.sales }}</p>
                                                         </div>
                                                     </div>
-                                                    {% if item.visibility != "d" and item.visibility != "r" %}
-                                                        {% if item.IsOwned == false %}
+                                                    {% if data.item.visibility != "d" and data.item.visibility != "r" %}
+                                                        {% if not data.item.isOwned %}
                                                         <button id="btn-purchase" class="btn btn-success btn-lg col-md-12 mb-1">purchase</button>
                                                         {% endif %}
-                                                        {% if item.IsOwned == true and IsLoggedIn %}
+                                                        {% if data.item.IsOwned and data.siteusername %}
                                                         <div class="row justify-content-center mt-2">
                                                             <div class="col-auto text-muted">
                                                                 <p>Item Owned.</p>
                                                             </div>
                                                         </div>
                                                         {% endif %}
-                                                        {% if item.asset_type == 3 %}
+                                                        {% if data.item.asset_type == 3 %}
                                                         <button id="CopyButton" class="btn btn-primary btn-lg col-md-12 mr-1" style="text-transform: capitalize;">Copy ID</button>
                                                         {% endif %}
                                                     {% endif %}
@@ -141,18 +141,18 @@
                             <div class="card-body row">
                                 <div class="text-center" style="margin-left:25%">
                                     <p>Created</p>
-                                    <p class="mb-0">{{ item.publish }}</p>
+                                    <p class="mb-0">{{ data.item.publish }}</p>
                                 </div>
                                 <div class="text-center" style="margin-right:25%;margin-left:auto;">
                                     <p>Updated</p>
-                                    <p class="mb-0">{{ item.updated }}</p>
+                                    <p class="mb-0">{{ data.item.updated }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <p id="ID" style="display: none;">http://www.finobe.net/asset/?id={{ item.id }}</p>
+            <p id="ID" style="display: none;">http://www.finobe.net/asset/?id={{ data.item.id }}</p>
             <script>
             function copy(copyId) {
                 var $inp = $("<input>");
@@ -185,7 +185,8 @@
 
                                                     confirmPurchase.addEventListener('click', function() {
                                                         const data = new URLSearchParams();
-                                                        data.append('assetid', '{{ item.id }}');
+                                                        data.append('assetid', '{{ data.item.id }}');
+                                                        data.append('_token', '{{ data.csrf_token }}');
                                                         
                                                         fetch("/api/purchase", {
                                                             method: "POST",
@@ -194,9 +195,10 @@
                                                             },
                                                             body: data,
                                                         })
-                                                        .then(response => response.text())
+                                                        .then(response => response.json())
                                                         .then(data => {
-                                                            if(data == "Not enough dius") {
+                                                            if(data.code != 200) {
+                                                                purchaseError.querySelector('p').innerHTML = data.message;
                                                                 purchaseError.style.display = "";
 
                                                                 setTimeout(function () {
@@ -206,7 +208,7 @@
                                                                 purchaseComplete.style.display = "";
                                                                 
                                                                 setTimeout(function () {
-                                                                    window.location.href = "/item/{{ item.id }}";
+                                                                    window.location.href = "/item/{{ data.item.id }}";
                                                                 }, 2500);
                                                             }
                                                             
