@@ -1634,6 +1634,8 @@ class frontEnd extends Controller
             ->where('id', $id)
             ->first();
         
+            $this->request['data']['embeds']['title'] = htmlspecialchars($item['title']) . $this->request['data']['embeds']['title'];
+        
         if($item['asset_type'] == 9) {
             return redirect('/place/' . $id);
         }
