@@ -23,7 +23,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         $isLocal = $this->app->environment('local');
 
         Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
-            /*
+            /* stop
             return $isLocal ||
                    $entry->isReportableException() ||
                    $entry->isFailedRequest() ||
@@ -31,6 +31,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                    $entry->isScheduledTask() ||
                    $entry->hasMonitoredTag();
             */
+            if ($entry->type == 'request' && isset($entry->content['uri']) && str_starts_with($entry->content['uri'], '/s')) {
+                return false;
+            }
+
             return true;
         });
     }
