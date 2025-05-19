@@ -460,7 +460,7 @@ class frontEnd extends Controller
         }));
 
         foreach($user['friends'] as $key => $friend) {
-            $user['friends'][$key]['id'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+            $user['friends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
             $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
         }
 
