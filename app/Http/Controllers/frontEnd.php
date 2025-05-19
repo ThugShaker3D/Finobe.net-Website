@@ -517,7 +517,7 @@ class frontEnd extends Controller
         }
 
         $this->request['data']['user']['friends'] = array_reverse(array_filter($this->request['data']['user']['friends'], function ($friend) {
-            return $friend['status'] == 'friends';
+            return $friend['status'] == 'pending';
         }));
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
