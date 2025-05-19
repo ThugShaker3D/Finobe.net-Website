@@ -1578,7 +1578,7 @@ class frontEnd extends Controller
             $result['title'] = htmlspecialchars($result['title']);
 
             if($result['asset_type'] == 3) {
-                $result['duration'] = $this->dataService->timestamp($row['additional']['duration']);
+                $result['duration'] = $this->dataService->timestamp($result['additional']['duration']);
             }
 
             $user = User::find($result['author']);
