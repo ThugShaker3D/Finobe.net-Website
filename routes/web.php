@@ -32,7 +32,7 @@ Route::middleware([SetClientIp::class])->group(function() {
 
         Route::prefix('catalog')->group(function() {
             Route::get('/{section}', [frontEnd::class, 'catalog_index']);
-        })
+        });
 
         Route::prefix('user')->group(function() {
             Route::get('/{id}', [frontEnd::class, 'user']);
