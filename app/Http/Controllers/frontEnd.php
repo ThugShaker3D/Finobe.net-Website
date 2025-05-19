@@ -1686,7 +1686,7 @@ class frontEnd extends Controller
         }
 
         $item['author'] = htmlspecialchars(User::where('id', $item['author'])->value('username') ?? $item['additional']['oldUser']);
-        $item['description'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($item['description'])));
+        $item['description'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($item['description']))));
         $item['publish'] = date('m/d/Y', strtotime($item['created']));
 	    $item['updated'] = date('m/d/Y', strtotime($item['updated']));
 
