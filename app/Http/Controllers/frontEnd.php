@@ -944,6 +944,7 @@ class frontEnd extends Controller
     }
 
     public function forum_new_post(Request $request) {
+        $this->request['data']['embeds']['title'] = 'New Post' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
         if(!$this->request['data']['siteusername']) {
