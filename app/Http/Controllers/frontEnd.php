@@ -321,12 +321,13 @@ class frontEnd extends Controller
             }
         }
 
-        $user->friends[] = [
+        $friends = $user->friends;
+        $friends[] = [
             'username' => $this->request['data']['user']['username'],
             'status' => 'pending'
         ];
 
-        $user->friends = json_encode($user->friends, JSON_FORCE_OBJECT);
+        $user->friends = json_encode($friends, JSON_FORCE_OBJECT);
         $user->save();
 
         return redirect('/user/' . $id);
