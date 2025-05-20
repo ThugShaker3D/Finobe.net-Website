@@ -529,6 +529,41 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/User_friends_incoming', $this->request);
     }
 
+    public function transactions(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Transaction log' . $this->request['data']['embeds']['title'];
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $purchases = [];
+        $results = $this->db->table('purchases')
+            ->where('username', $this->request['data']['user']['username'])
+            ->orderBy('date', 'DESC')
+            ->limit(15)
+            ->get()
+            ->toArray();
+        
+        foreach($results as $result) {
+            $result['date'] = date('m/d/Y' strtotime($result['data']));
+
+            if($this->db->table('assets')->where('id', $result['assetid'])->exists()) {
+                $result['assetname'] = strip_tags(htmlspecialchars($this->db->table('assets')->select('title')->where('id', $result['assetid'])->value('title')));
+            } elseif($result['amount'] > 0 && $result['assetid'] == 0) {
+                $result['assetname'] = 'Dius';
+            }
+
+            $result['uuid'] = User::where('username', $result['author'])->exists() ? User::where('username', $result['author'])->value('id') : false;
+            $result['author'] = htmlspecialchars($result['author']);
+            $result['amount'] = formatNumber($result['amount']);
+            $purchases[] = $result;
+        }
+
+        $this->request['data']['purchases'] = $purchases;
+
+        return view($this->request['data']['user']['version'] . '/Transactions', $this->request);
+    }
+
     public function users(Request $request) {
         $this->request['data']['embeds']['title'] = 'Users' . $this->request['data']['embeds']['title'];
         $data = $request->all();
