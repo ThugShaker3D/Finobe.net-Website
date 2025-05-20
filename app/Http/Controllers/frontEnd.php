@@ -1756,6 +1756,69 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Character', $this->request);
     }
 
+    public function place(Request $request, $id) {
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!$this->db->table('assets')->where('id', $id)->exists()) {
+            Session::put('error', 'Place not found');
+            return redirect('/app/places');
+        }
+
+        $place = (array) $this->db->table('assets')
+            ->where('id', $id)
+            ->first();
+        
+        $place['additional'] = json_decode($place['additional'], true);
+        
+        if($place['asset_type'] != 9) {
+            return redirect('/app/places');
+        }
+
+        $place = [
+            'id' => $place['id'];
+            'additional' => $place['additional'],
+            'title' => strip_tags(htmlspecialchars($place['title'])),
+            'username' => User::where('id', $place['author'])->value('username'),
+            'description' => nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($place['description'])))),
+            'created' => date('m/d/Y', strtotime($place['created'])),
+            'updated' => date('m/d/Y', strtotime($place['updated'])),
+            'visits' => number_format($place['additional']['visits']),
+            'thumbnail' => $this->db->table('assets')->select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file'),
+            'servers' => []
+        ];
+
+        $servers = [];
+        $results = $this->db->table('servers')
+            ->where('placeid', $place)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+
+        foreach($results as $result) {
+            $players = json_decode($result['players'], true);
+            $result['players'] = [];
+
+            foreach($players as $playerId) {
+                if(User::find($playerId)) {
+                    $result['players'][] = [
+                        'userid' => $playerId,
+                        'username' => User::where('id', $playerId)->value('username'),
+                        'avatar' => Cache::remember('pfp_' . User::where('id', $playerId)->value('username'), 60 * 60, function() use ($playerId) { return User::where('username', User::where('id', $playerId)->value('username'))->value('pfp'); });
+                    ];
+                }
+            }
+
+            $place['servers'][] = $result;
+        }
+
+        $this->request['data']['place'] = $place;
+
+        return view($this->request['data']['user']['version'] . '/Places/Place', $this->request);
+    }
+
     public function places(Request $request) {
         $this->request['data']['embeds']['title'] = 'Places' . $this->request['data']['embeds']['title'];
 
