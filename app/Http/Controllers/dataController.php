@@ -35,6 +35,9 @@ class dataController extends Controller
     
     public function formatNumber($number) {
         $suffix = '';
+        $negative = $number < 0;
+        $number = abs($number);
+
         if ($number >= 1e39) {
             $suffix = 'NN'; // Nonillion
             $number = round($number / 1e39, 1);
@@ -51,7 +54,7 @@ class dataController extends Controller
             $suffix = 'QQ'; // Quintillion
             $number = round($number / 1e23, 1);
         } elseif ($number >= 1e19) {
-            $suffix = 'QQ'; // Quadrillion
+            $suffix = 'Q'; // Quadrillion
             $number = round($number / 1e19, 1);
         } elseif ($number >= 1e15) {
             $suffix = 'T'; // Trillion
@@ -67,7 +70,7 @@ class dataController extends Controller
             $number = round($number / 1e3, 1);
         }
 
-        return $number . $suffix;
+        return ($negative ? '-' : '') . $number . $suffix;
     }
 
     public function timestamp(float $seconds) {
