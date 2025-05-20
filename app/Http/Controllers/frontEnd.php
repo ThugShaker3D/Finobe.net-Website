@@ -1762,8 +1762,7 @@ class frontEnd extends Controller
         }
 
         if(!$this->db->table('assets')->where('id', $id)->exists()) {
-            Session::put('error', 'Place not found');
-            return redirect('/app/places');
+            return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
         $place = (array) $this->db->table('assets')
@@ -1817,6 +1816,83 @@ class frontEnd extends Controller
         $this->request['data']['place'] = $place;
 
         return view($this->request['data']['user']['version'] . '/Places/Place', $this->request);
+    }
+
+    public function place_settings(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!$this->db->table('assets')->where('id', $id)->exists()) {
+            return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
+        }
+
+        $place = (array) $this->db->table('assets')
+            ->where('id', $id)
+            ->first();
+        
+        if($place['asset_type'] != 9) {
+            return redirect('/app/places');
+        }
+
+        $place['username'] = User::where('id', $place['author'])->value('username');
+        $place['additional'] = json_decode($place['additiona'], true);
+
+        if($place['username'] != $this->request['data']['user']['username']) {
+            Session::put('error', 'You do not own this place');
+            return redirect('/app/places');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'title'            => 'required|string|min:3|max:255',
+                'description'      => 'required|string|max:8192',
+                'allowplaying'     => 'nullable|boolean',
+                'downloadable'     => 'nullable|boolean',
+                'hideRecent'       => 'nullable|boolean',
+                'combat'           => 'nullable|boolean',
+                'social'           => 'nullable|boolean',
+                'building'         => 'nullable|boolean',
+                'musical'          => 'nullable|boolean',
+                'game-version'     => 'required|in:2012,2016',
+                'category'         => 'required|in:original,copy',
+                'chat-type'        => 'required|in:classic,bubble_chat,both',
+                'max-players'      => 'required|integer|between:5,100',
+            ]);
+
+            $place['additional']['allowplaying'] = isset($data['allowplaying']);
+            $place['additional']['uncopylocked'] = isset($data['downloadable']);
+            $place['additional']['hidden'] = isset($data['hideRecent']);
+            $place['additional']['gears']['combat'] = isset($data['combat']);
+            $place['additional']['gears']['social'] = isset($data['social']);
+            $place['additional']['gears']['building'] = isset($data['building']);
+            $place['additional']['gears']['musical'] = isset($data['musical']);
+            $place['additional']['version'] = $data['game-version'];
+            $place['additional']['category'] = $data['category'];
+            $place['additional']['chat_type'] = $data['chat-type'];
+            $place['additional']['maxplayers'] = (int) $data['max-players'];
+
+            $this->db->table('assets')
+                ->where('id', $id)
+                ->update([
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'additional' => json_encode($place['additional'])
+                ]);
+            
+            Session::put('successv2', 'Place settings saved.');
+            return redirect('/place/' . $id . '/settings');
+        }
+
+        $place['title'] = strip_tags(htmlspecialchars($place['title']));
+        //$place['description'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($place['description']))));
+
+        $this->request['data']['place'] = $place;
+        $this->request['data']['embeds']['title'] = $place['title'] . $this->request['data']['embeds']['title'];
+
+        return view($this->request['data']['user']['version'] . '/Places/Place_settings', $this->request);
     }
 
     public function places(Request $request) {

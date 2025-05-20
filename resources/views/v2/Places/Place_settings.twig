@@ -710,7 +710,7 @@ input[type='number'][data-v-e236382e]:hover::-webkit-outer-spin-button {
                                     <strong>Name</strong>
                                 </label>
                                 <div class="full-width">
-                                    <input type="text" name="name" value="{{ place.title|raw }}" placeholder="Place title"
+                                    <input type="text" name="name" value="{{ data.place.title|raw }}" placeholder="Place title"
                                         class="form-control"><br>
                                 </div>
                                 <label for="description" class="col-form-label text-md-right">
@@ -718,64 +718,64 @@ input[type='number'][data-v-e236382e]:hover::-webkit-outer-spin-button {
                                 </label>
                                 <div class="full-width">
                                     <textarea type="text" name="description" value="" placeholder="description"
-                                        class="form-control">{{ place.description }}</textarea>
+                                        class="form-control">{{ data.place.description }}</textarea>
                                 </div>
-                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="visibility" name="allowplaying" class="custom-control-input"{{ (place.additional.allowplaying == "y") ? " checked" : "" }}> <label for="visibility" class="custom-control-label pl-1">Allow playing of this place</label></div>
-                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="downloadable" name="downloadable" class="custom-control-input"{{ (place.additional.uncopylocked == "y") ? " checked" : "" }}> <label for="downloadable" class="custom-control-label pl-1">Uncopylocked</label></div>
+                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="visibility" name="allowplaying" class="custom-control-input"{{ (data.place.additional.allowplaying == "y") ? " checked" : "" }}> <label for="visibility" class="custom-control-label pl-1">Allow playing of this place</label></div>
+                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="downloadable" name="downloadable" class="custom-control-input"{{ (data.place.additional.uncopylocked == "y") ? " checked" : "" }}> <label for="downloadable" class="custom-control-label pl-1">Uncopylocked</label></div>
                                 <small id="downloadable" class="form-text text-muted" style="margin-left:3%">Enabling this option will allow your place file to be downloaded by anybody</small>
-                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="hideRecent" name="hideRecent" class="custom-control-input"{{ (place.additional.hidden == "y") ? " checked" : "" }}> <label for="hideRecent" class="custom-control-label pl-1">Hide from recent places list</label></div>
+                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="hideRecent" name="hideRecent" class="custom-control-input"{{ (data.place.additional.hidden == "y") ? " checked" : "" }}> <label for="hideRecent" class="custom-control-label pl-1">Hide from recent places list</label></div>
                                 <small id="hideRecent" class="form-text text-muted" style="margin-left:3%">Enabling this will hide your place from the place list unless te user explicitly checked the "Show hidden places" option.</small>
                                 <p class="col-form-label">
                                     <strong>Gear Types</strong>
                                 </p>
                                 <div class="d-flex mb-2">
                                     <div>
-                                        <div data-v-4350f98c="" class="custom-control custom-checkbox"><input data-v-4350f98c="" type="checkbox" id="combat" name="combat" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.gears.combat == "true") ? " checked" : "" }}> <label data-v-4350f98c="" for="combat" class="custom-control-label pl-1">Combat</label></div>
-                                        <div data-v-4350f98c="" class="custom-control custom-checkbox mt-3"><input data-v-4350f98c="" type="checkbox" id="social" name="social" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.gears.social == "true") ? " checked" : "" }}> <label data-v-4350f98c="" for="social" class="custom-control-label pl-1">Social</label></div>
+                                        <div data-v-4350f98c="" class="custom-control custom-checkbox"><input data-v-4350f98c="" type="checkbox" id="combat" name="combat" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.gears.combat) ? " checked" : "" }}> <label data-v-4350f98c="" for="combat" class="custom-control-label pl-1">Combat</label></div>
+                                        <div data-v-4350f98c="" class="custom-control custom-checkbox mt-3"><input data-v-4350f98c="" type="checkbox" id="social" name="social" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.gears.social) ? " checked" : "" }}> <label data-v-4350f98c="" for="social" class="custom-control-label pl-1">Social</label></div>
                                     </div>
                                     <div style="margin-left: 10%">
-                                        <div data-v-4350f98c="" class="custom-control custom-checkbox"><input data-v-4350f98c="" type="checkbox" id="building" name="building" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.gears.building == "true") ? " checked" : "" }}> <label data-v-4350f98c="" for="building" class="custom-control-label pl-1">Building</label></div>
-                                        <div data-v-4350f98c="" class="custom-control custom-checkbox mt-3"><input data-v-4350f98c="" type="checkbox" id="musical" name="musical" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.gears.musical == "true") ? " checked" : "" }}> <label data-v-4350f98c="" for="musical" class="custom-control-label pl-1">Musical</label></div>
+                                        <div data-v-4350f98c="" class="custom-control custom-checkbox"><input data-v-4350f98c="" type="checkbox" id="building" name="building" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.gears.building) ? " checked" : "" }}> <label data-v-4350f98c="" for="building" class="custom-control-label pl-1">Building</label></div>
+                                        <div data-v-4350f98c="" class="custom-control custom-checkbox mt-3"><input data-v-4350f98c="" type="checkbox" id="musical" name="musical" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.gears.musical) ? " checked" : "" }}> <label data-v-4350f98c="" for="musical" class="custom-control-label pl-1">Musical</label></div>
                                     </div>
                                 </div>
                                 <p class="col-form-label">
                                     <strong>Chat Type</strong>
                                 </p>
-                                <div class="custom-control custom-radio"><input type="radio" id="type-classic" name="chat-type" value="classic" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.chat_type == "classic") ? " checked" : "" }}> <label data-v-4350f98c="" for="type-classic" class="custom-control-label pl-1">Classic</label></div>
-                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="type-bubble-chat" name="chat-type" class="custom-control-input" value="bubble_chat" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.chat_type == "bubble_chat") ? " checked" : "" }}> <label data-v-4350f98c="" for="type-bubble-chat" class="custom-control-label pl-1">Bubble Chat</label></div>
-                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="type-both" name="chat-type" class="custom-control-input" value="both" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.chat_type == "both") ? " checked" : "" }}> <label data-v-4350f98c="" for="type-both" class="custom-control-label pl-1">Both</label></div>
+                                <div class="custom-control custom-radio"><input type="radio" id="type-classic" name="chat-type" value="classic" class="custom-control-input" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.chat_type == "classic") ? " checked" : "" }}> <label data-v-4350f98c="" for="type-classic" class="custom-control-label pl-1">Classic</label></div>
+                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="type-bubble-chat" name="chat-type" class="custom-control-input" value="bubble_chat" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.chat_type == "bubble_chat") ? " checked" : "" }}> <label data-v-4350f98c="" for="type-bubble-chat" class="custom-control-label pl-1">Bubble Chat</label></div>
+                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="type-both" name="chat-type" class="custom-control-input" value="both" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.chat_type == "both") ? " checked" : "" }}> <label data-v-4350f98c="" for="type-both" class="custom-control-label pl-1">Both</label></div>
                                 <p class="col-form-label mt-3 mb-0 py-0">
                                     <strong>Category</strong>
                                 </p>
                                 <small class="form-text text-muted mt-0">This is the category that your place will be listed under on the place list. If you falsely categorize your place, you may have your place slots revoked and even be banned.</small>
-                                <div class="custom-control custom-radio"><input type="radio" id="category-original" name="category" class="custom-control-input" value="original"{{ (place.additional.category == "original") ? " checked" : "" }}> <label for="category-original" class="custom-control-label pl-1">Original</label></div>
+                                <div class="custom-control custom-radio"><input type="radio" id="category-original" name="category" class="custom-control-input" value="original"{{ (data.place.additional.category == "original") ? " checked" : "" }}> <label for="category-original" class="custom-control-label pl-1">Original</label></div>
                                 <small id="category-original" class="form-text text-muted" style="margin-left:3%">Choose this option if your place is something you've made yourself, and not a copy.</small>
-                                <div class="custom-control custom-radio"><input type="radio" id="category-copy" name="category" class="custom-control-input" value="copy"{{ (place.additional.category == "copy") ? " checked" : "" }}> <label for="category-copy" class="custom-control-label pl-1">Copy (Non-original)</label></div>
+                                <div class="custom-control custom-radio"><input type="radio" id="category-copy" name="category" class="custom-control-input" value="copy"{{ (data.place.additional.category == "copy") ? " checked" : "" }}> <label for="category-copy" class="custom-control-label pl-1">Copy (Non-original)</label></div>
                                 <small id="category-copy" class="form-text text-muted" style="margin-left:3%">Choose this option if your is a copy of an existing game or a modified game or a modified existing game.</small>
                                 <p class="col-form-label mt-2">
                                     <strong>Max Players</strong>
                                 </p>
                                 <select name="max-players" class="form-control">
-                                    <option value="5"{{ (place.additional.maxplayers == 5) ? " selected" : "" }}>5</option>
-                                    <option value="10"{{ (place.additional.maxplayers == 10) ? " selected" : "" }}>10</option>
-                                    <option value="15"{{ (place.additional.maxplayers == 15) ? " selected" : "" }}>15</option>
-                                    <option value="20"{{ (place.additional.maxplayers == 20) ? " selected" : "" }}>20</option>
-                                    <option value="25"{{ (place.additional.maxplayers == 25) ? " selected" : "" }}>25</option>
-                                    <option value="30"{{ (place.additional.maxplayers == 30) ? " selected" : "" }}>30</option>
-                                    <option value="35"{{ (place.additional.maxplayers == 35) ? " selected" : "" }}>35</option>
-                                    <option value="40"{{ (place.additional.maxplayers == 40) ? " selected" : "" }}>40</option>
-                                    <option value="45"{{ (place.additional.maxplayers == 45) ? " selected" : "" }}>45</option>
-                                    <option value="50"{{ (place.additional.maxplayers == 50) ? " selected" : "" }}>50</option>
-                                    <option value="55"{{ (place.additional.maxplayers == 55) ? " selected" : "" }}>55</option>
-                                    <option value="60"{{ (place.additional.maxplayers == 60) ? " selected" : "" }}>60</option>
-                                    <option value="65"{{ (place.additional.maxplayers == 65) ? " selected" : "" }}>65</option>
-                                    <option value="70"{{ (place.additional.maxplayers == 70) ? " selected" : "" }}>70</option>
-                                    <option value="75"{{ (place.additional.maxplayers == 75) ? " selected" : "" }}>75</option>
-                                    <option value="80"{{ (place.additional.maxplayers == 80) ? " selected" : "" }}>80</option>
-                                    <option value="85"{{ (place.additional.maxplayers == 85) ? " selected" : "" }}>85</option>
-                                    <option value="90"{{ (place.additional.maxplayers == 90) ? " selected" : "" }}>90</option>
-                                    <option value="95"{{ (place.additional.maxplayers == 95) ? " selected" : "" }}>95</option>
-                                    <option value="100"{{ (place.additional.maxplayers == 100) ? " selected" : "" }}>100</option>
+                                    <option value="5"{{ (data.place.additional.maxplayers == 5) ? " selected" : "" }}>5</option>
+                                    <option value="10"{{ (data.place.additional.maxplayers == 10) ? " selected" : "" }}>10</option>
+                                    <option value="15"{{ (data.place.additional.maxplayers == 15) ? " selected" : "" }}>15</option>
+                                    <option value="20"{{ (data.place.additional.maxplayers == 20) ? " selected" : "" }}>20</option>
+                                    <option value="25"{{ (data.place.additional.maxplayers == 25) ? " selected" : "" }}>25</option>
+                                    <option value="30"{{ (data.place.additional.maxplayers == 30) ? " selected" : "" }}>30</option>
+                                    <option value="35"{{ (data.place.additional.maxplayers == 35) ? " selected" : "" }}>35</option>
+                                    <option value="40"{{ (data.place.additional.maxplayers == 40) ? " selected" : "" }}>40</option>
+                                    <option value="45"{{ (data.place.additional.maxplayers == 45) ? " selected" : "" }}>45</option>
+                                    <option value="50"{{ (data.place.additional.maxplayers == 50) ? " selected" : "" }}>50</option>
+                                    <option value="55"{{ (data.place.additional.maxplayers == 55) ? " selected" : "" }}>55</option>
+                                    <option value="60"{{ (data.place.additional.maxplayers == 60) ? " selected" : "" }}>60</option>
+                                    <option value="65"{{ (data.place.additional.maxplayers == 65) ? " selected" : "" }}>65</option>
+                                    <option value="70"{{ (data.place.additional.maxplayers == 70) ? " selected" : "" }}>70</option>
+                                    <option value="75"{{ (data.place.additional.maxplayers == 75) ? " selected" : "" }}>75</option>
+                                    <option value="80"{{ (data.place.additional.maxplayers == 80) ? " selected" : "" }}>80</option>
+                                    <option value="85"{{ (data.place.additional.maxplayers == 85) ? " selected" : "" }}>85</option>
+                                    <option value="90"{{ (data.place.additional.maxplayers == 90) ? " selected" : "" }}>90</option>
+                                    <option value="95"{{ (data.place.additional.maxplayers == 95) ? " selected" : "" }}>95</option>
+                                    <option value="100"{{ (data.place.additional.maxplayers == 100) ? " selected" : "" }}>100</option>
                                 </select>
                                 <p class="col-form-label mt-2">
                                     <strong>Reset Place</strong>
@@ -784,8 +784,8 @@ input[type='number'][data-v-e236382e]:hover::-webkit-outer-spin-button {
                                 <p class="col-form-label mt-2">
                                     <strong>Version</strong>
                                 </p>
-                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="version-2012" name="game-version" class="custom-control-input" value="2012" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.version == "2012") ? " checked" : "" }}> <label data-v-4350f98c="" for="version-2012" class="custom-control-label pl-1">2012</label></div>
-                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="version-2016" name="game-version" class="custom-control-input" value="2016" autofill-prediction="UNKNOWN_TYPE"{{ (place.additional.version == "2016") ? " checked" : "" }}> <label data-v-4350f98c="" for="version-2016" class="custom-control-label pl-1">2016</label></div>
+                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="version-2012" name="game-version" class="custom-control-input" value="2012" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.version == "2012") ? " checked" : "" }}> <label data-v-4350f98c="" for="version-2012" class="custom-control-label pl-1">2012</label></div>
+                                <div data-v-4350f98c="" class="custom-control custom-radio"><input data-v-4350f98c="" type="radio" id="version-2016" name="game-version" class="custom-control-input" value="2016" autofill-prediction="UNKNOWN_TYPE"{{ (data.place.additional.version == "2016") ? " checked" : "" }}> <label data-v-4350f98c="" for="version-2016" class="custom-control-label pl-1">2016</label></div>
                                 <small class="form-text text-muted mt-0">Note: Switching a 2016 game to 2012 will cause it to be reset to an empty baseplate.</small>
                                 <button type="submit" class="btn btn-primary mt-3">update</button>
                             </div>
