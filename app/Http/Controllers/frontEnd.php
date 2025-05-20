@@ -1744,7 +1744,7 @@ class frontEnd extends Controller
             $result['author'] = User::select('username')->where('id', $item['author'])->value('username');
             $result['equipped'] = in_array($result['assetid'], $this->request['data']['user']['avatar'][0]['equippedGearVersionIds']);
 
-            if($result['equipped']) {
+            if(in_array($item['asset_type'], [8, 11, 12, 18])) {
                 $result['thumbnail'] = $item['additional']['media']['thumbnail'];
             }
 
