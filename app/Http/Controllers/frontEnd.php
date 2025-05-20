@@ -1911,11 +1911,13 @@ class frontEnd extends Controller
     }
 
     public function trades(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Trades' . $this->request['data']['embeds']['title'];
+
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
         }
 
-        return view($this->request['data']['user']['version'] . '/Trades');
+        return view($this->request['data']['user']['version'] . '/Trades', $this->request);
     }
 
     public function auth_form(Request $request) {
