@@ -1910,6 +1910,14 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Places/Index', $this->request);
     }
 
+    public function trades(Request $request) {
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Trades');
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
