@@ -14,6 +14,8 @@
 /public/chiwawa.html
 /storage/*.key
 /storage/pail
+/storage/app/rbx/files/privateKey1024.pem
+/storage/app/rbx/files/publicKeyBlob1024.txt
 /vendor
 .env
 .env.backup
