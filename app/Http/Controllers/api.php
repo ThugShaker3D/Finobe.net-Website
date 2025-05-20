@@ -774,7 +774,7 @@ class api extends Controller
 
         if(!isset($results)) {
             $this->response['code'] = 400;
-            $this->response['message'] = 'Bad requestg';
+            $this->response['message'] = 'Bad request';
 
             return response()->json($this->response, 400);
         }
