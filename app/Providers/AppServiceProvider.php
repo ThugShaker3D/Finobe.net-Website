@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,11 +21,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (env('APP_ENV') !== 'local') {
-            $request = new Request();
             $appUrl = parse_url(env('APP_URL'), PHP_URL_HOST);
-            $requestHost = $request->getHost();
+            $requestHost = request()->getHost();
 
-            if ($appUrl === $requestHost) {
+            if ($appUrl === $requestHost && request()->is('telescope*')) {
                 URL::forceScheme('https');
             }
         }
