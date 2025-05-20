@@ -1969,6 +1969,12 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
+        $this->request['data']['messages'] = [
+            'data' => [],
+            'page' => 1,
+            'number_of_pages' => 1
+        ];
+
         $messages = $this->db->table('messages')
             ->where('touser', $this->request['data']['user']['username'])
             ->where('archived', 'n')
@@ -1996,12 +2002,9 @@ class frontEnd extends Controller
             $message['date'] = date('M j, Y | g:i A', strtotime($message['date']));
             $this->request['data']['messages']['data'][] = $message;
         }
-        
-        $this->request['data']['messages'] = [
-            'data' => [],
-            'page' => $currentPage,
-            'number_of_pages' => $number_of_pages
-        ];
+
+        $this->request['data']['messages']['page'] = $currentPage;
+        $this->request['data']['messages']['number_of_pages'] = $number_of_pages;
 
         return view($this->request['data']['user']['version'] . '/Inbox/Index', $this->request);
     }
@@ -2015,6 +2018,12 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
+        $this->request['data']['messages'] = [
+            'data' => [],
+            'page' => 1,
+            'number_of_pages' => 1
+        ];
+
         $messages = $this->db->table('messages')
             ->where('author', $this->request['data']['user']['username'])
             ->where('archived', 'n')
@@ -2043,11 +2052,8 @@ class frontEnd extends Controller
             $this->request['data']['messages']['data'][] = $message;
         }
         
-        $this->request['data']['messages'] = [
-            'data' => [],
-            'page' => $currentPage,
-            'number_of_pages' => $number_of_pages
-        ];
+        $this->request['data']['messages']['page'] = $currentPage;
+        $this->request['data']['messages']['number_of_pages'] = $number_of_pages;
 
         return view($this->request['data']['user']['version'] . '/Inbox/Index', $this->request);
     }
@@ -2061,6 +2067,12 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
+        $this->request['data']['messages'] = [
+            'data' => [],
+            'page' => 1,
+            'number_of_pages' => 1
+        ];
+
         $messages = $this->db->table('messages')
             ->where('author', $this->request['data']['user']['username'])
             ->where('archived', 'y')
@@ -2089,11 +2101,8 @@ class frontEnd extends Controller
             $this->request['data']['messages']['data'][] = $message;
         }
         
-        $this->request['data']['messages'] = [
-            'data' => [],
-            'page' => $currentPage,
-            'number_of_pages' => $number_of_pages
-        ];
+        $this->request['data']['messages']['page'] = $currentPage;
+        $this->request['data']['messages']['number_of_pages'] = $number_of_pages;
 
         return view($this->request['data']['user']['version'] . '/Inbox/Index', $this->request);
     }
