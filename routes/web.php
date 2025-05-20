@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api;
+use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -73,5 +74,36 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::match(['post', 'get'], '/login', [frontEnd::class, 'auth_login']);
             Route::match(['post', 'get'], '/register', [frontEnd::class, 'auth_register']);
         });
+    });
+
+    Route::domain('clientsettings.finobe.net')->group(function() {
+        Route::get('/Setting/QuietGet/{bucketName}', [rbxAPIs::class, 'quietGet']);
+    });
+
+    Route::domain('versioncompatibility.finobe.net')->group(function() {
+        Route::get('/GetAllowedSecurityVersions', [rbxAPIs::class, 'getAllowedSecurityVersions']);
+        Route::get('/GetAllowedMD5Hashes', [rbxAPIs::class, 'getAllowedMD5Hashes']);
+    });
+
+    Route::domain('api.finobe.net')->group(function() {
+        Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
+        Route::any('/marketplace/productinfo', [rbxAPIs::class, 'productInfo']);
+    });
+
+    Route::domain('www.finobe.net')->group(function() {
+        Route::get('/Game/Gameserver.lua', [rbxAPIs::class, 'gameServerLua']);
+        Route::any('/asset/GetScriptState.ashx', [rbxAPIs::class, 'getScriptStateAshx']);
+        Route::get('/asset/', [rbxAPIs::class, 'asset']);
+        Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
+        Route::get('/api/gameserver/visit/{jobId}', [rbxAPIs::class, 'visitJobId']);
+        Route::get('/api/gameserver/shutdown/{jobId}', [rbxAPIs::class, 'shutdownJobId']);
+        Route::get('/api/gameserver/alive/{jobId}', [rbxAPIs::class, 'aliveJobId']);
+        Route::get('/api/gameserver/update', [rbxAPIs::class, 'update']);
+        Route::get('/Asset/CharacterFetch.ashx', [rbxAPIs::class, 'characterFetch']);
+        Route::get('/Asset/BodyColors.ashx', [rbxAPIs::class, 'bodyColors']);
+        Route::get('/Login/Negotiate.ashx', [rbxAPIs::class, 'negotiateAshx']);
+        Route::get('//Game/Studio.ashx', [rbxAPIs::class, 'studioAshx']);
+        Route::any('/Game/PlaceLauncher.ashx', [rbxAPIs::class, 'placeLauncher']);
+        Route::get('/Game/Join.ashx', [rbxAPIs::class, 'joinAshx']);
     });
 });

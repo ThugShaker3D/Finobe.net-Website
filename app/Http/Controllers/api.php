@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -549,6 +550,70 @@ class api extends Controller
             $user->avatar = json_encode($avatar);
             $user->save();
         }
+
+        return response()->json($this->response, 200);
+    }
+
+    public function render(Request $request) {
+        if(!Auth::check()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
+        $user = Auth::user();
+
+        if($user->status != 'admin' && Carbon::now()->diffInSeconds($user->render_cooldown) <= 30) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Whoa, cool down with the regeneration requests there!';
+
+            return response()->json($this->response, 400);
+        }
+
+        $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+        $constructedJob = $arbiter->ConstructJob(
+            RobloxUtilities::GenerateGUID(),
+            '
+                local asseturl, url, fileExtension, x, y = ...
+                
+                settings()["Task Scheduler"].ThreadPoolConfig = Enum.ThreadPoolConfig.PerCore4;
+                game:GetService("ContentProvider"):SetThreadPool(16)
+                game:GetService("ScriptContext").ScriptsDisabled=true 
+                pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
+                player = game:GetService("Players"):CreateLocalPlayer(0)
+                player.CharacterAppearance = asseturl
+                player:LoadCharacter(false)
+                
+                if player.Character then
+                    for _, child in pairs(player.Character:GetChildren()) do
+                        if child:IsA("Tool") then
+                            player.Character.Torso["Right Shoulder"].CurrentAngle = math.rad(90)
+                            break
+                            end
+                    end
+                end
+                
+                game:GetService("ThumbnailGenerator").GraphicsMode = 4
+                
+                return game:GetService("ThumbnailGenerator"):Click(fileExtension, x, y, true)
+            ',
+            60,
+            0,
+            2,
+            "ScriptExecution",
+            ["https://www.finobe.net/asset/CharacterFetch.ashx?userId={$user->id}", "https://www.finobe.net", "PNG", 768, 768]
+        );
+    
+        $jobEx = $arbiter->OpenJobEx($constructedJob);
+        $filename = uniqid() . ".png";
+        file_put_contents("/var/www/cdn.finobe.net/avatar/" . $filename, base64_decode($jobEx));
+
+        $user->render_cooldown = now();
+        $user->pfp = "avatar/{$filename}";
+        $user->save();
+
+        $this->response['image'] = "https://cdn.finobe.net/avatar/{$filename}";
 
         return response()->json($this->response, 200);
     }

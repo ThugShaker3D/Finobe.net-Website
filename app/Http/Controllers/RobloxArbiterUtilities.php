@@ -9,7 +9,7 @@ class RobloxArbiterUtilities extends Controller
     private $SoapClient;
 
     function __construct($url = "127.0.0.1", $port = 64989) {
-        $this->SoapClient = new \SoapClient(storage_path("app/private/files/RCCService.wsdl"), ["location" => "http://{$url}:$port", "uri" => "http://finobe.net/", "exceptions" => false, "connection_timeout" => 30]); //Arseny: I hope this works like thsis :sob:
+        $this->SoapClient = new \SoapClient(storage_path("rbx/files/RCCService.wsdl"), ["location" => "http://{$url}:$port", "uri" => "http://finobe.net/", "exceptions" => false, "connection_timeout" => 30]); //Arseny: I hope this works like thsis :sob:
     }
 
     function SoapCallService(string $name, array $arguments = [])
