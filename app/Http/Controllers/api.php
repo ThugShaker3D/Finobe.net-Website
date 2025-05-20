@@ -288,7 +288,7 @@ class api extends Controller
 
         $this->db->table('purchases')->insert([
             'username' => $user['username'],
-            'assetid' => $data['id'],
+            'assetid' => $data['assetid'],
             'serial' => isset($data['serial']) ? $data['serial'] : 0,
             'author' => $item['author'],
             'amount' => -1 * $item['additional']['price']
