@@ -39,7 +39,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
             Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
             Route::get('/inbox/message', [frontEnd::class, 'inbox_message']);
-            Route::get('/inbox/compose', [frontEnd::class, 'inbox_compose']);
+            Route::match(['post', 'get'], '/inbox/compose', [frontEnd::class, 'inbox_compose']);
 
             Route::prefix('forum')->group(function() {
                 Route::match(['post', 'get'], '/new/post', [frontEnd::class, 'forum_new_post']);
