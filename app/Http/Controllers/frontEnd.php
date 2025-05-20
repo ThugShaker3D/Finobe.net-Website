@@ -1838,7 +1838,7 @@ class frontEnd extends Controller
         }
 
         $place['username'] = User::where('id', $place['author'])->value('username');
-        $place['additional'] = json_decode($place['additiona'], true);
+        $place['additional'] = json_decode($place['additional'], true);
 
         if($place['username'] != $this->request['data']['user']['username']) {
             Session::put('error', 'You do not own this place');
