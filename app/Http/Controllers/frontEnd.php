@@ -550,13 +550,15 @@ class frontEnd extends Controller
             $result['date'] = date('m/d/Y', strtotime($result['date']));
 
             if($this->db->table('assets')->where('id', $result['assetid'])->exists()) {
-                $result['assetname'] = strip_tags(htmlspecialchars($this->db->table('assets')->select('title')->where('id', $result['assetid'])->value('title')));
+                $result['assetname'] = strip_tags(htmlspecialchars(
+                    $this->db->table('assets')->select('title')->where('id', $result['assetid'])->value('title')
+                ));
             } elseif($result['amount'] > 0 && $result['assetid'] == 0) {
                 $result['assetname'] = 'Dius';
             }
 
             $result['uuid'] = User::where('username', $result['author'])->exists() ? User::where('username', $result['author'])->value('id') : false;
-            $result['author'] = htmlspecialchars($result['author']);
+            //$result['author'] = htmlspecialchars($result['author']);
             $result['amount'] = $this->dataService->formatNumber($result['amount']);
             $purchases[] = $result;
         }
