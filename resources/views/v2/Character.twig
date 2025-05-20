@@ -231,7 +231,7 @@
 								const lleg = document.getElementById('l-leg');
 								const spinner = document.getElementById('spinner');
 								const render = document.getElementById('renderbtn');
-								const avatar = JSON.parse('{{ avatar | json_encode | raw }}');
+								const avatar = JSON.parse('{{ data.user.avatar | json_encode | raw }}');
 								const avatarimg = document.getElementById('renderimg');
 								const robloxColors = {
 									"White": { rgb: [242, 243, 243], id: 1 },
