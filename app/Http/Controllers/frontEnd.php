@@ -536,26 +536,6 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $results = $this->db->table('purchases')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
-        
-        foreach($results as $result) {
-            if(!User::find(intval($result['author']))) {
-                if(User::where('username', $result['author'])->exists()) {
-                    $result['author'] = User::where('username', $result['author'])->value('id');
-
-                    $this->db->table('purchases')
-                        ->where('id', $result['id'])
-                        ->update([
-                            'author' => $result['author']
-                        ]);
-                }
-            }
-        }
-
         $purchases = [];
         $results = $this->db->table('purchases')
             ->where('username', $this->request['data']['user']['username'])
