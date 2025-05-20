@@ -1709,6 +1709,8 @@ class frontEnd extends Controller
     }
 
     public function character(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Character' . $this->request['data']['embeds']['title'];
+
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
         }
@@ -1748,6 +1750,8 @@ class frontEnd extends Controller
 
             $purchases[] = $result;
         }
+
+        $this->request['data']['purchases'] = $purchases;
         
         return view($this->request['data']['user']['version'] . '/Character', $this->request);
     }
