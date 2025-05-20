@@ -2180,7 +2180,7 @@ class frontEnd extends Controller
                 return redirect('/app/inbox');
             }
 
-            if($this->db->table('messages')->where('author', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('NOW() - INTERNAL 5 MINUTE'))->exists()) {
+            if($this->db->table('messages')->where('author', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('(NOW() - INTERNAL 5 MINUTE'))->exists()) {
                 Session::put('error', 'Wait 5 minutes before sending another message');
                 return redirect('/app/inbox/compose');
             }
