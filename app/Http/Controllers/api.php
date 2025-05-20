@@ -18,7 +18,7 @@ class api extends Controller
         $this->db = DB::connection('finobe');
         $this->response = [
             'code' => 200,
-            'message' => ''
+            'message' => 'Success'
         ];
     }
 
@@ -615,6 +615,238 @@ class api extends Controller
 
         $this->response['image'] = "https://cdn.finobe.net/avatar/{$filename}";
 
+        return response()->json($this->response, 200);
+    }
+
+    public function places(Request $request) {
+        $data = $request->all();
+
+        if(!isset($data['version'])) {
+            $data['version'] = 'all';
+        }
+
+        if(!isset($data['type'])) {
+            $data['type'] = 'all';
+        }
+
+        if(!isset($data['search'])) {
+            $data['type'] = '';
+        }
+
+        $this->response['data'] = [];
+        $this->response['info'] = [
+            'pages' => 1,
+            'current_page' => 1
+        ];
+
+        $results_per_page = 20;
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+        if($data['type'] == 'all' && $data['version'] == 'all' && $data['search'] == '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'featured' && $data['version'] == 'all' && $data['search'] == '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw("additional->>'$.featured' = true")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'featured' && $data['version'] == '2012' && $data['search'] == '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw("additional->>'$.featured' = true")
+                ->whereRaw("additional->>'$.version' = '2012'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'featured' && $data['version'] == '2016' && $data['search'] == '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw("additional->>'$.featured' = true")
+                ->whereRaw("additional->>'$.version' = '2016'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'all' && $data['version'] == '2012' && $data['search'] == '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw("additional->>'$.version' = '2012'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'all' && $data['version'] == '2016' && $data['search'] == '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw("additional->>'$.version' = '2016'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'featured' && $data['version'] == 'all' && $data['search'] != '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw('title LIKE :search')
+                ->whereRaw("additional->>'$.featured' = true")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'featured' && $data['version'] == '2012' && $data['search'] != '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw('title LIKE :search')
+                ->whereRaw("additional->>'$.featured' = true")
+                ->whereRaw("additional->>'$.version' = '2012'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'featured' && $data['version'] == '2016' && $data['search'] != '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw('title LIKE :search')
+                ->whereRaw("additional->>'$.featured' = true")
+                ->whereRaw("additional->>'$.version' = '2016'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'all' && $data['version'] == 'all' && $data['search'] != '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw('title LIKE :search')
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'all' && $data['version'] == '2012' && $data['search'] != '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw('title LIKE :search')
+                ->whereRaw("additional->>'$.version' = '2012'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        } elseif($data['type'] == 'all' && $data['version'] == '2016' && $data['search'] != '') {
+            $results = $this->db->table('assets')
+                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
+                ->whereRaw('title LIKE :search')
+                ->whereRaw("additional->>'$.version' = '2016'")
+                ->where('asset_type', 9)
+                ->groupBy('assets.id')
+                ->orderByDesc('total_players')
+                ->limit($limit)
+                ->offset($offset);
+        }
+
+        if(!isset($results)) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
+        if($data['search'] != '') {
+            $results = $results->addBinding(['search' => '%' . htmlspecialchars($data['search']) . '%'], 'where');
+        }
+
+        $results = $results->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        foreach($results as $result) {
+            $result['additional'] = json_decode($result['additional'], true);
+            $players = 0;
+
+            $servers = $this->db->table('servers')
+                ->select('players')
+                ->where('placeid', $result['id'])
+                ->get()
+                ->map(function ($item) {
+                    return (array) $item;
+                })->toArray();
+            
+            foreach($servers as $server) {
+                $players += count(json_decode($server['players']));
+            }
+
+            $result['author'] = htmlspecialchars(User::where('id', $result['author'])->value('username'));
+            $result['thumbnail'] = Cache::remember('thumbnail_' . $result['additional']['media']['imageAssetId'], 60 * 60, function() use ($result) { return $this->db->table('assets')->select('file')->where('id', $result['additional']['media']['imageAssetId'])->value('file'); });
+
+            $html = '
+                <div data-v-5ad0ed22="" title="' . htmlspecialchars($result['title']) . '" class="game-card-div">
+                    <a data-v-5ad0ed22="" href="/place/' . $result['id'] . '" class="game-card-link">
+                        <span data-v-5ad0ed22="" class="game-card d-flex flex-column">
+                            ' . ($result['additional']['version'] == "2016" ? '<span data-v-5ad0ed22="" class="badge badge-danger position-absolute">2016</span>' : '') . '
+                            <span data-v-5ad0ed22="" class="thumbnail">
+                                <div data-v-5ad0ed22="" class="vue-load-image"><img data-v-5ad0ed22="" src="https://cdn.finobe.net/' . $result['thumbnail'] . '" class="card-img-top"></div>
+                            </span>
+                            <span data-v-5ad0ed22="" class="data">
+                                <p data-v-5ad0ed22="" class="catalog-no-overflow-plz">' . htmlspecialchars($result['title']) . '</p>
+                                <p data-v-5ad0ed22="" class="catalog-no-overflow-plz author">by ' . htmlspecialchars($result['author']) . '</p>
+                                <p data-v-5ad0ed22="" class="catalog-no-overflow-plz text-muted">' . $players . ' online</p>
+                            </span>
+                            <p data-v-5ad0ed22="" class="catalog-no-overflow-plz text-muted mb-0 visits"><small data-v-5ad0ed22="">' . number_format($result['additional']['visits']) . ' visits</small></p>
+                        </span>
+                    </a>
+                </div>';
+            
+            $this->response['data'][] = $html;
+        }
+
+        if(!count($results)) {
+            $html = '
+                <div data-v-4350f98c="">
+                  <div data-v-4350f98c="">
+                      <div data-v-28f94fdd="" data-v-4350f98c="" class="finobe__vloader">
+                        <img src="/s/img/pensive.svg"></span> 
+                        <h3 data-v-28f94fdd="" class="mt-2 text-center">No places found.</h3>
+                      </div>
+                  </div>
+                </div>';
+            $this->response['data'][] = $html;
+        }
+
+        $total_items = $this->db->table('assets')->where('asset_type', 9)->count();
+        $total_pages = ceil($total_items / $results_per_page);
+
+        $this->response['info']['pages'] = $total_pages;
+        $this->response['info']['current_page'] = $currentPage;
+        
         return response()->json($this->response, 200);
     }
 }

@@ -1756,6 +1756,16 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Character', $this->request);
     }
 
+    public function places(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Places' . $this->request['data']['embeds']['title'];
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Places/Index', $this->request);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');

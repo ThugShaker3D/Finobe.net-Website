@@ -21,7 +21,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (env('APP_ENV') !== 'local') {
-            URL::forceScheme('https');
+            $appUrl = parse_url(env('APP_URL'), PHP_URL_HOST);
+            $requestHost = Request::getHost();
+
+            if ($appUrl === $requestHost) {
+                URL::forceScheme('https');
+            }
         }
     }
 }

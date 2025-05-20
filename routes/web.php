@@ -27,6 +27,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
 
         Route::prefix('app')->group(function() {
+            Route::get('/places', [frontEnd::class, 'places']);
             Route::get('/character', [frontEnd::class, 'character']);
 
             Route::prefix('forum')->group(function() {
@@ -99,7 +100,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/api/gameserver/visit/{jobId}', [rbxAPIs::class, 'visitJobId']);
         Route::get('/api/gameserver/shutdown/{jobId}', [rbxAPIs::class, 'shutdownJobId']);
         Route::get('/api/gameserver/alive/{jobId}', [rbxAPIs::class, 'aliveJobId']);
-        Route::get('/api/gameserver/update', [rbxAPIs::class, 'update']);
+        Route::post('/api/gameserver/update', [rbxAPIs::class, 'update']);
         Route::get('/Asset/CharacterFetch.ashx', [rbxAPIs::class, 'characterFetch']);
         Route::get('/Asset/BodyColors.ashx', [rbxAPIs::class, 'bodyColors']);
         Route::get('/Login/Negotiate.ashx', [rbxAPIs::class, 'negotiateAshx']);

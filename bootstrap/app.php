@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens([
-            '/logout'
+            '/logout',
+            '/marketplace/productinfo',
+            '/asset/GetScriptState.ashx',
+            '/Game/PlaceLauncher.ashx',
+            '/api/gameserver/update'
         ]);
     })->create();
