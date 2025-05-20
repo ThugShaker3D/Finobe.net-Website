@@ -471,7 +471,7 @@
 										
 										fetch("/api/character", {
 											method: 'POST',
-											data: formData
+											body: formData
 										  })
 										  .then(response => response.json())
 										  .then(response => {
@@ -579,7 +579,7 @@
 
 									fetch("/api/character", {
 										method: 'POST',
-										data: formData
+										body: formData
 									  })
 									  .then(response => response.json())
 									  .then(response => {
