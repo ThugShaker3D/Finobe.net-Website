@@ -649,7 +649,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == 'all' && $data['search'] == '') {
             $results = $this->db->table('assets')
@@ -659,7 +659,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2012' && $data['search'] == '') {
             $results = $this->db->table('assets')
@@ -670,7 +670,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2016' && $data['search'] == '') {
             $results = $this->db->table('assets')
@@ -681,7 +681,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2012' && $data['search'] == '') {
             $results = $this->db->table('assets')
@@ -691,7 +691,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2016' && $data['search'] == '') {
             $results = $this->db->table('assets')
@@ -701,7 +701,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == 'all' && $data['search'] != '') {
             $results = $this->db->table('assets')
@@ -712,7 +712,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2012' && $data['search'] != '') {
             $results = $this->db->table('assets')
@@ -724,7 +724,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2016' && $data['search'] != '') {
             $results = $this->db->table('assets')
@@ -736,7 +736,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == 'all' && $data['search'] != '') {
             $results = $this->db->table('assets')
@@ -746,7 +746,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2012' && $data['search'] != '') {
             $results = $this->db->table('assets')
@@ -757,7 +757,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2016' && $data['search'] != '') {
             $results = $this->db->table('assets')
@@ -768,7 +768,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         } else {
             $results = $this->db->table('assets')
@@ -777,7 +777,7 @@ class api extends Controller
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
-                ->limit($limit)
+                ->limit($results_per_page)
                 ->offset($offset);
         }
 
