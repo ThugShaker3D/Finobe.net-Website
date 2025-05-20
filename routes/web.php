@@ -62,7 +62,8 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('api')->group(function() {
-            Route::get('/mark', [api::class, 'mark']);
+            Route::get('/mark', [api::class, 'mark']); // not mathmark reference >:D
+            Route::get('/places', [api::class, 'places']);
             Route::get('/inventory', [api::class, 'inventory']);
             Route::post('/rate', [api::class, 'rate']);
             Route::post('/render', [api::class, 'render']);
