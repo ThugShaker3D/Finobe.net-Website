@@ -488,11 +488,14 @@
 								});
 								
 								function regen() {
+									const formData = new FormData();
+									formData.append('_token', '{{ data.csrf_token }}');
 									render.disabled = true;
 									render.innerHTML = "working...";
 
 									fetch("/api/render", {
-										method: 'POST'
+										method: 'POST',
+										body: formData
 									  })
 									  .then(response => response.json())
 									  .then(data => {
