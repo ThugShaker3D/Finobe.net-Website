@@ -409,24 +409,24 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
+            $avatar = json_decode($user->avatar, true);
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
 
-            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+            foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 8)->exists()) {
                     $itemcount++;
                 }
             }
 
-            if($itemcount < 5 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
-                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+            if($itemcount < 5 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                    $avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
                     );
                 } else {
-                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                    $avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
                 }
             } else {
                 $this->response['code'] = 400;
@@ -435,7 +435,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            $user->avatar = json_encode($user->avatar);
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'shirt') {
             if(!isset($data['assetid'])) {
@@ -446,24 +446,24 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
+            $avatar = json_decode($user->avatar, true);
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
 
-            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+            foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 11)->exists()) {
                     $itemcount++;
                 }
             }
 
-            if($itemcount < 1 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
-                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+            if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                    $avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
                     );
                 } else {
-                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                    $avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
                 }
             } else {
                 $this->response['code'] = 400;
@@ -472,7 +472,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            $user->avatar = json_encode($user->avatar);
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'pants') {
             if(!isset($data['assetid'])) {
@@ -483,24 +483,24 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
+            $avatar = json_decode($user->avatar, true);
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
 
-            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+            foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 12)->exists()) {
                     $itemcount++;
                 }
             }
 
-            if($itemcount < 1 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
-                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+            if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                    $avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
                     );
                 } else {
-                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                    $avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
                 }
             } else {
                 $this->response['code'] = 400;
@@ -509,7 +509,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            $user->avatar = json_encode($user->avatar);
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'face') {
             if(!isset($data['assetid'])) {
@@ -520,24 +520,24 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
+            $avatar = json_decode($user->avatar, true);
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
 
-            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+            foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 18)->exists()) {
                     $itemcount++;
                 }
             }
 
-            if($itemcount < 1 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
-                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
-                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+            if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                    $avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
                     );
                 } else {
-                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                    $avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
                 }
             } else {
                 $this->response['code'] = 400;
@@ -546,7 +546,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            $user->avatar = json_encode($user->avatar);
+            $user->avatar = json_encode($avatar);
             $user->save();
         }
 
