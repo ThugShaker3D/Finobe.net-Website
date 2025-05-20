@@ -55,6 +55,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/{id}/accept', [frontEnd::class, 'user_accept']);
             Route::get('/{id}/remove', [frontEnd::class, 'user_remove']);
             Route::get('/{id}/friends', [frontEnd::class, 'user_friends']);
+            Route::get('/transaction-log', [frontEnd::class, 'transactions']);
         });
 
         Route::prefix('forum')->group(function() {
