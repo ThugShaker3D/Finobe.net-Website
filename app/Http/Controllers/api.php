@@ -271,6 +271,13 @@ class api extends Controller
             ->first();
 
         $item['additional'] = json_decode($item['additional'], true);
+
+        if(!in_array($item['asset_type'], [8, 11, 12, 18])) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Invalid item type';
+
+            return response()->json($this->response, 400);
+        }
         
         if($user['Dius'] - $item['additional']['price'] < 0) {
             $this->response['code'] = 400;
