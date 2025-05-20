@@ -557,7 +557,7 @@ class frontEnd extends Controller
 
             $result['uuid'] = User::where('username', $result['author'])->exists() ? User::where('username', $result['author'])->value('id') : false;
             $result['author'] = htmlspecialchars($result['author']);
-            $result['amount'] = formatNumber($result['amount']);
+            $result['amount'] = $this->dataService->formatNumber($result['amount']);
             $purchases[] = $result;
         }
 
