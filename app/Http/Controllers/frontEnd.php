@@ -2149,7 +2149,7 @@ class frontEnd extends Controller
                 ]);
         }
 
-        $this->request['data']['embeds']['title'] = htmlspecialchars() . $this->request['data']['embeds']['title'];
+        $this->request['data']['embeds']['title'] = $message['subject'] . $this->request['data']['embeds']['title'];
         $this->request['data']['message'] = $message;
 
         return view($this->request['data']['user']['version'] . '/Inbox/Message', $this->request);
