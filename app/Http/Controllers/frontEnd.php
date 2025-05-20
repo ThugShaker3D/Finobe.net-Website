@@ -1960,6 +1960,48 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Trades', $this->request);
     }
 
+    public function inbox(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $messages = $this->db->table('messages')
+            ->where('touser', $this->request['data']['user']['username'])
+            ->where('archived', 'n')
+            ->count();
+
+        $results_per_page = 12;
+        $number_of_pages = ceil($messages / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+
+        $messages = $this->db->table('messages')
+            ->where('touser', $this->request['data']['user']['username'])
+            ->where('archived', 'n')
+            ->offset($offset)
+            ->limit($results_per_page)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        foreach($messages as $message) {
+            $message['message'] = strip_tags(htmlspecialchars($message['message']));
+            $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
+            $message['author'] = htmlspecialchars($message['author']);
+            $message['date'] = date('M j, Y | g:i A', strtotime($message['date']));
+            $this->request['data']['messages']['data'][] = $message;
+        }
+        
+        $this->request['data']['messages'] = [
+            'data' => [],
+            'page' => $currentPage,
+            'number_of_pages' => $number_of_pages
+        ];
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
