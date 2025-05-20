@@ -630,7 +630,7 @@ class api extends Controller
         }
 
         if(!isset($data['search'])) {
-            $data['type'] = '';
+            $data['search'] = '';
         }
 
         $this->response['data'] = [];
