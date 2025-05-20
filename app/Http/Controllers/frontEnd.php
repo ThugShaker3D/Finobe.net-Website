@@ -547,7 +547,7 @@ class frontEnd extends Controller
             })->toArray();
         
         foreach($results as $result) {
-            $result['date'] = date('m/d/Y', strtotime($result['data']));
+            $result['date'] = date('m/d/Y', strtotime($result['date']));
 
             if($this->db->table('assets')->where('id', $result['assetid'])->exists()) {
                 $result['assetname'] = strip_tags(htmlspecialchars($this->db->table('assets')->select('title')->where('id', $result['assetid'])->value('title')));
