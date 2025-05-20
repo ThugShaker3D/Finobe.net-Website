@@ -464,13 +464,16 @@
 										spinner.style.display = "flex";
 										document.getElementById(type).style.backgroundColor = color;
 										
-										const queryString = `?type=${encodeURIComponent(this.type)}&color=${encodeURIComponent(toRbxColor(color))}`;
-										const options = {
-										  method: 'GET',
-										};
-										fetch("/api/character" + queryString, {
-											method: 'GET'
+										const formData = new FormData();
+										formData.append('type', this.type);
+										formData.append('assetid', toRbxColor(color));
+										formData.append('_token', '{{ data.csrf_token }}');
+										
+										fetch("/api/character", {
+											method: 'POST',
+											data: formData
 										  })
+										  .then(response => response.json())
 										  .then(response => {
 											if (!response.ok) {
 											  alert('Network response was not ok');
@@ -567,19 +570,24 @@
 								}
 
 								function wear(assetid, type) {
-									const queryString = `?type=${encodeURIComponent(type)}&assetid=${encodeURIComponent(assetid)}`;
+									const formData = new FormData();
+									formData.append('type', type);
+									formData.append('assetid', assetid);
+									formData.append('_token', '{{ data.csrf_token }}');
+
 									document.getElementById(assetid).children[0].children[0].querySelector('button').disabled = true;
 
-									fetch("/api/character" + queryString, {
-										method: 'GET'
+									fetch("/api/character", {
+										method: 'POST',
+										data: formData
 									  })
-									  .then(response => response.text())
+									  .then(response => response.json())
 									  .then(response => {
 										document.getElementById(assetid).children[0].children[0].querySelector('button').disabled = false;
 
-										if(response != 'Success') {
-											alert(response);
-											exit();
+										if(response.code != 200) {
+											alert(response.message);
+											return;
 										}
 
 										console.log(document.getElementById(assetid).classList.contains('equipped'));

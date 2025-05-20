@@ -301,11 +301,255 @@ class api extends Controller
     public function character(Request $request) {
         $data = $request->all();
 
-        if(!Auth::check()) {
+        if(!Auth::check() || !isset($data['type'])) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Bad request';
 
             return response()->json($this->response, 400);
         }
+
+        $idNumbers = [
+            1, 2, 3, 5, 6, 9, 11, 12, 18, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 37, 38, 39, 40, 41, 42,
+            43, 44, 45, 47, 48, 49, 50, 100, 101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113,
+            115, 116, 118, 119, 120, 121, 123, 124, 125, 126, 127, 128, 131, 133, 134, 135, 136, 137, 138,
+            140, 141, 143, 145, 146, 147, 148, 149, 150, 151, 153, 154, 157, 158, 168, 176, 178, 179, 180,
+            190, 191, 192, 193, 194, 195, 196, 198, 199, 200, 208, 209, 210, 211, 212, 213, 216, 217, 218,
+            219, 220, 221, 222, 223, 224, 225, 226, 232, 268, 301, 302, 303, 304, 305, 306, 307, 308, 309,
+            310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 327, 328, 329,
+            330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348,
+            349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 1001, 1002,
+            1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018,
+            1019, 1020, 1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032
+        ];
+
+        if($data['type'] == 'head') {
+            if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+            $user->avatar[0]['bodyColors']['headColorId'] = $data['color'];
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'torso') {
+            if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+            $user->avatar[0]['bodyColors']['torsoColorId'] = $data['color'];
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'r-arm') {
+            if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+            $user->avatar[0]['bodyColors']['rightArmColorId'] = $data['color'];
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'l-arm') {
+            if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+            $user->avatar[0]['bodyColors']['leftArmColorId'] = $data['color'];
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'r-leg') {
+            if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+            $user->avatar[0]['bodyColors']['rightLegColorId'] = $data['color'];
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'l-leg') {
+            if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+            $user->avatar[0]['bodyColors']['leftLegColorId'] = $data['color'];
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'hat') {
+            if(!isset($data['assetid'])) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+
+            $data['assetid'] = intval($data['assetid']);
+            $itemcount = 0;
+
+            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+                if($this->db->table('assets')->where('id', $key)->where('asset_type', 8)->exists()) {
+                    $itemcount++;
+                }
+            }
+
+            if($itemcount < 5 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+                    );
+                } else {
+                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                }
+            } else {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Too many hats';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'shirt') {
+            if(!isset($data['assetid'])) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+
+            $data['assetid'] = intval($data['assetid']);
+            $itemcount = 0;
+
+            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+                if($this->db->table('assets')->where('id', $key)->where('asset_type', 11)->exists()) {
+                    $itemcount++;
+                }
+            }
+
+            if($itemcount < 1 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+                    );
+                } else {
+                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                }
+            } else {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You are wearing a shirt already';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'pants') {
+            if(!isset($data['assetid'])) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+
+            $data['assetid'] = intval($data['assetid']);
+            $itemcount = 0;
+
+            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+                if($this->db->table('assets')->where('id', $key)->where('asset_type', 12)->exists()) {
+                    $itemcount++;
+                }
+            }
+
+            if($itemcount < 1 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+                    );
+                } else {
+                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                }
+            } else {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You are wearing pants already';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        } elseif($data['type'] == 'face') {
+            if(!isset($data['assetid'])) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $user->avatar = json_decode($user->avatar, true);
+
+            $data['assetid'] = intval($data['assetid']);
+            $itemcount = 0;
+
+            foreach($user->avatar[0]['equippedGearVersionIds'] as $key => $value) {
+                if($this->db->table('assets')->where('id', $key)->where('asset_type', 18)->exists()) {
+                    $itemcount++;
+                }
+            }
+
+            if($itemcount < 1 || in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $user->avatar[0]['equippedGearVersionIds'])) {
+                    $user->avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($user->avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+                    );
+                } else {
+                    $user->avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                }
+            } else {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You are wearing a face already';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user->avatar = json_encode($user->avatar);
+            $user->save();
+        }
+
+        return response()->json($this->response, 200);
     }
 }
