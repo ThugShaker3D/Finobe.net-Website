@@ -2139,7 +2139,7 @@ class frontEnd extends Controller
         $message['message'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($message['message']))));
         $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
         $message['author'] = htmlspecialchars($message['author']);
-        $message['date'] = date('M j, g:ia', strtotime($message['data']));
+        $message['date'] = date('M j, g:ia', strtotime($message['date']));
 
         if($message['readed'] == 'n' && $this->request['data']['user']['username'] != $message['author']) {
             $this->db->table('messages')
