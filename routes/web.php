@@ -35,7 +35,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::prefix('app')->group(function() {
             Route::get('/places', [frontEnd::class, 'places']);
             Route::get('/character', [frontEnd::class, 'character']);
-            Route::get('/inbox', [frontEnd::class, 'index']);
+            Route::get('/inbox', [frontEnd::class, 'inbox']);
             Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
             Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
             Route::get('/inbox/message', [frontEnd::class, 'inbox_message']);
