@@ -27,8 +27,8 @@
               <form method="get" action="">
               <div data-v-e236382e="" data-v-4350f98c="" class="paginator clearfix text-center clearfix">
                 <a data-v-e236382e="" class="btn btn-theme mr-2 {{ (data.messages.page <= 1) ? "disabled" : ""}}" href="/app/inbox{{ (data.section != "inbox") ? "/" ~ data.section : "" }}?page={{ data.messages.page - 1 }}"><i data-v-e236382e="" class="far fa-chevron-left"></i></a>
-                <span data-v-e236382e=""><input data-v-e236382e="" id="input-form-data-v-e236382e-02" type="number" min="1" value="{{ data.messages.page }}" name="page" class="form-control form-control-sm page-input mr-1"> of <span data-v-e236382e="" id="input-form-data-v-e236382e-03" place="total">{{ data.messages.number_of_page }}</span></span>
-                <a data-v-e236382e="" class="btn btn-theme ml-2 {{ (data.messages.page >= data.messages.number_of_page) ? "disabled" : ""}}" href="/app/inbox{{ (data.section != "inbox") ? "/" ~ data.section : "" }}?page={{ data.messages.page + 1 }}"><i data-v-e236382e="" class="far fa-chevron-right"></i></a>
+                <span data-v-e236382e=""><input data-v-e236382e="" id="input-form-data-v-e236382e-02" type="number" min="1" value="{{ data.messages.page }}" name="page" class="form-control form-control-sm page-input mr-1"> of <span data-v-e236382e="" id="input-form-data-v-e236382e-03" place="total">{{ data.messages.number_of_pages }}</span></span>
+                <a data-v-e236382e="" class="btn btn-theme ml-2 {{ (data.messages.page >= data.messages.number_of_pages) ? "disabled" : ""}}" href="/app/inbox{{ (data.section != "inbox") ? "/" ~ data.section : "" }}?page={{ data.messages.page + 1 }}"><i data-v-e236382e="" class="far fa-chevron-right"></i></a>
               </div>
               </form>
             </div>
