@@ -1862,6 +1862,11 @@ class frontEnd extends Controller
                 'max-players'      => 'required|integer|between:5,100',
             ]);
 
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/place/' . $id . '/settings');
+            }
+
             $place['additional']['allowplaying'] = isset($data['allowplaying']);
             $place['additional']['uncopylocked'] = isset($data['downloadable']);
             $place['additional']['hidden'] = isset($data['hideRecent']);
