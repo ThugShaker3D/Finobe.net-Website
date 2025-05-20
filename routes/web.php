@@ -64,6 +64,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/mark', [api::class, 'mark']);
             Route::get('/inventory', [api::class, 'inventory']);
             Route::post('/rate', [api::class, 'rate']);
+            Route::post('/render', [api::class, 'render']);
             Route::post('/purchase', [api::class, 'purchase']);
             Route::post('/character', [api::class, 'character']);
             Route::post('/rating_number', [api::class, 'rating_number']);
