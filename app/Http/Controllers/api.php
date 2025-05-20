@@ -770,15 +770,6 @@ class api extends Controller
                 ->orderByDesc('total_players')
                 ->limit($results_per_page)
                 ->offset($offset);
-        } else {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
-                ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->where('asset_type', 9)
-                ->groupBy('assets.id')
-                ->orderByDesc('total_players')
-                ->limit($results_per_page)
-                ->offset($offset);
         }
 
         if(!isset($results)) {
