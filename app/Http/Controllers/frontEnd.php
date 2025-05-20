@@ -2135,7 +2135,7 @@ class frontEnd extends Controller
             return redirect('/app/inbox');
         }
 
-        $message['uid'] = User::where('username', $message['author']);
+        $message['uid'] = User::where('username', $message['author'])->value('id');
         $message['message'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($message['message']))));
         $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
         $message['author'] = htmlspecialchars($message['author']);
