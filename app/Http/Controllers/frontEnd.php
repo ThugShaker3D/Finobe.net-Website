@@ -1777,7 +1777,7 @@ class frontEnd extends Controller
         }
 
         $place = [
-            'id' => $place['id'];
+            'id' => $place['id'],
             'additional' => $place['additional'],
             'title' => strip_tags(htmlspecialchars($place['title'])),
             'username' => User::where('id', $place['author'])->value('username'),
