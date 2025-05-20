@@ -540,7 +540,7 @@ class frontEnd extends Controller
         $results = $this->db->table('purchases')
             ->where('username', $this->request['data']['user']['username'])
             ->orderBy('date', 'DESC')
-            ->limit(15)
+            ->limit(100)
             ->get()
             ->map(function ($item) {
                 return (array) $item;
