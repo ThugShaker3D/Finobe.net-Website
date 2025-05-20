@@ -149,7 +149,7 @@
                          </div>
                          <div class="card-body" style="height: auto;">
                              <button id="renderbtn" onclick="regen();" class="btn btn-primary full-width"><i class="fa fa-sync-alt"></i> regen</button>
-                             <img id="renderimg" src="{{ (user.pfp == "") ? "/s/img/spinnerv2.gif" : "https://cdn.finobe.net/" ~ user.pfp }}" class="full-width mt-2" style="height: auto;">
+                             <img id="renderimg" src="{{ (data.user.pfp == "") ? "/s/img/spinnerv2.gif" : "https://cdn.finobe.net/" ~ data.user.pfp }}" class="full-width mt-2" style="height: auto;">
                          </div>
                      </div>
                  </div>
@@ -203,7 +203,7 @@
                             </div>
                             <div class="tab-pane" id="hats">
                               <div class="row">
-							  	{% for item in purchases %}
+							  	{% for item in data.purchases %}
 								  {% if item.asset_type == 8 %}
 									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
 										<div class="card">
@@ -212,7 +212,7 @@
 													<img src="{{ item.thumbnail }}" style="width: 50%; height: auto;">
 												</div>
 												<p class="mt-2 mb-0"><a href="/item/{{ item.assetid }}">{{ item.title }}</a></p>
-												<p class="mt-0 mb-0">by {% if item.uuid == false %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
+												<p class="mt-0 mb-0">by {% if not item.uuid %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
 												<button class="btn btn-{{ (item.equipped) ? 'danger' : 'primary' }} full-width mt-2" onclick=";wear('{{ item.assetid }}', 'hat');">{{ (item.equipped) ? 'unequip' : 'equip' }}</button>
 											</div>
 										</div>
@@ -609,7 +609,7 @@
                             </div>
                             <div class="tab-pane" id="shirts">
 								<div class="row">
-                              	{% for item in purchases %}
+                              	{% for item in data.purchases %}
 								  {% if item.asset_type == 11 %}
 									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
 										<div class="card">
@@ -618,7 +618,7 @@
 													<img src="{{ item.thumbnail }}" style="width: 50%; height: auto;">
 												</div>
 												<p class="mt-2 mb-0"><a href="/item/{{ item.assetid }}">{{ item.title }}</a></p>
-												<p class="mt-0 mb-0">by {% if item.uuid == false %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
+												<p class="mt-0 mb-0">by {% if not item.uuid %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
 												<button class="btn btn-{{ (item.equipped) ? 'danger' : 'primary' }} full-width mt-2" onclick=";wear('{{ item.assetid }}', 'shirt');">{{ (item.equipped) ? 'unequip' : 'equip' }}</button>
 											</div>
 										</div>
@@ -629,7 +629,7 @@
                             </div>
                             <div class="tab-pane" id="pants">
 								<div class="row">
-								{% for item in purchases %}
+								{% for item in data.purchases %}
 									{% if item.asset_type == 12 %}
 										<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
 											<div class="card">
@@ -638,7 +638,7 @@
 														<img src="{{ item.thumbnail }}" style="width: 50%; height: auto;">
 													</div>
 													<p class="mt-2 mb-0"><a href="/item/{{ item.assetid }}">{{ item.title }}</a></p>
-													<p class="mt-0 mb-0">by {% if item.uuid == false %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
+													<p class="mt-0 mb-0">by {% if not item.uuid %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
 													<button class="btn btn-{{ (item.equipped) ? 'danger' : 'primary' }} full-width mt-2" onclick=";wear('{{ item.assetid }}', 'pants');">{{ (item.equipped) ? 'unequip' : 'equip' }}</button>
 												</div>
 											</div>
@@ -649,7 +649,7 @@
                             </div>
                             <div class="tab-pane" id="faces">
                               	<div class="row">
-								{% for item in purchases %}
+								{% for item in data.purchases %}
 									{% if item.asset_type == 18 %}
 										<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
 											<div class="card">
@@ -658,7 +658,7 @@
 														<img src="{{ item.thumbnail }}" style="width: 50%; height: auto;">
 													</div>
 													<p class="mt-2 mb-0"><a href="/item/{{ item.assetid }}">{{ item.title }}</a></p>
-													<p class="mt-0 mb-0">by {% if item.uuid == false %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
+													<p class="mt-0 mb-0">by {% if not item.uuid %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
 													<button class="btn btn-{{ (item.equipped) ? 'danger' : 'primary' }} full-width mt-2" onclick=";wear('{{ item.assetid }}', 'face');">{{ (item.equipped) ? 'unequip' : 'equip' }}</button>
 												</div>
 											</div>
