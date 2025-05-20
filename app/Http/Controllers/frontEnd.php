@@ -1848,7 +1848,7 @@ class frontEnd extends Controller
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'title'            => 'required|string|min:3|max:255',
-                'description'      => 'required|string|max:8192',
+                'description'      => 'nullable|string|max:8192',
                 'allowplaying'     => 'nullable|boolean',
                 'downloadable'     => 'nullable|boolean',
                 'hideRecent'       => 'nullable|boolean',
@@ -1883,7 +1883,7 @@ class frontEnd extends Controller
                 ->where('id', $id)
                 ->update([
                     'title' => $data['title'],
-                    'description' => $data['description'],
+                    'description' => $data['description'] ?? '',
                     'additional' => json_encode($place['additional'])
                 ]);
             
