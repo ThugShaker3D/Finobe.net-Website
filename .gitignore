@@ -3,7 +3,7 @@
 /public/build
 /public/hot
 /public/storage
-/public/s
+# /public/s
 /public/scss
 /public/sprites
 /public/svgs
