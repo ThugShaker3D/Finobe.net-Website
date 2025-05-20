@@ -701,6 +701,7 @@ input[type='number'][data-v-e236382e]:hover::-webkit-outer-spin-button {
                     </div>
                     <div class="col-lg-10 mb-2">
                         <form role="form" method="POST" action="" enctype="multipart/form-data">
+                            <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                             <div class="form-group">
                                 <h4 style="font-weight: 300;"><strong>Edit</strong> <a href="/place/{{ place.id }}">{{ place.title|raw }}</a></h4>
                                 <p class="col-form-label">
