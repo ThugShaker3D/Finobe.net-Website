@@ -542,7 +542,9 @@ class frontEnd extends Controller
             ->orderBy('date', 'DESC')
             ->limit(15)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
         
         foreach($results as $result) {
             $result['date'] = date('m/d/Y', strtotime($result['data']));
