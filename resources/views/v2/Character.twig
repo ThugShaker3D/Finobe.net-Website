@@ -490,19 +490,18 @@
 								function regen() {
 									render.disabled = true;
 									render.innerHTML = "working...";
-									
-									const options = {
-									    method: 'GET'
-									};
-									fetch("/api/render", options)
-									  .then(response => response.text())
+
+									fetch("/api/render", {
+										method: 'POST'
+									  })
+									  .then(response => response.json())
 									  .then(data => {
-										if(!data.startsWith("https://")) {
+										if(data.code != 200) {
 											alert(data);
 										} else {
 											avatarimg.src = "https://cdn.finobe.net/avatar/default.png";
 											setTimeout(() => {
-												avatarimg.src = data;
+												avatarimg.src = data.image;
 											}, 500);
 										}
 										
