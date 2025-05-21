@@ -21,6 +21,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::get('/users', [frontEnd::class, 'users']);
+        Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [frontEnd::class, 'trades']);
         Route::get('/item/{id}', [frontEnd::class, 'item']);
         Route::get('/invites', [frontEnd::class, 'invites']);
