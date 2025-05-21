@@ -9,7 +9,7 @@
             <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
             {% else %}
 			<li class="nav-item dropdown dropdown-notifications">
-              <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell align-middle mr-2"></i> ({{ notifications.info.number }})<span class="caret"></span></a> 
+              <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell align-middle mr-2"></i> ({{ data.notifications.info.number }})<span class="caret"></span></a> 
               <div class="dropdown-menu dropdown-menu-left">
                  <div class="dropdown-header"><span class="align-middle">Notifications</span></div>
                  <a href="/api/mark?id=all" id="notification-markall" class="dropdown-item">Mark all as read</a> 
