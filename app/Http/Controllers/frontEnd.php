@@ -3072,7 +3072,7 @@ class frontEnd extends Controller
                     ]);
                 
                 Session::put('successv2', 'Successfully updated.');
-                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'))
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'));
             } elseif(isset($data['gary'])) {
                 User::where('id', $this->request['data']['user']['id'])
                     ->update([
@@ -3080,7 +3080,7 @@ class frontEnd extends Controller
                     ]);
                 
                 Session::put('successv2', 'Successfully updated.');
-                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'))
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'));
             } elseif(isset($data['upsidedown'])) {
                 User::where('id', $this->request['data']['user']['id'])
                     ->update([
@@ -3088,7 +3088,7 @@ class frontEnd extends Controller
                     ]);
                 
                 Session::put('successv2', 'Successfully updated.');
-                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'))
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'));
             } elseif(isset($data['version'])) {
                 $validator = Validator::make($data, [
                     'version' => 'required|string|in:v1,v2'
