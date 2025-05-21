@@ -2943,6 +2943,7 @@ class frontEnd extends Controller
     }
 
     public function app_settings(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Settings' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
         if(!$this->request['data']['siteusername']) {
@@ -3021,6 +3022,226 @@ class frontEnd extends Controller
         }
 
         return view($this->request['data']['user']['version'] . '/Settings/Index', $this->request);
+    }
+
+    public function app_theme(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Theme' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            if(isset($data['branding'])) {
+                $validator = Validator::make($data, [
+                    'branding' => 'required|string|in:aesthetiful,finobe'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/theme');
+                }
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+                $user->branding = $data['branding'];
+                $user->save();
+
+                Session::put('successv2', 'Successfully updated.');
+                return redirect('/app/' . ($user->version == 'v1' ? 'settings' : 'theme'));
+            } elseif(isset($data['logo'])) {
+                $validator = Validator::make($data, [
+                    'logo' => 'required|string|in:v1,v2,v3'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/theme');
+                }
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+                $user->branding = $data['branding'];
+                $user->save();
+
+                Session::put('successv2', 'Successfully updated.');
+                return redirect('/app/' . ($user->version == 'v1' ? 'settings' : 'theme'));
+            } elseif(isset($data['dark'])) {
+                User::where('id', $this->request['data']['user']['id'])
+                    ->update([
+                        'theme' => DB::raw('CASE WHEN theme = 0 THEN 1 ELSE 0 END')
+                    ]);
+                
+                Session::put('successv2', 'Successfully updated.');
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'))
+            } elseif(isset($data['gary'])) {
+                User::where('id', $this->request['data']['user']['id'])
+                    ->update([
+                        'gary' => DB::raw('CASE WHEN theme = 0 THEN 1 ELSE 0 END')
+                    ]);
+                
+                Session::put('successv2', 'Successfully updated.');
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'))
+            } elseif(isset($data['upsidedown'])) {
+                User::where('id', $this->request['data']['user']['id'])
+                    ->update([
+                        'upsidedown' => DB::raw('CASE WHEN theme = 0 THEN 1 ELSE 0 END')
+                    ]);
+                
+                Session::put('successv2', 'Successfully updated.');
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'))
+            } elseif(isset($data['version'])) {
+                $validator = Validator::make($data, [
+                    'version' => 'required|string|in:v1,v2'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/theme');
+                }
+
+                User::where('id', $this->request['data']['user']['id'])
+                    ->update([
+                        'gary' => 0,
+                        'upsidedown' => 0,
+                        'theme' => 0,
+                        'logo' => 'v1',
+                        'version' => $data['version']
+                    ]);
+                
+                Session::put('success', 'Successfully changed');
+                return redirect('/app/' . ($this->request['data']['user']['version'] == 'v1' ? 'settings' : 'theme'));
+            }
+
+            return redirect('/app/theme');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Settings/Theme', $this->request);
+    }
+
+    public function app_games(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Places' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            if($this->request['data']['user']['Dius'] < 625) {
+                Session::put('error', 'You do not have enough Dius to purchase a place slot');
+                return redirect('/app/games');
+            }
+
+            $user = User::find($this->request['data']['user']['id'])->first();
+            $user->Dius -= 625;
+            $user->slots += 1;
+            $user->save();
+
+            $this->db->table('purchases')->insert([
+                'username' => $user->username,
+                'assetid' => 0,
+                'author' => 1,
+                'amount' => -625
+            ]);
+
+            Session::put('successv2', 'Successfully purchased.');
+            return redirect('/app/games');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Settings/Places', $this->request);
+    }
+
+    public function app_connect(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Connect' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'username' => 'required|string'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/app/connect');
+            }
+
+            $user = User::find($this->request['data']['user']['id'])->first();
+            $user->eracast_link = 'None';
+            $user->save();
+
+            Http::withHeaders([
+                'User-Agent' => 'finobe.net/Server 1.0'
+            ])->get('https://api.eracast.cc/v1/update_aesthetifulplus_link', [
+                'user' => $data['username'],
+                'userid' => 'None'
+            ]);
+
+            Session::put('successv2', 'Successfully disconnected.');
+            return redirect('/app/connect');
+        }
+
+        if($this->request['data']['user']['eracast_link'] != 'None') {
+            $response = Http::withHeaders([
+                'User-Agent' => 'finobe.net/Server 1.0'
+            ])->get('https://api.eracast.cc/v1/get_user_username', [
+                'userid' => $this->request['data']['user']['eracast_link']
+            ]);
+
+            $this->request['data']['user']['eracast_username'] = $response->body();
+        }
+
+        return view($this->request['data']['user']['version'] . '/Settings/Connect', $this->request);
+    }
+
+    public function api_connect(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Connecting eracast' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if($request->isMethod('post')) {
+            if(!isset($data['data'])) {
+                return redirect('https://www.eracast.cc/signin?context=connect&next=&feature=aesthetifulplus');
+            } else {
+                function decryptData($data, $key) {
+                    $data = base64_decode(urldecode($data));
+                    $iv = substr($data, 0, 16);
+                    $encrypted = substr($data, 16);
+                    $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+                    parse_str($decrypted, $dataArray);
+                    return $dataArray;
+                }
+
+                $validator = Validator::make($data, [
+                    'data' => 'required|string'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/connect');
+                }
+
+                $decoded = decryptData($data['data'], 'connect');
+
+                if(!isset($decoded['e_username'])) {
+                    Session::put('error', 'There was an error, please try again.');
+                    return redirect('/app/connect');
+                }
+
+                $response = Http::withHeaders([
+                    'User-Agent' => 'finobe.net/Server 1.0'
+                ])->get('https://api.eracast.cc/v1/get_user_pfp', [
+                    'user' => $decoded['e_username']
+                ]);
+
+                $this->request['data']['pfp'] = $response->body();
+                return redirect('/app/connect');
+            }
+        }
+
+        return view($this->request['data']['user']['version'] . '/Settings/ConnectAPI', $this->request);
     }
 
     public function auth_form(Request $request) {

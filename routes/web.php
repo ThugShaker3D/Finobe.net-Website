@@ -47,10 +47,11 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/character', [frontEnd::class, 'character']);
             Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
             Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
+            Route::match(['post', 'get'], '/connect', [frontEnd::class, 'app_connect']);
             Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
-            Route::match(['post', 'get'], '/settings', [frontEnd::class, 'app_settings']);
             Route::match(['post', 'get'], '/inbox/message', [frontEnd::class, 'inbox_message']);
             Route::match(['post', 'get'], '/inbox/compose', [frontEnd::class, 'inbox_compose']);
+            Route::match(['post', 'get', 'options'], '/settings', [frontEnd::class, 'app_settings']);
 
             Route::prefix('forum')->group(function() {
                 Route::match(['post', 'get'], '/new/post', [frontEnd::class, 'forum_new_post']);
@@ -94,6 +95,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::post('/purchase', [api::class, 'purchase']);
             Route::post('/character', [api::class, 'character']);
             Route::post('/rating_number', [api::class, 'rating_number']);
+            Route::match(['post', 'get'], '/connect', [frontEnd::class, 'api_connect']);
         });
 
         Route::prefix('auth')->group(function() {
