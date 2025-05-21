@@ -113,4 +113,20 @@ class dataController extends Controller
         $clean_text = preg_replace($regexDingbats, '', $clean_text);
         return $clean_text;
     }
+
+    public function send_discord_message($message, $username, $avatar = false) {
+		$json_data = [
+            "content" => $message,
+            "username" => str_replace("@", "", $username),
+            "avatar_url" => ($avatar ? $avatar : env('APP_URL', 'https://cdn.eracast.cc') . '/s/img/logo.png'),
+            "tts" => false,
+            "embeds" => []
+        ];
+
+		$response = Http::withHeaders([
+			'Content-Type' => 'application/json',
+		])->post(env('DISCORD_WEBHOOK', 'https://discord.com/api/webhooks/' . env('FINOBE_DISCORD_WEBHOOK')), $json_data);
+
+        return;
+	}
 }

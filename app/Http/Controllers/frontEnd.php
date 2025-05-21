@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use FFMpeg\FFMpeg;
+use FFMpeg\Format\Audio\Mp3;
+use FFMpeg\Format\Video\X264;
+use FFMpeg\Coordinate\TimeCode;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Controllers\dataController;
@@ -2711,6 +2715,11 @@ class frontEnd extends Controller
                 return redirect('/catalog/new');
             }
 
+            if($this->request['data']['user']['Dius'] - 5 < 0) {
+                Session::put('error', 'Not enough dius');
+                return redirect('/catalog/new');
+            }
+
             if($data['media-type'] == 'video') {
                 if($this->request['data']['user']['status'] != 'admin') {
                     return redirect('/catalog/new');
@@ -2725,8 +2734,209 @@ class frontEnd extends Controller
                     return redirect('/catalog/new');
                 }
 
+                $filename = uniqid();
+                $thumbnail = $filename . '.jpg';
+                $filename .= '.mp4';
+
                 $file = $request->file('file')->store('videos', 'private');
+                $ffmpeg = FFmpeg::create();
+                $video = $ffmpeg->open(storage_path('app' . $file));
+                $format = new X264('aac', 'libx264');
+                $format->setAdditionalParameters(['-movflags', '+faststart']);
+                $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $filename);
+                $video->frame(TimeCode::fromSeconds(1))
+                    ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $thumbnail);
+                
+                $id = $this->db->table('videos')->insertGetId([
+                    'title' => $data['title'],
+                    'author' => $this->request['data']['user']['username'],
+                    'filename' => $filename,
+                    'thumbnail' => $thumbnail,
+                    'description' => $data['description']
+                ]);
+
+                $user = User::find($this->request['data']['user']['id']);
+                $user->Dius -= 5;
+                $user->save();
+
+                return redirect('/video/' . $id);
+            } elseif($data['media-type'] == 'audio') {
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimetypes:audio/mpeg,audio/ogg,audio/midi,audio/wav|max:10240'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/catalog/new');
+                }
+
+                if($this->request['data']['user']['Dius'] - 5 < 0) {
+                    Session::put('error', 'Not enough dius');
+                    return redirect('/catalog/new');
+                }
+
+                $filename = uniqid();
+                $file = $request->file('file');
+                $file->move(public_path('dynamic/temp/' . $filename));
+                $ffmpeg = FFmpeg::create();
+                $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
+                $duration = $audio->getFormat()->get('duration');
+                $format = new Mp3();
+                $format->setAudioKiloBitrate(96);
+                $audio->save($format, public_path('/dynamic/reviewing/' . $filename));
+
+                $id = $this->db->table('assets')->insertGetId([
+                    'asset_type' => $assetTypes[$data['media-type']],
+                    'title' => $data['title'],
+                    'author' => $this->request['data']['user']['id'],
+                    'file' => $filename,
+                    'description' => $data['description'],
+                    'visibility' => 'r',
+                    'additional' => json_encode([
+                        'duration' => $duration,
+                        'price' => intval($data['price']),
+                        'media' => [
+                            'imageAssetId' => 2
+                        ],
+                        'oldUser' => ''
+                    ])
+                ]);
+
+                $user = User::find($this->request['data']['user']['id']);
+                $user->Dius -= 5;
+                $user->save();
+
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+
+                return redirect('/item/' . $id);
+            } elseif($data['media-type'] == 'shirt') {
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/catalog/new');
+                }
+
+                if($this->request['data']['user']['Dius'] - 5 < 0) {
+                    Session::put('error', 'Not enough dius');
+                    return redirect('/catalog/new');
+                }
+
+                $image = getimagesize($request->file('file')->getPathname());
+
+                if(abs(($image[0] / $image[1]) - (585 / 559)) > 0.01) {
+                    Session::put('error', 'Image is not correct ratio (585x559)');
+                    return redirect('/catalog/new');
+                }
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+
+                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'shirt');
+
+                $user->Dius -= 5;
+                $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => $id,
+                    'author' => $user->id,
+                    'amount' => 0
+                ]);
+
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+
+                Session::put('success', 'Success');
+                return redirect('/item/' . $id);
+            } elseif($data['media-type'] == 'pants') {
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/catalog/new');
+                }
+
+                if($this->request['data']['user']['Dius'] - 5 < 0) {
+                    Session::put('error', 'Not enough dius');
+                    return redirect('/catalog/new');
+                }
+
+                $image = getimagesize($request->file('file')->getPathname());
+
+                if(abs(($image[0] / $image[1]) - (585 / 559)) > 0.01) {
+                    Session::put('error', 'Image is not correct ratio (585x559)');
+                    return redirect('/catalog/new');
+                }
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+
+                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'pants');
+
+                $user->Dius -= 5;
+                $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => $id,
+                    'author' => $user->id,
+                    'amount' => 0
+                ]);
+
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+
+                Session::put('success', 'Success');
+                return redirect('/item/' . $id);
+            } elseif($data['media-type'] == 'faces') {
+                if($this->request['data']['user']['status'] != 'admin') {
+                    Session::put('error', 'Admin required');
+                    return redirect('/catalog/new');
+                }
+
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/catalog/new');
+                }
+
+                if($this->request['data']['user']['Dius'] - 5 < 0) {
+                    Session::put('error', 'Not enough dius');
+                    return redirect('/catalog/new');
+                }
+
+                $image = getimagesize($request->file('file')->getPathname());
+
+                if(abs(($image[0] / $image[1]) - (256 / 256)) > 0.01) {
+                    Session::put('error', 'Image is not correct ratio (256x256)');
+                    return redirect('/catalog/new');
+                }
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+
+                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'face');
+
+                $user->Dius -= 5;
+                $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => $id,
+                    'author' => $user->id,
+                    'amount' => 0
+                ]);
+
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+
+                Session::put('success', 'Success');
+                return redirect('/item/' . $id);
             }
+
+            return redirect('/catalog/new');
         }
 
         return view($this->request['data']['user']['version'] . '/Catalog/New', $this->request);
