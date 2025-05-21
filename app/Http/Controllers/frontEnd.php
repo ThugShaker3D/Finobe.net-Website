@@ -1606,9 +1606,9 @@ class frontEnd extends Controller
         $results_per_page = 12;
 
         if(isset($data['q'])) {
-            $search = '%' . htmlspecialchars($data['search']) . '%';
+            $search = htmlspecialchars($data['q']);
             $results = $this->db->table('assets')
-                ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+                ->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
                 ->orderBy('id', 'DESC')
@@ -1629,7 +1629,7 @@ class frontEnd extends Controller
 
         if(isset($data['q'])) {
             $results = $this->db->table('assets')
-                ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+                ->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
                 ->where('asset_type', $sections[$section])
                 ->where('visibility', 'n')
                 ->orderBy('id', 'DESC')
