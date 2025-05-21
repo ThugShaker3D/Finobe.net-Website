@@ -2250,7 +2250,7 @@ class frontEnd extends Controller
                 $key['dateUsed'] = date('m/d/Y', strtotime($key['dateUsed']));
             }
 
-            $keys['data'][] = $row;
+            $keys['data'][] = $key;
         }
 
         $this->request['data']['keys'] = $keys;
