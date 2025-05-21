@@ -2380,7 +2380,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        if($this->db->table('verify_email')->where('username', $this->request['data']['user']['email'])->exists()) {
+        if($this->db->table('verify_email')->where('username', $this->request['data']['user']['username'])->where('used', 'n')->exists()) {
             return redirect('/');
         }
 
