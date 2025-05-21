@@ -3219,6 +3219,10 @@ class frontEnd extends Controller
                 'userid' => $this->request['data']['user']['id']
             ]);
 
+            $user = User::find($this->request['data']['user']['id'])->first();
+            $user->eracast_link = $data['userid'];
+            $user->save();
+
             Session::put('success', 'Successfully linked.');
             return redirect('/app/connect');
         }
