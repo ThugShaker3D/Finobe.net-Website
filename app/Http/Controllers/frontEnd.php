@@ -3209,7 +3209,7 @@ class frontEnd extends Controller
 
             if($validator->fails()) {
                 Session::put('error', $validator->errors()->first());
-                return redirect('/api/connect');
+                return redirect('/app/connect');
             }
 
             Http::withHeaders([
