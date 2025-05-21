@@ -2483,7 +2483,7 @@ class frontEnd extends Controller
             return redirect('/password/reset');
         }
 
-        $user = User::where('email', $data['email']);
+        $user = User::where('email', $data['email'])->first();
 
         if($this->db->table('reset_password')->where('username', $user->username)->where('used', 'n')->exists()) {
             return redirect('/password/reset');
