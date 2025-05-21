@@ -57,7 +57,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('catalog')->group(function() {
-            Route::match(['post', 'get', 'options'], '/catalog/new', [frontEnd::class, 'catalog_new']);
+            Route::match(['post', 'get', 'options'], '/new', [frontEnd::class, 'catalog_new']);
             Route::get('/{section}', [frontEnd::class, 'catalog_index']);
 
             Route::get('/', function() {
