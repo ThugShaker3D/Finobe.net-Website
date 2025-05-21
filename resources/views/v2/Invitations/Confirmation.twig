@@ -17,6 +17,7 @@
                                     <p>Please only invite people you trust. You could be banned for inviting someone that breaks the rules. You are not allowed to sell or publicly post invites.</p>
                                     <p class="mt-4">
                                         <form action="" method="POST">
+                                            <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                             <a href="/invites" class="btn btn-outline-danger mr-1" style="text-transform: none;">nope, guess not</a>
                                             <button type="submit" value="Submit" class="btn btn-primary" style="text-transform: none;">yeah, let's do it!</button>
                                         </form>
