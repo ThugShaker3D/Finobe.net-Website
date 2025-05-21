@@ -3259,6 +3259,7 @@ class frontEnd extends Controller
 
             $this->request['data']['pfp'] = $response->body();
             $this->request['data']['e_username'] = $decoded['e_username'];
+            $this->request['data']['e_id'] = $decoded['e_id'];
         }
 
         return view($this->request['data']['user']['version'] . '/Settings/ConnectAPI', $this->request);
