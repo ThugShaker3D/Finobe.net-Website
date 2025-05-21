@@ -2942,6 +2942,7 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Catalog/New', $this->request);
     }
 
+    /*
     public function app_settings(Request $request) {
         $data = $request->all();
 
@@ -3022,6 +3023,7 @@ class frontEnd extends Controller
 
         return view($this->request['data']['user']['version'] . '/Settings/Index', $this->request);
     }
+    */
 
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
