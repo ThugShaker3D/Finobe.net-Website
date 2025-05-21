@@ -88,7 +88,7 @@ class frontEnd extends Controller
             
             $this->request['data']['notifications'] = [
                 'data' => [],
-                'ads' => filter_var(env('FINOBE_ADS'), FILTER_VALIDATE_BOOLEAN),
+                'ads' => (bool)env('FINOBE_ADS'),
                 'info' => [
                     'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
                     'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
@@ -911,7 +911,7 @@ class frontEnd extends Controller
                 'content' => 'required|string|min:3|max:16384'
             ]);
 
-            if(!filter_var(env('FINOBE_FORUM_POST'), FILTER_VALIDATE_BOOLEAN)) {
+            if(!(bool)env('FINOBE_FORUM_POST')) {
                 Session::put('error', 'Posting on the forums have been disabled');
                 return redirect('/forum/post?id=' . $data['id']);
             }
@@ -1216,7 +1216,7 @@ class frontEnd extends Controller
                 'content' => 'required|string|min:3|max:16384'
             ]);
 
-            if(!filter_var(env('FINOBE_FORUM_POST'), FILTER_VALIDATE_BOOLEAN)) {
+            if(!(bool)env('FINOBE_FORUM_POST')) {
                 Session::put('error', 'Posting on the forums have been disabled');
                 return redirect('/forum/post?id=' . $data['id']);
             }
@@ -2267,12 +2267,12 @@ class frontEnd extends Controller
         }
 
         if($request->isMethod('post')) {
-            if(!filter_var(env('FINOBE_INVITE_KEYS'), FILTER_VALIDATE_BOOLEAN)) {
+            if(!(bool)env('FINOBE_INVITE_KEYS')) {
                 Session::put('error', 'Invite keys aren\'t enabled on the website');
                 return redirect('/invites');
             }
 
-            if(!filter_var(env('FINOBE_CREATE_INVITE_KEYS'), FILTER_VALIDATE_BOOLEAN)) {
+            if(!(bool)env('FINOBE_CREATE_INVITE_KEYS')) {
                 Session::put('error', 'Invite key creation is disabled');
                 return redirect('/invites');
             }
@@ -2596,6 +2596,142 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Reset', $this->request);
     }
 
+    public function create(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Create asset' . $this->request['data']['embeds']['title'];
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Create', $this->request);
+    }
+
+    public function place_new(Request $request) {
+        $this->request['data']['embeds']['title'] = 'New Place' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'title' => 'required|string|min:3|max:255',
+                'description' => 'nullable|string|max:8192'
+            ]);
+
+            $games = $this->db->table('assets')
+                ->where('author', $this->request['data']['user']['id'])
+                ->where('asset_type', 9)
+                ->count();
+            
+            if(!(bool)env('FINOBE_CREATE_PLACES')) {
+                Session::put('error', 'Creating assets is currently disabled');
+                return redirect('/app/place/new');
+            }
+
+            if($games >= $this->request['data']['user']['slots']) {
+                Session::put('error', 'You have used all of your place slots');
+                return redirect('/app/place/new');
+            }
+
+            if($this->request['data']['user']['status'] != 'admin') {
+                Session::put('error', 'Admin status is required');
+                return redirect('/app/place/new');
+            }
+
+            $id = $this->db->table('assets')->insertGetId([
+                'asset_type' => 9,
+                'title' => trim($data['title']),
+                'description' => trim($data['description'] ?? ''),
+                'additional' => json_encode([
+                    'visits' => 0,
+                    'version' => '2012',
+                    'maxplayers' => 15,
+                    'category' => 'original',
+                    'featured' => false,
+                    'gears' => [
+                        'combat' => true,
+                        'social' => true,
+                        'building' => true,
+                        'musical' => true
+                    ],
+                    'uncopylocked' => false,
+                    'allowplaying' => true,
+                    'chat_type' => 'classic',
+                    'media' => [
+                        'imageAssetId' => 1
+                    ],
+                    'hidden' => false
+                ])
+            ]);
+
+            return redirect('/place/' . $id);
+        }
+
+        return view($this->request['data']['user']['version'] . '/Places/New', $this->request);
+    }
+
+    public function catalog_new(Request $request) {
+        $this->request['data']['embeds']['title'] = 'New Asset' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+        
+        if($request->isMethod('post')) {
+            if(!(bool)env('FINOBE_CREATE_ASSETS')) {
+                Session::put('Creating assets is currently disabled');
+                return redirect('/catalog/new');
+            }
+
+            $assetTypes = [
+                'hats' => 8,
+                't-shirts' => 2,
+                'shirt' => 11,
+                'pants' => 12,
+                'gears' => 19,
+                'faces' => 18,
+                'heads' => 17,
+                'packages' => 32,
+                'audio' => 3,
+                'model' => 10
+            ];
+
+            $validator = Validator::make($data, [
+                'title' => 'required|string|min:3|max:255',
+                'description' => 'nullable|string|max:8192',
+                'media-type' => 'required|string',
+                'price' => 'required|integer|min:0'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/catalog/new');
+            }
+
+            if($data['media-type'] == 'video') {
+                if($this->request['data']['user']['status'] != 'admin') {
+                    return redirect('/catalog/new');
+                }
+
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimetypes:video/mp4,video/x-ms-wmv,video/quicktime|max:102400'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/catalog/new');
+                }
+
+                $file = $request->file('file')->store('videos', 'private');
+            }
+        }
+
+        return view($this->request['data']['user']['version'] . '/Catalog/New', $this->request);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
@@ -2639,7 +2775,7 @@ class frontEnd extends Controller
                 return redirect('/auth/form');
             }
 
-            if((bool) env('FINOBE_INVITE_KEYS') && isset($data['invite_key']) && !$this->db->table('inviteKeys')->where('IID', $data['invite_key'])->where('used', 'n')->exists()) {
+            if($this->request['data']['inviteKeys'] && isset($data['invite_key']) && !$this->db->table('inviteKeys')->where('IID', $data['invite_key'])->where('used', 'n')->exists()) {
                 Session::put('error', 'Invalid invite key.');
                 return redirect('/auth/form');
             }
@@ -2655,7 +2791,7 @@ class frontEnd extends Controller
                 'token' => bin2hex(random_bytes(30))
             ]);
 
-            if((bool) env('FINOBE_INVITE_KEYS') && isset($data['invite_key'])) {
+            if($this->request['data']['inviteKeys'] && isset($data['invite_key'])) {
                 $this->db->table('inviteKeys')
                     ->where('IID', $data['invite_key'])
                     ->update([

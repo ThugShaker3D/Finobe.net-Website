@@ -8,19 +8,19 @@
       <div class="container" style="margin-bottom:10px">
                 <div class="full-width mt-3">
                     <h4>New Place</h4>
-                    <p>You've used
-                        {{ user.places }} of {{ user.slots }} place slots.
+                    <p>
+                        You've used {{ data.user.places }} of {{ data.user.slots }} place slots.
                     </p>
                     <div class="card-body text-center">
                         <form role="form" id="form" method="POST" action="/app/place/new" enctype="multipart/form-data">
-                            <input type="hidden" name="_token" value="oo1nGcSQqdQkCYgKUEpYicfFLx7S6NG3KUUE4GGJ">
+                            <input type="hidden" name="_token" value="{{ data.csrf_token }}">
     
                             <div class="form-group row">
                                 <label for="name" class="col-form-label text-md-right"
                                     style="margin-left:15px;">Name</label>
                                 <div class="col-md-12">
-                                    <input type="text" id="name" name="name"
-                                        value="{{ user.username }}'s place"
+                                    <input type="text" id="name" name="title"
+                                        value="{{ data.user.username }}'s place"
                                         placeholder="Place name" required="required" autofocus="autofocus"
                                         class="form-control">
                                 </div>
