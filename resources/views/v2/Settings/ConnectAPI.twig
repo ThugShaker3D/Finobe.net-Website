@@ -34,6 +34,7 @@
                         </div>
                         <div style="display: inline-block;">
                             <form method="POST" action="/api/connect">
+                                <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                 <input type="hidden" name="username" value="{{ data.e_username }}">
                                 <input type="hidden" name="userid" value="{{ data.e_id }}">
                                 <button type="submit" class="btn btn-primary">Connect</button>

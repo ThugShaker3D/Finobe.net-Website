@@ -27,14 +27,15 @@
                                     <a href="//www.eracast.cc/"><img src="//cdn.eracast.cc/yt/imgbin/yt-mini-logo.jpg" width="50" height="50"></a>
                                     <label class="col-form-label" style="margin-left:10px">EraCast</label>
                                     <div style="float:right;margin-top:10px;">
-                                        {% if user.eracast_link == "None" %}
+                                        {% if data.user.eracast_link == "None" %}
                                             <a href="/api/connect?app=eracast">
                                                 <button class="btn btn-secondary ">Not Connected</button>
                                             </a>
                                         {% else %}
                                             <form method="POST" action="/app/connect">
-                                                <input type="hidden" name="username" value="{{ user.username }}">
-                                                <p>{{ user.eracast_username }}
+                                                <input type="hidden" name="_token" value="{{ data.csrf_token }}">
+                                                <input type="hidden" name="username" value="{{ data.user.username }}">
+                                                <p>{{ data.user.eracast_username }}
                                                 <button id="toggleButton" class="btn btn-primary " onmouseover="toggleButtonText(true)" onmouseout="toggleButtonText(false)">Connected</button></p>
                                             </form>
                                             <script>

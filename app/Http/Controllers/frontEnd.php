@@ -3237,6 +3237,7 @@ class frontEnd extends Controller
                 ]);
 
                 $this->request['data']['pfp'] = $response->body();
+                $this->request['data']['e_username'] = $decoded['e_username'];
                 return redirect('/app/connect');
             }
         }
