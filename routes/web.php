@@ -24,11 +24,16 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/trades', [frontEnd::class, 'trades']);
         Route::get('/item/{id}', [frontEnd::class, 'item']);
         Route::get('/invites', [frontEnd::class, 'invites']);
+        Route::get('/password/reset', [frontEnd::class, 'password_reset']);
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
+        Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'verify_email']);
+        Route::post('/verify/email', [frontEnd::class, 'verify_email']);
+        Route::post('/password/email', [frontEnd::class, 'password_email']);
         Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
         Route::match(['post', 'get'], '/election', [frontEnd::class, 'election']);
         Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_new']);
+        Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);
 
         Route::prefix('place')->group(function() {
             Route::get('/{id}', [frontEnd::class, 'place']);

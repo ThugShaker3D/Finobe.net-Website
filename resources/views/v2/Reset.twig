@@ -13,9 +13,9 @@
 				   Reset Password
 				</div>
 				<div class="card-body">
-				    {% if reset == true %}
-				   <form role="form" method="POST" action="/password/verify">
-					  <input type="hidden" name="resetinfo" value="{{ resetinfo }}"> 
+				    {% if data.reset %}
+				   <form role="form" method="POST" action="">
+				   	  <input type="hidden" name="_token" value="{{ data.csrf_token }}"> 
 					  <div class="form-group row">
 						 <label for="password" class="col-md-3 col-form-label">New Password</label> 
 						 <div class="col-md-9"><input type="password" id="password" name="password" value="" required="required" autofocus="autofocus" class="form-control"></div>
@@ -26,7 +26,7 @@
 				   </form>
 				    {% else %}
 				   <form role="form" method="POST" action="/password/email">
-					  <input type="hidden" name="_token" value="fVViIsee0aVnxm5drUNddJyvfQ2lWyr8HhTwikLi"> 
+					  <input type="hidden" name="_token" value="{{ data.csrf_token }}"> 
 					  <div class="form-group row">
 						 <label for="email" class="col-md-3 col-form-label">E-mail Address</label> 
 						 <div class="col-md-9"><input type="email" id="email" name="email" value="" required="required" autofocus="autofocus" class="form-control"></div>
