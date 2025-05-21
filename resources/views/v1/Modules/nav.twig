@@ -96,6 +96,9 @@
       </div>
    </div>
 </nav>
+<div class="alert alert-danger alert-skinny my-0 text-center">
+	<p class="mb-0 text-white">Version 1 is currently broken following the release of the rewrite, it may be fixed in the future or deprecated. Only the absolute essentials work for you to switch back to Version 2.</p>
+</div>
 {% for announcement in data.announcements %}
 <div class="alert alert-{{ announcement.color }} alert-skinny my-0 text-center">
 	<p class="mb-0" style="color: white;">{{ announcement.message | raw }}</p>
