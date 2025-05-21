@@ -2489,12 +2489,12 @@ class frontEnd extends Controller
             return redirect('/password/reset');
         }
 
+        $resetid = hash_hmac('sha256', $id, 'privatekey');
+
         $id = $this->db->table('reset_password')->insertGetId([
             'username' => $user->username,
             'uid' => $resetid
         ]);
-
-        $resetid = hash_hmac('sha256', $id, 'privatekey');
 
         $html = file_get_contents(storage_path('reset_password_template.php'));
         $keywords = ['UUID', 'SIGNATURE', 'RESETID'];
