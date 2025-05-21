@@ -33,11 +33,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="mb-1" style="margin-bottom:0px;"><strong>Username: </strong>
-                                    {{ user.username }}
+                                    {{ data.user.username }}
                                 </p>
                                 <p style="margin-bottom: 0px;">
                                     <strong>E-mail: </strong>
-                                    {{ user.email }}
+                                    {{ data.user.email }}
                                     <a href="#ex1" rel="modal:open" style="color:inherit">
                                         <i class="far align-middle fa-pen-square ml-1" style="float:right;margin-top:5px;"></i>
                                     </a>
@@ -52,7 +52,7 @@
                                     </label>
                                     <div class="col-md-12">
                                         <textarea type="text" id="blurb" name="blurb" value="" placeholder="Blurb"
-                                            class="form-control" rows="8">{{ user.blurb }}</textarea>
+                                            class="form-control" rows="8">{{ data.user.blurb }}</textarea>
                                     </div>
                                     <label class="col-form-label text-md-right row"
                                         style="margin-left:15px;"><strong>Note:</strong>
@@ -65,7 +65,7 @@
                                 </div>
                             </form>
                         </div>
-                        {% if user.status == "admin" %}
+                        {% if data.user.status == "admin" %}
                         <div class="mt-3">
                             <form role="form" method="POST" action="/app/settings" enctype="multipart/form-data">
                                 <div class="form-group row">
@@ -94,7 +94,7 @@
                 <div class="card" style="margin-bottom:20px;height:100%">
                     <div class="card-header" style="display: flex; align-items: center;">
                         <a href="#close-modal" rel="modal:close" style="margin-right: 5px;">
-                            <button class="btn btn-{{ (user.theme == "night") ? "secondary" : "light" }}">
+                            <button class="btn btn-{{ (data.user.theme == "night") ? "secondary" : "light" }}">
                                 <i class="far fa-chevron-left"></i>
                             </button>
                         </a>
@@ -105,9 +105,9 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <label for="email" class="col-form-label">New E-mail</label>
-                                    <input type="email" name="email_a" value="" placeholder="New E-mail" required class="form-control">
+                                    <input type="email" name="email" value="" placeholder="New E-mail" required class="form-control">
                                     <label for="password" class="col-form-label">Confirm Password</label>
-                                    <input type="password" name="password_a" value="" placeholder="Password" required class="form-control">
+                                    <input type="password" name="password" value="" placeholder="Password" required class="form-control">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary full-width">Change</button>

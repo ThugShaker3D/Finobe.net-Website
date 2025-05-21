@@ -122,7 +122,7 @@ class frontEnd extends Controller
                 }
             }
 
-            $user = User::find($this->request['data']['user']['id']);
+            $user = User::find($this->request['data']['user']['id'])->first();
             $user->ip = hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip');
             $user->lastlogin = now();
             $user->save();
@@ -248,7 +248,7 @@ class frontEnd extends Controller
             return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
-        $user = User::find($id)->toArray();
+        $user = User::find($id)->first()->toArray();
 
         $this->request['data']['embeds']['title'] = htmlspecialchars($user['username']) . $this->request['data']['embeds']['title'];
 
@@ -313,7 +313,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id);
+        $user = User::find($id)->first();
         $user->friends = json_decode($user->friends, true);
         
         if($user->username == $this->request['data']['user']['username']) {
@@ -350,7 +350,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id);
+        $user = User::find($id)->first();
         $user->friends = json_decode($user->friends, true);
         
         if($user->username == $this->request['data']['user']['username']) {
@@ -411,7 +411,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id);
+        $user = User::find($id)->first();
         $user->friends = json_decode($user->friends, true);
         
         if($user->username == $this->request['data']['user']['username']) {
@@ -463,7 +463,7 @@ class frontEnd extends Controller
             return view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
-        $user = User::find($id)->toArray();
+        $user = User::find($id)->first()->toArray();
         $user['friends'] = array_reverse(array_filter(json_decode($user['friends'], true), function ($friend) {
             return $friend['status'] == 'friends';
         }));
@@ -958,7 +958,7 @@ class frontEnd extends Controller
                 ]);
 
             */
-            $user = User::find($this->request['data']['user']['id']);
+            $user = User::find($this->request['data']['user']['id'])->first();
             $user->post_cooldown = now();
             $user->save();
             
@@ -1317,7 +1317,7 @@ class frontEnd extends Controller
                     ]);
             }
             
-            $user = User::find($this->request['data']['user']['id']);
+            $user = User::find($this->request['data']['user']['id'])->first();
             $user->post_cooldown = now();
             $user->save();
             
@@ -1503,7 +1503,7 @@ class frontEnd extends Controller
                     'comment' => $data['content']
                 ]);
 
-                $user = User::find($this->request['data']['user']['id']);
+                $user = User::find($this->request['data']['user']['id'])->first();
                 $user->post_cooldown = now();
                 $user->save();
 
@@ -1660,7 +1660,7 @@ class frontEnd extends Controller
                 $result['duration'] = $this->dataService->timestamp($result['additional']['duration']);
             }
 
-            $user = User::find($result['author']);
+            $user = User::find($result['author'])->first();
             $result['uuid'] = $user ? $user->toArray()['id'] : false;
             $result['author'] = htmlspecialchars($user['username'] ?? $result['additional']['oldUser']);
             $items[] = $result;
@@ -2440,7 +2440,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id);
+        $user = User::find($id)->first();
 
         if(!$this->db->table('verify_email')->where('username', $user->username)->where('uid', $verifyid)->where('used', 'n')->exists()) {
             Session::put('error', 'Session not found');
@@ -2559,7 +2559,7 @@ class frontEnd extends Controller
             return redirect('/password/reset');
         }
 
-        $user = User::find($id);
+        $user = User::find($id)->first();
 
         if(!$this->db->table('reset_password')->where('username', $user->username)->where('uid', $resetid)->where('used', 'n')->exists()) {
             Session::put('error', 'Session not found');
@@ -2755,7 +2755,7 @@ class frontEnd extends Controller
                     'description' => $data['description']
                 ]);
 
-                $user = User::find($this->request['data']['user']['id']);
+                $user = User::find($this->request['data']['user']['id'])->first();
                 $user->Dius -= 5;
                 $user->save();
 
@@ -2802,7 +2802,7 @@ class frontEnd extends Controller
                     ])
                 ]);
 
-                $user = User::find($this->request['data']['user']['id']);
+                $user = User::find($this->request['data']['user']['id'])->first();
                 $user->Dius -= 5;
                 $user->save();
 
@@ -2942,6 +2942,87 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Catalog/New', $this->request);
     }
 
+    public function app_settings(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            if(isset($data['blurb']) && !$request->hasFile('file')) {
+                $validator = Validator::make($data, [
+                    'blurb' => 'required|string|max:8192'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/settings');
+                }
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+                $user->blurb = $data['blurb'];
+                $user->save();
+
+                Session::put('success', 'Successfully updated.');
+                return redirect('/app/settings');
+            } elseif(isset($data['password_a']) && !$request->hasFile('file')) {
+                $validator = Validator::make($data, [
+                    'email' => 'required|email',
+                    'password' => 'required|string|alpha_dash|unique:finobe.users,email'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/settings');
+                }
+
+                if(!Hash::check($data['password'], $this->request['data']['user']['password'])) {
+                    Session::put('errorlogin', true);
+                    return redirect('/auth/login');
+                }
+
+                $user = Auth::user();
+                $user->email = $data['email'];
+                $user->save();
+
+                Session::put('success', 'Successfully updated.');
+                return redirect('/app/settings');
+            } elseif($this->request['data']['user']['status'] == 'admin' && $request->hasFile('file')) {
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|minetypes:image/png,image/jpg|max:10240'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/app/settings');
+                }
+
+                $file = $request->file('file');
+                list($width, $height) = getimagesize($file->getPathname());
+                $filename = uniqid() . '.' $file->extension();
+
+                if($width != $height) {
+                    Session::put('error', 'Image needs to be 1:1 ratio');
+                    return redirect('/app/settings');
+                }
+
+                $file->move('/var/www/cdn.finobe.net/avatar/' . $filename);
+
+                $user = User::find($this->request['data']['user']['id'])->first();
+                $user->pfp = $filename;
+                $user->save();
+
+                Session::put('success', 'Successfully updated.');
+                return redirect('/app/settings');
+            }
+
+            return redirect('/app/settings');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Settings/Index', $this->request);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
@@ -3040,12 +3121,12 @@ class frontEnd extends Controller
                 return redirect('/auth/login');
             }
 
-            $user = User::where('email', $data['email'])->first();
-
-            if(!Hash::check($data['password'], $user->toArray()['password'])) {
+            if(!Hash::check($data['password'], $this->request['data']['user']['password'])) {
                 Session::put('errorlogin', true);
                 return redirect('/auth/login');
             }
+
+            $user = User::where('email', $data['email'])->first();
 
             Auth::login($user, isset($data['remember']));
             Session::put('success', 'Successfully logged in.');
