@@ -3060,7 +3060,7 @@ class frontEnd extends Controller
                 }
 
                 $user = User::find($this->request['data']['user']['id'])->first();
-                $user->branding = $data['branding'];
+                $user->logo = $data['logo'];
                 $user->save();
 
                 Session::put('successv2', 'Successfully updated.');
