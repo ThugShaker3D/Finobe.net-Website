@@ -6,7 +6,7 @@
             margin-bottom: 15px;
         }
         
-        {{ election.css | raw }}
+        {{ data.election.css | raw }}
     </style>
   </head>
   <body>
@@ -15,10 +15,10 @@
       <div class="container mt-3">
           <div class="card">
               <div class="card-body text-center">
-                  <h4>{{ election.title | raw }}</h4>
+                  <h4>{{ data.election.title | raw }}</h4>
                   <p>Pick elections</p>
                   <div class="d-flex justify-content-around p-3">
-                      {% for option in election.options %}
+                      {% for option in data.election.options %}
                       <div class="card" style="min-width: 20%;width: auto;">
                           {% if option.image != "" %}
                             <div class="card-header p-0">
@@ -32,7 +32,7 @@
                           <form method="post" action="">
                             <div class="card-body">
                                 <input type="hidden" name="index" value="{{ option.id }}">
-                                <button class="btn btn-{{ (election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == user.username)) ? "success" : "secondary" }} full-width">vote{{ (election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == user.username)) ? "d" : "" }}</button>
+                                <button class="btn btn-{{ (election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == data.user.username)) ? "success" : "secondary" }} full-width">vote{{ (election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == data.user.username)) ? "d" : "" }}</button>
                             </div>
                           </form>
                       </div>
