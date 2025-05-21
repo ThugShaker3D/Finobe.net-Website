@@ -2220,6 +2220,95 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Inbox/Compose', $this->request);
     }
 
+    public function invites(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Invites' . $this->request['data']['embeds']['title'];
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        $keys = [
+            'data' => [],
+            'info' => [
+                'created' => $this->db->table('inviteKeys')->where('author', $this->request['data']['user']['username'])->where(DB::raw('MONTH(creation)'), DB::raw('MONTH(NOW())'))->where(DB::raw('YEAR(creation)'), DB::raw('YEAR(NOW())'))->count()
+            ]
+        ];
+
+        $inviteKeys = $this->db->table('inviteKeys')
+            ->where('author', $this->request['data']['user']['username'])
+            ->orderBy('creation', 'DESC')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        foreach($inviteKeys as $key) {
+            $key['creation'] = date('m/d/Y', strtotime($key['creation']));
+
+            if($key['used'] == 'y') {
+                $key['uuid'] = User::where('username', $key['usedBy'])->select('id');
+                $key['dateUsed'] = date('m/d/Y', strtotime($key['dateUsed']));
+            }
+
+            $keys['data'][] = $row;
+        }
+
+        $this->request['data']['keys'] = $keys;
+
+        return view($this->request['data']['user']['version'] . '/Invitations/Invites', $this->request);
+    }
+
+    public function invites_new(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Invites' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            if(!filter_var(env('FINOBE_INVITE_KEYS'), FILTER_VALIDATE_BOOLEAN)) {
+                Session::put('error', 'Invite keys aren\'t enabled on the website');
+                return redirect('/invites');
+            }
+
+            if(!filter_var(env('FINOBE_CREATE_INVITE_KEYS'), FILTER_VALIDATE_BOOLEAN)) {
+                Session::put('error', 'Invite key creation is disabled');
+                return redirect('/invites');
+            }
+
+            if($this->db->table('inviteKeys')->where('author', $this->request['data']['user']['username'])->where(DB::raw('MONTH(creation)'), DB::raw('MONTH(NOW())'))->where(DB::raw('YEAR(creation)'), DB::raw('YEAR(NOW())'))->count() - 2 >= 0) {
+                Session::put('error', 'You cannot create any more invites this month');
+                return redirect('/invites');
+            }
+
+            function inviteKey($length) {
+                $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                $randomString = '';
+            
+                $maxIndex = strlen($characters) - 1;
+            
+                for($i = 0; $i < $length; $i++) {
+                    $randomString .= $characters[random_int(0, $maxIndex)];
+                }
+            
+                return $randomString;
+            }
+
+            $key = inviteKey(32);
+
+            $this->db->table('inviteKey')->insert([
+                'author' => $this->request['data']['user']['username'],
+                'IID' => $key
+            ]);
+
+            Session::put('successv2', 'Invite key created: ' . $key);
+            return redirect('/invites');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Invitations/Confirmation', $this->request);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
