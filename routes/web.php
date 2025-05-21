@@ -20,6 +20,10 @@ Route::middleware([SetClientIp::class])->group(function() {
             ], 404);
         });
 
+        Route::get('/forum', function() {
+            return redirect('/forum/home'); // for version 1 users
+        });
+
         Route::get('/users', [frontEnd::class, 'users']);
         Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [frontEnd::class, 'trades']);
