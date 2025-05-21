@@ -38,7 +38,7 @@
             <li class="nav-item"><a href="/users" class="nav-link">Users</a></li>
             <li class="nav-item"><a href="https://blog.finobe.net/" class="nav-link">Blog</a></li>
          </ul>
-         {% if IsLoggedIn %}
+         {% if data.siteusername %}
          <ul class="nav navbar-nav my-2 my-lg-0">
            <li data-animation="false" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ data.user.Dius }} - 0h 0m 0s remaining" class="nav-item n-money-text"><a href="/user/transaction-log" class="nav-link"><img src="/s/img/v1/owo_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> {{ data.user.Dius }}
               </a>
