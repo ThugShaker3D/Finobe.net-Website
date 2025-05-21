@@ -3202,44 +3202,64 @@ class frontEnd extends Controller
         $data = $request->all();
 
         if($request->isMethod('post')) {
-            if(!isset($data['data'])) {
-                return redirect('https://www.eracast.cc/signin?context=connect&next=&feature=aesthetifulplus');
-            } else {
-                function decryptData($data, $key) {
-                    $data = base64_decode(urldecode($data));
-                    $iv = substr($data, 0, 16);
-                    $encrypted = substr($data, 16);
-                    $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-                    parse_str($decrypted, $dataArray);
-                    return $dataArray;
-                }
+            $validator = Validator::make($data, [
+                'userid' => 'required|integer',
+                'username' => 'required|string'
+            ]);
 
-                $validator = Validator::make($data, [
-                    'data' => 'required|string'
-                ]);
-
-                if($validator->fails()) {
-                    Session::put('error', $validator->errors()->first());
-                    return redirect('/app/connect');
-                }
-
-                $decoded = decryptData($data['data'], 'connect');
-
-                if(!isset($decoded['e_username'])) {
-                    Session::put('error', 'There was an error, please try again.');
-                    return redirect('/app/connect');
-                }
-
-                $response = Http::withHeaders([
-                    'User-Agent' => 'finobe.net/Server 1.0'
-                ])->get('https://api.eracast.cc/v1/get_user_pfp', [
-                    'user' => $decoded['e_username']
-                ]);
-
-                $this->request['data']['pfp'] = $response->body();
-                $this->request['data']['e_username'] = $decoded['e_username'];
-                return redirect('/app/connect');
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/api/connect');
             }
+
+            Http::withHeaders([
+                'User-Agent' => 'finobe.net/Server 1.0'
+            ])->get('https://api.eracast.cc/v1/update_aesthetifulplus_link', [
+                'user' => $data['username'],
+                'userid' => $this->request['data']['user']['id']
+            ]);
+
+            Session::put('success', 'Successfully linked.');
+            return redirect('/app/connect');
+        }
+
+        if(!isset($data['data'])) {
+            return redirect('https://www.eracast.cc/signin?context=connect&next=&feature=aesthetifulplus');
+        } else {
+            function decryptData($data, $key) {
+                $data = base64_decode(urldecode($data));
+                $iv = substr($data, 0, 16);
+                $encrypted = substr($data, 16);
+                $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+                parse_str($decrypted, $dataArray);
+                return $dataArray;
+            }
+
+            $validator = Validator::make($data, [
+                'data' => 'required|string'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/api/connect');
+            }
+
+            $decoded = decryptData($data['data'], 'connect');
+
+            if(!isset($decoded['e_username'])) {
+                Session::put('error', 'There was an error, please try again.');
+                return redirect('/api/connect');
+            }
+
+            $response = Http::withHeaders([
+                'User-Agent' => 'finobe.net/Server 1.0'
+            ])->get('https://api.eracast.cc/v1/get_user_pfp', [
+                'user' => $decoded['e_username']
+            ]);
+
+            $this->request['data']['pfp'] = $response->body();
+            $this->request['data']['e_username'] = $decoded['e_username'];
+            return redirect('/api/connect');
         }
 
         return view($this->request['data']['user']['version'] . '/Settings/ConnectAPI', $this->request);
