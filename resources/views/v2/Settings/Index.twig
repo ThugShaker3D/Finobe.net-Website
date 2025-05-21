@@ -46,6 +46,7 @@
                         </div>
                         <div class="mt-3">
                             <form role="form" method="POST" action="/app/settings" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                 <div class="form-group row">
                                     <label for="blurb" class="col-form-label text-md-right" style="margin-left:15px;">
                                         <h4 style="font-weight: 300;">Blurb</h4>
@@ -68,6 +69,7 @@
                         {% if data.user.status == "admin" %}
                         <div class="mt-3">
                             <form role="form" method="POST" action="/app/settings" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                 <div class="form-group row">
                                     <label for="pfp" class="col-form-label text-md-right" style="margin-left:15px;">
                                         <h4 style="font-weight: 300;">Profile picture</h4>
@@ -102,6 +104,7 @@
                     </div>
                     <div class="card-body">
                         <form role="form" method="POST" action="/app/settings">
+                            <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <label for="email" class="col-form-label">New E-mail</label>
