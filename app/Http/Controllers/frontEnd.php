@@ -2230,11 +2230,11 @@ class frontEnd extends Controller
         $keys = [
             'data' => [],
             'info' => [
-                'created' => $this->db->table('inviteKeys')->where('author', $this->request['data']['user']['username'])->where(DB::raw('MONTH(creation)'), DB::raw('MONTH(NOW())'))->where(DB::raw('YEAR(creation)'), DB::raw('YEAR(NOW())'))->count()
+                'created' => $this->db->table('invitekeys')->where('author', $this->request['data']['user']['username'])->where(DB::raw('MONTH(creation)'), DB::raw('MONTH(NOW())'))->where(DB::raw('YEAR(creation)'), DB::raw('YEAR(NOW())'))->count()
             ]
         ];
 
-        $inviteKeys = $this->db->table('inviteKeys')
+        $inviteKeys = $this->db->table('invitekeys')
             ->where('author', $this->request['data']['user']['username'])
             ->orderBy('creation', 'DESC')
             ->get()
@@ -2277,7 +2277,7 @@ class frontEnd extends Controller
                 return redirect('/invites');
             }
 
-            if($this->db->table('inviteKeys')->where('author', $this->request['data']['user']['username'])->where(DB::raw('MONTH(creation)'), DB::raw('MONTH(NOW())'))->where(DB::raw('YEAR(creation)'), DB::raw('YEAR(NOW())'))->count() - 2 >= 0) {
+            if($this->db->table('invitekeys')->where('author', $this->request['data']['user']['username'])->where(DB::raw('MONTH(creation)'), DB::raw('MONTH(NOW())'))->where(DB::raw('YEAR(creation)'), DB::raw('YEAR(NOW())'))->count() - 2 >= 0) {
                 Session::put('error', 'You cannot create any more invites this month');
                 return redirect('/invites');
             }
@@ -2297,7 +2297,7 @@ class frontEnd extends Controller
 
             $key = inviteKey(32);
 
-            $this->db->table('inviteKey')->insert([
+            $this->db->table('invitekeys')->insert([
                 'author' => $this->request['data']['user']['username'],
                 'IID' => $key
             ]);
