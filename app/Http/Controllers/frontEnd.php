@@ -2988,7 +2988,7 @@ class frontEnd extends Controller
 
                 Session::put('success', 'Successfully updated.');
                 return redirect('/app/settings');
-            } elseif($this->request['data']['user']['status'] == 'admin' && $request->hasFile('file')) {
+            } elseif($this->request['data']['user']['status'] == 'admin' && $request->hasFile('file') && isset($data['LITERALLYIMPOSSIBLETOEXECUTETHISCODE'])) {
                 $validator = Validator::make($data, [
                     'file' => 'required|file|minetypes:image/png,image/jpg|max:10240'
                 ]);
