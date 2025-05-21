@@ -45,10 +45,10 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/inbox', [frontEnd::class, 'inbox']);
             Route::get('/places', [frontEnd::class, 'places']);
             Route::get('/character', [frontEnd::class, 'character']);
-            Route::get('/settings', [frontEnd::class, 'app_settings']);
             Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
             Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
             Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
+            Route::match(['post', 'get'], '/settings', [frontEnd::class, 'app_settings']);
             Route::match(['post', 'get'], '/inbox/message', [frontEnd::class, 'inbox_message']);
             Route::match(['post', 'get'], '/inbox/compose', [frontEnd::class, 'inbox_compose']);
 
