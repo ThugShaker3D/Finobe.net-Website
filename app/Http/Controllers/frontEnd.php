@@ -2384,7 +2384,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $verifyid = hash_mac('sha256', rand(0, 10000), 'privatekey');
+        $verifyid = hash_hmac('sha256', rand(0, 10000), 'privatekey');
 
         $html = file_get_contents(storage_path('verify_email_template.php'));
         $keywords = ['UUID', 'SIGNATURE', 'RESETID'];
