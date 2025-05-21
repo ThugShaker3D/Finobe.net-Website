@@ -2246,7 +2246,7 @@ class frontEnd extends Controller
             $key['creation'] = date('m/d/Y', strtotime($key['creation']));
 
             if($key['used'] == 'y') {
-                $key['uuid'] = User::where('username', $key['usedBy'])->select('id');
+                $key['uuid'] = User::where('username', $key['usedBy'])->value('id');
                 $key['dateUsed'] = date('m/d/Y', strtotime($key['dateUsed']));
             }
 
