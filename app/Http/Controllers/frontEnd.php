@@ -3241,14 +3241,14 @@ class frontEnd extends Controller
 
             if($validator->fails()) {
                 Session::put('error', $validator->errors()->first());
-                return redirect('/api/connect');
+                return redirect('/app/connect');
             }
 
             $decoded = decryptData($data['data'], 'connect');
 
             if(!isset($decoded['e_username'])) {
                 Session::put('error', 'There was an error, please try again.');
-                return redirect('/api/connect');
+                return redirect('/app/connect');
             }
 
             $response = Http::withHeaders([
