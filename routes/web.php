@@ -27,7 +27,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
-        Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_key']);
+        Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_new']);
 
         Route::prefix('place')->group(function() {
             Route::get('/{id}', [frontEnd::class, 'place']);
