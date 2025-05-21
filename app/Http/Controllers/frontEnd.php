@@ -2988,7 +2988,7 @@ class frontEnd extends Controller
 
                 Session::put('success', 'Successfully updated.');
                 return redirect('/app/settings');
-            } elseif($this->request['data']['user']['status'] == 'admin' && $request->hasFile('file') && isset($data['LITERALLYIMPOSSIBLETOEXECUTETHISCODE'])) {
+            } elseif($this->request['data']['user']['status'] == 'admin' && $request->hasFile('file')) {
                 $validator = Validator::make($data, [
                     'file' => 'required|file|minetypes:image/png,image/jpg|max:10240'
                 ]);
@@ -3000,7 +3000,7 @@ class frontEnd extends Controller
 
                 $file = $request->file('file');
                 list($width, $height) = getimagesize($file->getPathname());
-                $filename = uniqid() . '.' $file->extension();
+                $filename = uniqid() . '.' . $file->extension();
 
                 if($width != $height) {
                     Session::put('error', 'Image needs to be 1:1 ratio');
