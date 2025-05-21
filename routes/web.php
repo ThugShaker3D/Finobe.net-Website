@@ -47,6 +47,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/character', [frontEnd::class, 'character']);
             Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
             Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
+            Route::match(['post', 'get'], '/theme', [frontEnd::class, 'app_theme']);
             Route::match(['post', 'get'], '/games', [frontEnd::class, 'app_games']);
             Route::match(['post', 'get'], '/connect', [frontEnd::class, 'app_connect']);
             Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
