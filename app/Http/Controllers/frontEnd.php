@@ -2942,7 +2942,6 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Catalog/New', $this->request);
     }
 
-    /*
     public function app_settings(Request $request) {
         $data = $request->all();
 
@@ -2967,7 +2966,7 @@ class frontEnd extends Controller
 
                 Session::put('success', 'Successfully updated.');
                 return redirect('/app/settings');
-            } elseif(isset($data['password_a']) && !$request->hasFile('file')) {
+            } elseif(isset($data['password']) && !$request->hasFile('file')) {
                 $validator = Validator::make($data, [
                     'email' => 'required|email',
                     'password' => 'required|string|alpha_dash|unique:finobe.users,email'
@@ -3023,7 +3022,6 @@ class frontEnd extends Controller
 
         return view($this->request['data']['user']['version'] . '/Settings/Index', $this->request);
     }
-    */
 
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
