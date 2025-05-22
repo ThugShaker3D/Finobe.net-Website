@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Validator;
 class admin extends Controller
 {
     protected $db;
+    protected $dataService;
     protected $request;
 
-    public function __construct(Request $request) {
+    public function __construct(dataController $dataService, Request $request) {
         $this->db = DB::connection('finobe');
+        $this->dataService = $dataService;
         $this->request = [
             'data' => [
                 'embeds' => [
