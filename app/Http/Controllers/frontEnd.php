@@ -3068,7 +3068,7 @@ class frontEnd extends Controller
             } elseif(isset($data['dark'])) {
                 User::where('id', $this->request['data']['user']['id'])
                     ->update([
-                        'theme' => DB::raw('CASE WHEN theme = 0 THEN 1 ELSE 0 END')
+                        'theme' => ($this->request['data']['user']['theme'] == 1 ? 0 : 1)
                     ]);
                 
                 Session::put('successv2', 'Successfully updated.');
@@ -3076,7 +3076,7 @@ class frontEnd extends Controller
             } elseif(isset($data['gary'])) {
                 User::where('id', $this->request['data']['user']['id'])
                     ->update([
-                        'gary' => DB::raw('CASE WHEN gary = 0 THEN 1 ELSE 0 END')
+                        'gary' => ($this->request['data']['user']['gary'] == 1 ? 0 : 1)
                     ]);
                 
                 Session::put('successv2', 'Successfully updated.');
@@ -3084,7 +3084,7 @@ class frontEnd extends Controller
             } elseif(isset($data['upsidedown'])) {
                 User::where('id', $this->request['data']['user']['id'])
                     ->update([
-                        'upsidedown' => DB::raw('CASE WHEN upsidedown = 0 THEN 1 ELSE 0 END')
+                        'upsidedown' => ($this->request['data']['user']['upsidedown'] == 1 ? 0 : 1)
                     ]);
                 
                 Session::put('successv2', 'Successfully updated.');
