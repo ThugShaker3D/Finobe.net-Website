@@ -42,6 +42,7 @@
                                                 var data = new URLSearchParams();
                                                 data.append('videoId', videoId);
                                                 data.append('type', type);
+                                                data.append('_token', '{{ data.csrf_token }}');
 
                                                 $.ajax({
                                                     url: "/api/video/rating_number",
@@ -68,6 +69,7 @@
                                                 const data = new URLSearchParams();
                                                 data.append('videoId', '{{ data.video.id }}');
                                                 data.append('rating', 'l');
+                                                data.append('_token', '{{ data.csrf_token }}');
 
                                                 fetch("/api/video/rate", {
                                                     method: 'POST',
