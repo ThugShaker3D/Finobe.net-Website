@@ -33,7 +33,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/password/reset', [frontEnd::class, 'password_reset']);
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
-        Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'verify_email']);
+        Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'email_verify']);
         Route::post('/verify/email', [frontEnd::class, 'verify_email']);
         Route::post('/password/email', [frontEnd::class, 'password_email']);
         Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
