@@ -9,7 +9,7 @@ use App\Http\Middleware\ModerationMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([SetClientIp::class])->group(function() {
-    Route::domain(str_replace('https://', '', env('APP_URL')))->middleware([ModerationMiddleware::class])->group(function() {
+    Route::domain(str_replace('https://', '', 'sitetest1.finobe.net'/*env('APP_URL')*/))->middleware([ModerationMiddleware::class])->group(function() {
         Route::fallback(function() {
             return response()->view('v2/404', [
                 'data' => [
