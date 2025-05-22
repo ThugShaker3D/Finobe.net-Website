@@ -37,7 +37,7 @@ class Asset extends Controller
         if (self::isAssetExist($id))
         {
             switch ($assetType) {
-                case 8:
+                case 2:
                     return self::renderTShirt($id);
                 case 8:
                     return self::renderHat($id);
