@@ -3470,17 +3470,22 @@ class frontEnd extends Controller
                 'password' => 'required|string'
             ]);
 
+            if($validator->fails()) {
+                Session::put('errorlogin', true);
+                return redirect('/auth/login');
+            }
+
             if(!User::where('email', $data['email'])->exists()) {
                 Session::put('errorlogin', true);
                 return redirect('/auth/login');
             }
 
-            if(!Hash::check($data['password'], $this->request['data']['user']['password'])) {
+            $user = User::where('email', $data['email'])->first();
+
+            if(!Hash::check($data['password'], $user->password)) {
                 Session::put('errorlogin', true);
                 return redirect('/auth/login');
             }
-
-            $user = User::where('email', $data['email'])->first();
 
             Auth::login($user, isset($data['remember']));
             Session::put('success', 'Successfully logged in.');
