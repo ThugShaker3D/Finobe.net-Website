@@ -422,6 +422,14 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
+            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+
+            if($visibility != 'n') {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 8)->exists()) {
@@ -459,6 +467,14 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
+            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+
+            if($visibility != 'n') {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 11)->exists()) {
@@ -496,6 +512,14 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
+            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+
+            if($visibility != 'n') {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 12)->exists()) {
@@ -533,6 +557,14 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
+            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+
+            if($visibility != 'n') {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 18)->exists()) {
