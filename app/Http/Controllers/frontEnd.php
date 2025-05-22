@@ -3332,7 +3332,9 @@ class frontEnd extends Controller
             $bans[] = $result;
         }
 
-        usort($bans, 'compareDates');
+        usort($bans, function($a, $b) {
+			return strtotime($b['date']) - strtotime($a['date']);
+		});
         $this->request['data']['bans'] = $bans;
 
         return view($this->request['data']['user']['version'] . '/Bans', $this->request);
