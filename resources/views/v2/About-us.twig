@@ -583,7 +583,7 @@
       {% include ('v2/Modules/nav.twig') %}
       <div class="banner mb-4">
                 <div class="container d-flex justify-content-center align-items-center">
-                    <div class="mb-2"><img src="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}" class="mb-4" style="max-width: 120px;">
+                    <div class="mb-2"><img src="/s/img/{% if data.user.branding == "finobe" %}{% if data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}" alt="{{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}" class="mb-4" style="max-width: 120px;">
                     </div>
                     <h4>About Us</h4>
                     <h3 class="mt-4 mb-0 down-arrow"><i class="far fa-chevron-down"></i></h3>
