@@ -64,12 +64,6 @@ class ModerationMiddleware
             $this->request['data']['user']['friends'] = json_decode($this->request['data']['user']['friends'], true);
             $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
 
-            if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email') {
-                if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
-                    return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
-                }
-            }
-
             if(!$request->isMethod('post')) {
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
                     $this->request['data']['isCurrentlyBanned'] = true;
@@ -118,6 +112,12 @@ class ModerationMiddleware
                     $this->request['data']['expiration_formatted'] = date('Y-m-d', strtotime($this->request['data']['ban_info']['expire']));
                     
                     return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
+                }
+
+                if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email') {
+                    if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
+                        return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
+                    }
                 }
             }
         }
