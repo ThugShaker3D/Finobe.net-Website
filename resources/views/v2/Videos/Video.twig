@@ -106,6 +106,7 @@
                                                 const data = new URLSearchParams();
                                                 data.append('videoId', '{{ data.video.id }}');
                                                 data.append('rating', 'd');
+                                                data.append('_token', '{{ data.csrf_token }}');
 
                                                 fetch("/api/video/rate", {
                                                     method: 'POST',
