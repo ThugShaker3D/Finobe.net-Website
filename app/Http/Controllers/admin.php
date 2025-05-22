@@ -424,35 +424,29 @@ class admin extends Controller
             'data' => ''
         ];
 
-        $results = $this->db->table('announcements')
-            ->orderBy('id', 'DESC')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
-        
-        // shit code but i dont feel like rewriting it
-        if(count($results)) {
-            $totalRows = count($results);
-            $rowsPerPage = 10;
-            $totalPages = ceil($totalRows / $rowsPerPage);
-            $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
-            $start = ($currentPage - 1) * $rowsPerPage;
-            $end = $start + $rowsPerPage;
+        $page = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $perPage = 10;
 
+        $paginator = $this->db->table('announcements')
+            ->orderByDesc('id')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        $results = $paginator->items();
+
+        if (count($results)) {
             $html['data'] = "<table border='1' style=\"width:100%;\"><tr>";
 
-            foreach ($results as $key => $value) {
+            foreach (array_keys((array) $results[0]) as $key) {
                 $html['data'] .= "<th>" . htmlspecialchars($key) . "</th>";
             }
 
             $html['data'] .= "</tr>";
-            
-            for ($i = $start; $i < $end && $i < $totalRows; $i++) {
+
+            foreach ($results as $row) {
                 $html['data'] .= "<tr>";
-                foreach ($results[$i] as $key => $value) {
-                    if ($key == 'username') {
-                        $html['data'] .= "<td><a href=\"/user/$value\" target=\"_blank\">$value</a></td>";
+                foreach ((array) $row as $key => $value) {
+                    if ($key === 'username') {
+                        $html['data'] .= "<td><a href=\"/user/" . htmlspecialchars($value) . "\" target=\"_blank\">" . htmlspecialchars($value) . "</a></td>";
                     } else {
                         $html['data'] .= "<td>" . htmlspecialchars($value) . "</td>";
                     }
@@ -460,17 +454,15 @@ class admin extends Controller
                 $html['data'] .= "</tr>";
             }
 
-            $html['data'] .= "</table>";
+            $html['data'] .= "</table><div>";
 
-            $html['data'] .= "<div>";
-
-            for ($page = 1; $page <= $totalPages; $page++) {
-                $html['data'] .= "<a href='?page=$page'>$page</a> ";
+            for ($pageNum = 1; $pageNum <= $paginator->lastPage(); $pageNum++) {
+                $html['data'] .= "<a href='?page={$pageNum}'" . ($pageNum == $page ? " style='font-weight: bold'" : "") . ">{$pageNum}</a> ";
             }
 
             $html['data'] .= "</div>";
         } else {
-            $html['data'] .= "0 results";
+            $html['data'] = "0 results";
         }
 
         $this->request['data']['announcements'] = $html;
