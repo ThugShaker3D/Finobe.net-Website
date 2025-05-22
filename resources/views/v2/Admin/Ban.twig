@@ -36,6 +36,7 @@
                                 </script>
                                 <div class="card-body text-center">
                                     <form role="form" method="POST" action="/admin/bans" enctype="multipart/form-data">
+                                        <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                         <div class="form-group row">
                                             <label for="name" class="col-form-label text-md-right" style="margin-left:15px;">Username</label>
                                             <div class="col-md-12">

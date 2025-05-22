@@ -13,11 +13,12 @@
                                 <div class="card-header" style="display: flex; align-items: center;">
                                     <div class="row" style="flex-grow: 1;">
                                         <a href="/admin/"><button class="btn btn-theme col-md-1 mr-1"><i class="far fa-chevron-left"></i></button></a>
-                                        <h4><strong>Website announcements</strong></h4>
+                                        <h4><strong>Announcements</strong></h4>
                                     </div>
                                 </div>
                                 <div class="card-body text-center">
                                     <form role="form" method="POST" action="/admin/announcements" enctype="multipart/form-data">
+                                        <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                         <div class="form-group row">
                                             <label for="message" class="col-form-label text-md-right" style="margin-left:15px;">Message</label>
                                             <div class="col-md-12">
@@ -71,7 +72,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body text-center">
-                                    {{ announcers.data | raw }}
+                                    {{ data.announcements.data | raw }}
                                 </div>
                             </div>
                         </div>

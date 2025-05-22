@@ -123,9 +123,17 @@ Route::middleware([SetClientIp::class])->group(function() {
 
         Route::prefix('admin')->group(function() {
             Route::get('/', [admin::class, 'index']);
+            Route::get('/pin', [admin::class, 'pin']);
+            Route::get('/lock', [admin::class, 'lock']);
+            Route::get('/unpin', [admin::class, 'unpin']);
+            Route::get('/stick', [admin::class, 'stick']);
+            Route::get('/unlock', [admin::class, 'unlock']);
             Route::get('/assets', [admin::class, 'assets']);
+            Route::get('/unstick', [admin::class, 'unstick']);
             Route::get('/decider', [admin::class, 'decider']);
             Route::match(['post', 'get'], '/bans', [admin::class, 'bans']);
+            Route::match(['post', 'get'], '/prune-posts', [admin::class, 'prune_posts']);
+            Route::match(['post', 'get'], '/announcements', [admin::class, 'announcements']);
         });
     });
 

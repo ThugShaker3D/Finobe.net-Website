@@ -361,4 +361,287 @@ class admin extends Controller
 
         return view($this->request['data']['user']['version'] . '/Admin/Decider', $this->request);
     }
+
+    public function prune_posts(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Prune Forum Posts' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $id = !empty($data['id']) && empty($data['replyid']) ? $data['id'] : $data['replyid'];
+            $table = !empty($data['id']) && empty($data['replyid']) ? 'forum_threads' : 'forum_replies';
+
+            if(!$this->db->table($table)->where('id', $id)->exists()) {
+                Session::put('error', 'Forum post or reply doesn\'t exist.');
+                return redirect('/admin/prune-posts');
+            }
+
+            if($table == 'forum_threads') {
+                $results = $this->db->table('forum_replies')
+                    ->select('id')
+                    ->where('toid', $id)
+                    ->get()
+                    ->map(function ($item) {
+                        return (array) $item;
+                    })->toArray();
+                
+                foreach($results as $result) {
+                    $this->db->table('forum_replies')
+                        ->where('id', $result['id'])
+                        ->delete();
+                }
+
+                $this->db->table('forum_threads')
+                    ->where('id', $id)
+                    ->delete();
+            } else {
+                $this->db->table('forum_replies')
+                    ->where('id', $id)
+                    ->delete();
+            }
+
+            Session::put('success', 'Successfully deleted.');
+            return redirect('/admin/prune-posts');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/Prune_posts', $this->request);
+    }
+
+    public function announcements(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Announcements' . $this->request['data']['embeds']['title'];
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        $html = [
+            'time' => 'Time: ' . date('Y-m-d H:i:s'),
+            'data' => ''
+        ];
+
+        $results = $this->db->table('announcements')
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        // shit code but i dont feel like rewriting it
+        if(count($results)) {
+            $totalRows = count($results);
+            $rowsPerPage = 10;
+            $totalPages = ceil($totalRows / $rowsPerPage);
+            $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+            $start = ($currentPage - 1) * $rowsPerPage;
+            $end = $start + $rowsPerPage;
+
+            $html['data'] = "<table border='1' style=\"width:100%;\"><tr>";
+
+            foreach ($results as $key => $value) {
+                $html['data'] .= "<th>" . htmlspecialchars($key) . "</th>";
+            }
+
+            $html['data'] .= "</tr>";
+            
+            for ($i = $start; $i < $end && $i < $totalRows; $i++) {
+                $html['data'] .= "<tr>";
+                foreach ($result[$i] as $key => $value) {
+                    if ($key == 'username') {
+                        $html['data'] .= "<td><a href=\"/user/$value\" target=\"_blank\">$value</a></td>";
+                    } else {
+                        $html['data'] .= "<td>" . htmlspecialchars($value) . "</td>";
+                    }
+                }
+                $html['data'] .= "</tr>";
+            }
+
+            $html['data'] .= "</table>";
+
+            $html['data'] .= "<div>";
+
+            for ($page = 1; $page <= $totalPages; $page++) {
+                $html['data'] .= "<a href='?page=$page'>$page</a> ";
+            }
+
+            $html['data'] .= "</div>";
+        } else {
+            $html['data'] .= "0 results";
+        }
+
+        $this->request['data']['announcements'] = $html;
+
+        return view($this->request['data']['user']['version'] . '/Admin/Announcements', $this->request);
+    }
+
+    public function lock(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This thread doesn\'t exist');
+            return redirect('/forum/home');
+        }
+
+        $this->db->table('forum_threads')
+            ->where('id', $data['id'])
+            ->update([
+                'locked' => 'y'
+            ]);
+        
+        Session::put('success', 'Successfully locked');
+        return redirect('/forum/post?id=' . $data['id']);
+    }
+
+    public function unlock(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This thread doesn\'t exist');
+            return redirect('/forum/home');
+        }
+
+        $this->db->table('forum_threads')
+            ->where('id', $data['id'])
+            ->update([
+                'locked' => 'n'
+            ]);
+        
+        Session::put('success', 'Successfully unlocked');
+        return redirect('/forum/post?id=' . $data['id']);
+    }
+
+    public function pin(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This thread doesn\'t exist');
+            return redirect('/forum/home');
+        }
+
+        $this->db->table('forum_threads')
+            ->where('id', $data['id'])
+            ->update([
+                'pinned' => 'y'
+            ]);
+        
+        Session::put('success', 'Successfully pinned');
+        return redirect('/forum/post?id=' . $data['id']);
+    }
+
+    public function unpin(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This thread doesn\'t exist');
+            return redirect('/forum/home');
+        }
+
+        $this->db->table('forum_threads')
+            ->where('id', $data['id'])
+            ->update([
+                'pinned' => 'n'
+            ]);
+        
+        Session::put('success', 'Successfully unpinned');
+        return redirect('/forum/post?id=' . $data['id']);
+    }
+
+    public function stick(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_replies')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This thread doesn\'t exist');
+            return redirect('/forum/home');
+        }
+
+        $reply = (array) $this->db->table('forum_replies')
+            ->where('id', $data['id'])
+            ->first();
+
+        if($this->db->table('forum_replies')->where('toid', $reply['toid'])->where('sticked', 'y')->exists()) {
+            Session::put('error', 'A sticked reply already exists');
+            return redirect('/forum/home');
+        }
+
+        $this->db->table('forum_replies')
+            ->where('id', $data['id'])
+            ->update([
+                'sticked' => 'y'
+            ]);
+        
+        Session::put('success', 'Successfully sticked');
+        return redirect('/forum/post?id=' . $reply['toid']);
+    }
+
+    public function unstick(Request $request) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if(!isset($data['id'])) {
+            return redirect('/forum/home');
+        }
+
+        if(!$this->db->table('forum_replies')->where('id', $data['id'])->exists()) {
+            Session::put('error', 'This thread doesn\'t exist');
+            return redirect('/forum/home');
+        }
+
+        $reply = (array) $this->db->table('forum_replies')
+            ->where('id', $data['id'])
+            ->first();
+
+        $this->db->table('forum_replies')
+            ->where('id', $data['id'])
+            ->update([
+                'sticked' => 'n'
+            ]);
+        
+        Session::put('success', 'Successfully sticked');
+        return redirect('/forum/post?id=' . $reply['toid']);
+    }
 }
