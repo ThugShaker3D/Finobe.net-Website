@@ -47,7 +47,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/welcome', [frontEnd::class, 'legal_welcome']);
             Route::get('/legal_rules', [frontEnd::class, 'legal_rules']);
             Route::get('/terms', [frontEnd::class, 'legal_terms']);
-        })
+        });
 
         Route::prefix('place')->group(function() {
             Route::get('/{id}', [frontEnd::class, 'place']);
