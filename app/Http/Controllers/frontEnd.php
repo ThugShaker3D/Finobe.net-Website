@@ -122,7 +122,7 @@ class frontEnd extends Controller
                 }
             }
 
-            $user = User::find($this->request['data']['user']['id'])->first();
+            $user = User::find($this->request['data']['user']['id']);
             $user->ip = hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip');
             $user->lastlogin = now();
             $user->save();
@@ -248,7 +248,7 @@ class frontEnd extends Controller
             return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
-        $user = User::find($id)->first()->toArray();
+        $user = User::find($id)->toArray();
 
         $this->request['data']['embeds']['title'] = htmlspecialchars($user['username']) . $this->request['data']['embeds']['title'];
 
@@ -313,7 +313,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id)->first();
+        $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
         if($user->username == $this->request['data']['user']['username']) {
@@ -350,7 +350,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id)->first();
+        $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
         if($user->username == $this->request['data']['user']['username']) {
@@ -411,7 +411,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id)->first();
+        $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
         if($user->username == $this->request['data']['user']['username']) {
@@ -463,7 +463,7 @@ class frontEnd extends Controller
             return view($this->request['data']['user']['version'] . '/404', [], 404);
         }
 
-        $user = User::find($id)->first()->toArray();
+        $user = User::find($id)->toArray();
         $user['friends'] = array_reverse(array_filter(json_decode($user['friends'], true), function ($friend) {
             return $friend['status'] == 'friends';
         }));
@@ -960,7 +960,7 @@ class frontEnd extends Controller
                 ]);
 
             */
-            $user = User::find($this->request['data']['user']['id'])->first();
+            $user = User::find($this->request['data']['user']['id']);
             $user->post_cooldown = now();
             $user->save();
             
@@ -1320,7 +1320,7 @@ class frontEnd extends Controller
                     ]);
             }
             
-            $user = User::find($this->request['data']['user']['id'])->first();
+            $user = User::find($this->request['data']['user']['id']);
             $user->post_cooldown = now();
             $user->save();
             
@@ -1506,7 +1506,7 @@ class frontEnd extends Controller
                     'comment' => $data['content']
                 ]);
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->post_cooldown = now();
                 $user->save();
 
@@ -1663,7 +1663,7 @@ class frontEnd extends Controller
                 $result['duration'] = $this->dataService->timestamp($result['additional']['duration']);
             }
 
-            $user = User::find($result['author'])->first();
+            $user = User::find($result['author']);
             $result['uuid'] = $user ? $user->toArray()['id'] : false;
             $result['author'] = htmlspecialchars($user['username'] ?? $result['additional']['oldUser']);
             $items[] = $result;
@@ -2443,7 +2443,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        $user = User::find($id)->first();
+        $user = User::find($id);
 
         if(!$this->db->table('verify_email')->where('username', $user->username)->where('uid', $verifyid)->where('used', 'n')->exists()) {
             Session::put('error', 'Session not found');
@@ -2562,7 +2562,7 @@ class frontEnd extends Controller
             return redirect('/password/reset');
         }
 
-        $user = User::find($id)->first();
+        $user = User::find($id);
 
         if(!$this->db->table('reset_password')->where('username', $user->username)->where('uid', $resetid)->where('used', 'n')->exists()) {
             Session::put('error', 'Session not found');
@@ -2758,7 +2758,7 @@ class frontEnd extends Controller
                     'description' => $data['description']
                 ]);
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->Dius -= 5;
                 $user->save();
 
@@ -2805,7 +2805,7 @@ class frontEnd extends Controller
                     ])
                 ]);
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->Dius -= 5;
                 $user->save();
 
@@ -2834,7 +2834,7 @@ class frontEnd extends Controller
                     return redirect('/catalog/new');
                 }
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
 
                 $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'shirt');
 
@@ -2874,7 +2874,7 @@ class frontEnd extends Controller
                     return redirect('/catalog/new');
                 }
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
 
                 $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'pants');
 
@@ -2919,7 +2919,7 @@ class frontEnd extends Controller
                     return redirect('/catalog/new');
                 }
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
 
                 $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'face');
 
@@ -2964,7 +2964,7 @@ class frontEnd extends Controller
                     return redirect('/app/settings');
                 }
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->blurb = $data['blurb'];
                 $user->save();
 
@@ -3013,7 +3013,7 @@ class frontEnd extends Controller
 
                 $file->move('/var/www/cdn.finobe.net/avatar/' . $filename);
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->pfp = $filename;
                 $user->save();
 
@@ -3046,7 +3046,7 @@ class frontEnd extends Controller
                     return redirect('/app/theme');
                 }
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->branding = $data['branding'];
                 $user->save();
 
@@ -3062,7 +3062,7 @@ class frontEnd extends Controller
                     return redirect('/app/theme');
                 }
 
-                $user = User::find($this->request['data']['user']['id'])->first();
+                $user = User::find($this->request['data']['user']['id']);
                 $user->logo = $data['logo'];
                 $user->save();
 
@@ -3135,7 +3135,7 @@ class frontEnd extends Controller
                 return redirect('/app/games');
             }
 
-            $user = User::find($this->request['data']['user']['id'])->first();
+            $user = User::find($this->request['data']['user']['id']);
             $user->Dius -= 625;
             $user->slots += 1;
             $user->save();
@@ -3172,7 +3172,7 @@ class frontEnd extends Controller
                 return redirect('/app/connect');
             }
 
-            $user = User::find($this->request['data']['user']['id'])->first();
+            $user = User::find($this->request['data']['user']['id']);
             $user->eracast_link = 'None';
             $user->save();
 
@@ -3222,7 +3222,7 @@ class frontEnd extends Controller
                 'userid' => $this->request['data']['user']['id']
             ]);
 
-            $user = User::find($this->request['data']['user']['id'])->first();
+            $user = User::find($this->request['data']['user']['id']);
             $user->eracast_link = $data['userid'];
             $user->save();
 
