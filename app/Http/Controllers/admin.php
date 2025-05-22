@@ -450,7 +450,7 @@ class admin extends Controller
             
             for ($i = $start; $i < $end && $i < $totalRows; $i++) {
                 $html['data'] .= "<tr>";
-                foreach ($result[$i] as $key => $value) {
+                foreach ($results[$i] as $key => $value) {
                     if ($key == 'username') {
                         $html['data'] .= "<td><a href=\"/user/$value\" target=\"_blank\">$value</a></td>";
                     } else {
