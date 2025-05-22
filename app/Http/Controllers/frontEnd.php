@@ -3304,10 +3304,6 @@ class frontEnd extends Controller
         $this->request['data']['embeds']['title'] = 'Public Ban List' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
-        function compareDates($a, $b) {
-			return strtotime($b['date']) - strtotime($a['date']);
-		}
-
         $bans = [];
         $results = $this->db->table('bans')
             ->whereIn('username', function ($subquery) {
