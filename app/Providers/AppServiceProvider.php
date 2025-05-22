@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') !== 'local') {
             $appUrl = parse_url(env('APP_URL'), PHP_URL_HOST);
             $requestHost = request()->getHost();
-            dd($requestHost);
+            dd($appUrl);
 
             if ($appUrl === $requestHost && request()->is('telescope*')) {
                 URL::forceScheme('https');
