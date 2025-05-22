@@ -3413,7 +3413,7 @@ class frontEnd extends Controller
             $this->request['data']['videos']['pages']['data'][] = ['page' => $page];
         }
 
-        if(!count($user['friends'])) {
+        if(!$videos) {
             $this->request['data']['videos']['pages']['data'][] = [
                 'page' => 1
             ];
