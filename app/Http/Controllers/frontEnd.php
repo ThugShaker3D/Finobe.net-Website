@@ -3321,7 +3321,7 @@ class frontEnd extends Controller
             $results->where('username', 'like', $search);
         }
 
-        $results = $query->get()
+        $results = $results->get()
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
