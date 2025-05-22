@@ -1827,6 +1827,7 @@ class frontEnd extends Controller
             'additional' => $place['additional'],
             'title' => strip_tags(htmlspecialchars($place['title'])),
             'username' => User::where('id', $place['author'])->value('username'),
+            'author' => $place['author'],
             'description' => nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($place['description'])))),
             'created' => date('m/d/Y', strtotime($place['created'])),
             'updated' => date('m/d/Y', strtotime($place['updated'])),
