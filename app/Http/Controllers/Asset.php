@@ -37,6 +37,8 @@ class Asset extends Controller
         {
             switch ($assetType) {
                 case 8:
+                    return self::renderTShirt($id);
+                case 8:
                     return self::renderHat($id);
                 case 11:
                     return self::renderShirt($id);
@@ -213,7 +215,7 @@ class Asset extends Controller
                 "textureAssetId" => $textureId
             ]
         ]);
-        if ($assetType == 2 or $assetType == 18)
+        if ($assetType == 18)
         {
             if($assetType == 18) {
                 $thumb = self::getImage($accessoryId, $textureId);
@@ -231,7 +233,7 @@ class Asset extends Controller
                     'additional' => $additional
                 ]);
         }
-        if ($assetType != 2 or $assetType != 18) {
+        if ($assetType != 18) {
             self::render($accessoryId, $assetType);
         }
         return $accessoryId;
@@ -353,6 +355,56 @@ class Asset extends Controller
     }
 
     public static function renderShirt(int $id)
+    {
+        if (self::isAssetExist($id)) {
+            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $constructedJob = $arbiter->ConstructJob(
+                RobloxUtilities::GenerateGUID(),
+                '
+                    local assetid, asseturl, url, fileExtension, x, y = ...
+                    
+                    print("Render Shirt " .. assetid)
+                    
+                    pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
+                    game:GetService("ThumbnailGenerator").GraphicsMode = 4
+                    game:GetService("ScriptContext").ScriptsDisabled = true
+                    player = game:GetService("Players"):CreateLocalPlayer(0)
+                     player:LoadCharacter(false)
+                    c = Instance.new("Shirt")
+                    c.ShirtTemplate = game:GetObjects(asseturl)[1].ShirtTemplate
+                    c.Parent = player.Character
+
+                    t = game:GetService("ThumbnailGenerator")
+                    return t:Click(fileExtension, x, y, true, true)
+                ',
+                60,
+                0,
+                2,
+                "ScriptExecution",
+                [$id, "https://www.finobe.net/asset/?id={$id}", "https://www.finobe.net", "PNG", 768, 768]
+            );
+
+            $jobEx = $arbiter->OpenJobEx($constructedJob);
+
+            $filename = uniqid() . ".png";
+            file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
+
+            $hatData = self::getAssetData($id);
+            $additional = json_decode($hatData->additional);
+            $additional->media->thumbnail = "https://cdn.finobe.net/thumbnails/{$filename}";
+            $additional = json_encode($additional);
+            $this->db->table('assets')
+                ->where('id', $id)
+                ->update([
+                    'additional' => $additional
+                ]);
+
+            return "https://cdn.finobe.net/thumbnails/{$filename}";
+        }
+        return "";
+    }
+
+    public static function renderTShirt(int $id)
     {
         if (self::isAssetExist($id)) {
             $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);

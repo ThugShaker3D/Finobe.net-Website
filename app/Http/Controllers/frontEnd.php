@@ -2838,13 +2838,6 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->db->table('purchases')->insert([
-                    'username' => $user->username,
-                    'assetid' => $id,
-                    'author' => $user->id,
-                    'amount' => 0
-                ]);
-
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
 
                 Session::put('success', 'Success');
@@ -2877,13 +2870,6 @@ class frontEnd extends Controller
 
                 $user->Dius -= 5;
                 $user->save();
-
-                $this->db->table('purchases')->insert([
-                    'username' => $user->username,
-                    'assetid' => $id,
-                    'author' => $user->id,
-                    'amount' => 0
-                ]);
 
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
 
@@ -2923,12 +2909,31 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->db->table('purchases')->insert([
-                    'username' => $user->username,
-                    'assetid' => $id,
-                    'author' => $user->id,
-                    'amount' => 0
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+
+                Session::put('success', 'Success');
+                return redirect('/item/' . $id);
+            } elseif($data['media-type'] == 't-shirts') {
+                $validator = Validator::make($data, [
+                    'file' => 'required|file|mimetypes:image/png|max:10240'
                 ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/catalog/new');
+                }
+
+                if($this->request['data']['user']['Dius'] - 5 < 0) {
+                    Session::put('error', 'Not enough dius');
+                    return redirect('/catalog/new');
+                }
+
+                $user = User::find($this->request['data']['user']['id']);
+
+                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'tshirt');
+
+                $user->Dius -= 5;
+                $user->save();
 
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
 

@@ -224,6 +224,13 @@ class admin extends Controller
                 'visibility' => 'n'
             ]);
         
+        $this->db->table('purchases')->insert([
+            'username' => User::where('id', $data['author'])->value('username'),
+            'assetid' => $data['id'],
+            'author' => $asset['author'],
+            'amount' => 0
+        ]);
+        
         Session::put('success', 'Item accepted.');
         return redirect('/admin/assets');
     }
