@@ -2435,10 +2435,6 @@ class frontEnd extends Controller
     }
 
     public function email_verify(Request $request, $id, $verifyid) {
-        if(!$this->request['data']['siteusername']) {
-            return redirect('/');
-        }
-
         if(!User::find($id)) {
             Session::put('error', 'Unknown error');
             return redirect('/');
