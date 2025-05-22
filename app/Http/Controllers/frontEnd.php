@@ -2985,9 +2985,9 @@ class frontEnd extends Controller
 
                 $user = Auth::user();
                 $user->email = $data['email'];
+                $user->verified = 'n';
                 $user->save();
 
-                Session::put('success', 'Successfully updated.');
                 return redirect('/app/settings');
             } elseif($this->request['data']['user']['status'] == 'admin' && $request->hasFile('file')) {
                 $validator = Validator::make($data, [
