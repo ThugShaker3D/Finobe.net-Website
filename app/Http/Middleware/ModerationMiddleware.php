@@ -46,7 +46,7 @@ class ModerationMiddleware
                         'success' => Session::get('success', false),
                         'error' => Session::get('error', false),
                         'announcements' => []
-                    ]
+                    ],
                     'lucky_number' => rand(0, User::count()) . '/' . User::count()
                 ]
             ];
