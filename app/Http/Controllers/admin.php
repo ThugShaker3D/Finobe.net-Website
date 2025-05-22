@@ -145,6 +145,8 @@ class admin extends Controller
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
+        
+        dd($this->request['data']['announcements']);
     }
 
     public function index(Request $request) {
