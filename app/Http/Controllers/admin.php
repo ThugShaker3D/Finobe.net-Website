@@ -139,7 +139,7 @@ class admin extends Controller
 
         $this->request['data']['announcements'] = $this->db->table('announcements')
             ->select('message', 'expire', 'author', 'color')
-            ->where('expire', '>', 'now()')
+            ->where('expire', '>', now())
             ->orderBy('id', 'DESC')
             ->get()
             ->map(function ($item) {

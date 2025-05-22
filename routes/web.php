@@ -132,6 +132,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/assets', [admin::class, 'assets']);
             Route::get('/unstick', [admin::class, 'unstick']);
             Route::get('/decider', [admin::class, 'decider']);
+            Route::match(['post', 'get'], '/warn', [admin::class, 'warn']);
             Route::match(['post', 'get'], '/bans', [admin::class, 'bans']);
             Route::match(['post', 'get'], '/elections', [admin::class, 'elections']);
             Route::match(['post', 'get'], '/give_dius', [admin::class, 'give_dius']);
