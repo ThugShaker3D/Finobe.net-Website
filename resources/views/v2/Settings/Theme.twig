@@ -25,7 +25,7 @@
                             <div class="card-body">
                                 <form role="form" method="POST" action="/app/theme" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ data.csrf_token }}">
-                                    <input type="hidden" name="dark" value="">
+                                    <input type="hidden" name="dark" value="e">
                                     <label for="submit" class="col-form-label">Dark Theme</label>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary full-width" style="text-transform: capitalize;">Toggle Dark Theme</button>
@@ -33,7 +33,7 @@
                                 </form>
                                 <form role="form" method="POST" action="/app/theme" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ data.csrf_token }}">
-                                    <input type="hidden" name="gary" value="">
+                                    <input type="hidden" name="gary" value="e">
                                     <label for="submit" class="col-form-label">Dark Gary Mode</label>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary full-width" style="text-transform: capitalize;">Toggle Dark Gary Mode</button>
@@ -41,7 +41,7 @@
                                 </form>
                                 <form role="form" method="POST" action="/app/theme" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ data.csrf_token }}">
-                                    <input type="hidden" name="upsidedown" value="">
+                                    <input type="hidden" name="upsidedown" value="e">
                                     <label for="submit" class="col-form-label">Upside Down Mode</label>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary full-width" style="text-transform: capitalize;">Toggle Upside Down Mode</button>
@@ -51,7 +51,7 @@
                                     <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                     <div class="form-group">
                                         <label for="type" class="col-form-label">Branding</label>
-                                        <select id="branding" name="branding" class="form-control mt-2" required>
+                                        <select id="branding" name="branding" value="e" class="form-control mt-2" required>
                                             <option value="aesthetiful"{{ (data.user.branding == "aesthetiful") ? " selected" : "" }}>Aesthetiful</option>
                                             <option value="finobe"{{ (data.user.branding == "finobe") ? " selected" : "" }}>Finobe</option>
                                         </select>
@@ -64,7 +64,7 @@
                                     <input type="hidden" name="_token" value="{{ data.csrf_token }}">
 									<div class="form-group">
 										<label for="version" class="col-form-label">Version</label>
-										<select id="version" name="version" class="form-control mt-2" required>
+										<select id="version" name="version" value="e" class="form-control mt-2" required>
 											<option value="v1"{{ (data.user.version == "v1") ? " selected" : "" }}>Version 1</option>
 											<option value="v2"{{ (data.user.version == "v2") ? " selected" : "" }}>Version 2</option>
 										</select>
