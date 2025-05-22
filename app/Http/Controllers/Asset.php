@@ -164,19 +164,18 @@ class Asset extends Controller
         } elseif($type == "tshirt") {
             $assetType = 2;
             $xmlTemplate = '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
-                <External>null</External>
-                <External>nil</External>
-                <Item class="Decal" referent="RBX0">
-                    <Properties>
-                        <token name="Face">5</token>
-                        <string name="Name">face</string>
-                        <float name="Shiny">20</float>
-                        <float name="Specular">0</float>
-                        <Content name="Texture"><url>TEXTUREURLPLACEHOLDER</url></Content>
-                        <bool name="archivable">true</bool>
-                    </Properties>
-                </Item>
-            </roblox>';
+  <External>null</External>
+  <External>nil</External>
+  <Item class="ShirtGraphic" referent="RBX0">
+    <Properties>
+      <Content name="Graphic">
+        <url>TEXTUREURLPLACEHOLDER</url>
+      </Content>
+      <string name="Name">Shirt Graphic</string>
+      <bool name="archivable">true</bool>
+    </Properties>
+  </Item>
+</roblox>';
         } elseif($type == "shirt") {
             $assetType = 11;
             $xmlTemplate = '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
