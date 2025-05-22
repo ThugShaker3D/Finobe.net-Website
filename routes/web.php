@@ -32,6 +32,8 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/item/{id}', [frontEnd::class, 'item']);
         Route::get('/invites', [frontEnd::class, 'invites']);
         Route::get('/video/{id}', [frontEnd::class, 'video']);
+        Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
+        Route::get('/video/thumb/{id}', [frontEnd::class, 'video_thumb']);
         Route::get('/password/reset', [frontEnd::class, 'password_reset']);
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
