@@ -164,7 +164,7 @@ class admin extends Controller
             return redirect('/');
         }
 
-        $items = [];
+        $assets = [];
         $results = $this->db->table('assets')
             ->where('visibility', 'r')
             ->where('asset_type', '!=', 1)
@@ -179,8 +179,10 @@ class admin extends Controller
             $result['author'] = htmlspecialchars(User::where('id', $result['author'])->value('username'));
             $result['publish'] = date('m/d/Y', strtotime($result['created']));
             $result['additional'] = json_decode($result['additional'], true);
-            $items[] = $result;
+            $assets[] = $result;
         }
+
+        $this->request['data']['assets'] = $assets;
 
         return view($this->request['data']['user']['version'] . '/Admin/Assets', $this->request);
     }
@@ -643,5 +645,269 @@ class admin extends Controller
         
         Session::put('success', 'Successfully sticked');
         return redirect('/forum/post?id=' . $reply['toid']);
+    }
+
+    public function createxml(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Announcements' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'title' => 'required|string|min:3|max:255',
+                'description' => 'nullable|string|max:8192',
+                'price' => 'required|integer|min:0',
+                'onsale' => 'nullable|in:on,1,true,0,false,off',
+                'mesh' => 'required|file',
+                'xml' => 'required|file|mimetypes:text/plain',
+                'texture' => 'required|file|mimetypes:image/png'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/admin/createxml');
+            }
+
+            $id = Asset::createHat(
+                $data['title'],
+                ['tmp_name' => $request->file('texture')->getPathname()],
+                ['tmp_name' => $request->file('mesh')->getPathname()],
+                ['tmp_name' => $request->file('xml')->getPathname()],
+                $this->request['data']['user']['id'],
+                $data['description'] ?? '',
+                intval($data['price']),
+                isset($data['onsale'])
+            );
+
+            Session::put('success', 'Success');
+            return redirect('/item/' . $id);
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/CreateXML', $this->request);
+    }
+
+    public function give_dius(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Reward Dius' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'amount' => 'required|integer|min:0',
+                'toggler' => 'nullable'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->fails());
+                return redirect('/admin/give_dius');
+            }
+
+            if(isset($data['toggler'])) {
+                if(!User::where('username', $data['name'])->exists()) {
+                    Session::put('error', 'User does not exist');
+                    return redirect('/admin/give_dius');
+                }
+
+                User::where('username', $data['name'])
+                    ->update([
+                        'diubanned' => DB::raw("CASE WHEN diubanned = 'n' THEN 'y' ELSE 'n' END")
+                    ]);
+                
+                $user = User::where('username', $this->request['data']['user']['username'])->select('diubanned')->first();
+
+                if($user->diubanned == 'y') {
+                    Session::put('success', 'Successfully diu banned.');
+                } else {
+                    Session::put('success', 'Successfully diu unbanned.');
+                }
+
+                return redirect('/admin/give_dius');
+            }
+
+            if($data['name'] == '*') {
+                $users = User::all();
+
+                foreach($users as $user) {
+                    $user->Dius += intval($data['Dius']);
+                    $user->save();
+                }
+            } else {
+                if(!User::where('username', $data['name'])->exists()) {
+                    Session::put('error', 'User does not exist');
+                    return redirect('/admin/give_dius');
+                }
+
+                $user = User::where('username', $data['name'])->first();
+                $user->Dius += intval($data['amount']);
+                $user->save();
+            }
+
+            Session::put('success', 'Successfully given dius.');
+            return redirect('/admin/give_dius');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/Dius', $this->request);
+    }
+
+    public function warn(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Warn Users' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'name' => 'required|string|min:3|max:255',
+                'reason' => 'required|string|min:3|max:255'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->fails());
+                return redirect('/admin/warn');
+            }
+
+            if(!User::where('username', $data['name'])->exists()) {
+                Session::put('error', 'User does not exist');
+                return redirect('/admin/warn');
+            }
+
+            $this->db->table('warning')->insert([
+                'username' => $data['name'],
+                'reason' => $data['reason'],
+                'moderator' => $this->request['data']['user']['username']
+            ]);
+
+            Session::put('success', 'Successfully created.');
+            return redirect('/admin/warn');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/Warn', $this->request);
+    }
+
+    public function give_badges(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Give Badges' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'username' => 'required|string|min:3|max:255',
+                'message' => 'required|string|min:3|max:255',
+                'color' => 'required|string|in:success,primary,danger,info,warning'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->fails());
+                return redirect('/admin/give_badges');
+            }
+
+            if(!User::where('username', $data['username'])->exists()) {
+                Session::put('error', 'User does not exist');
+                return redirect('/admin/give_badges');
+            }
+
+            $user = User::where('username', $data['username'])->first();
+            $badges = json_decode($user->badges, true);
+            $badges['data']['custom_badges'][] = [
+                'message' => $data['message'],
+                'color' => $data['color']
+            ];
+
+            $user->badges = json_encode($badges);
+            $user->save();
+
+            Session::put('success', 'Successfully created.');
+            return redirect('/admin/give_badges');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/Badges', $this->request);
+    }
+
+    public function elections(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Elections' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'title' => 'required|string|min:3|max:255',
+                'css' => 'required|string|max:8192',
+                'expire' => 'required|date',
+                'time' => 'required|date',
+                'options' => 'required|string'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->fails());
+                return redirect('/admin/elections');
+            }
+
+            if($this->db->table('elections')->where('expire', '>', DB::raw('CURDATE()'))) {
+                Session::put('error', 'There is an election already active');
+                return redirect('/admin/elections');
+            }
+
+            $id = 1;
+            $options = json_decode($data['options'], true);
+
+            foreach($options as $key => $option) {
+                $options[$key]['id'] = $id;
+                $id++;
+            }
+
+            $timezone = new \DateTimeZone('America/Los_Angeles');
+            $dateTime = new \DateTime($data['expire'] . ' ' . $data['time'], $timezone);
+            $expire = $dateTime->format('Y-m-d H:i:s');
+
+            $this->db->table('elections')->insert([
+                'title' => $data['title'],
+                'author' => $this->request['data']['user']['username'],
+                'css' => $data['css'],
+                'options' => json_encode($options),
+                'expire' => $expire
+            ]);
+
+            Session::put('success', 'Successfully created.');
+            return redirect('/admin/elections');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/Elections', $this->request);
+    }
+
+    public function servers(Request $request) {
+        $data = $request->all();
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'type' => 'required|string'
+            ]);
+
+            if($validator->fails()) {
+                return redirect('/admin/servers');
+            }
+        }
+
+        $this->request['data']['servers'] = $this->db->table('servers')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+
+        return view($this->request['data']['user']['version'] . '/Admin/Servers', $this->request);
     }
 }

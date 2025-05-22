@@ -83,6 +83,7 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::prefix('user')->group(function() {
+            Route::get('/gettoken', [frontEnd::class, 'gettoken']);
             Route::get('/transaction-log', [frontEnd::class, 'transactions']);
             Route::get('/{id}', [frontEnd::class, 'user']);
             Route::get('/{id}/add', [frontEnd::class, 'user_add']);
@@ -132,6 +133,9 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/unstick', [admin::class, 'unstick']);
             Route::get('/decider', [admin::class, 'decider']);
             Route::match(['post', 'get'], '/bans', [admin::class, 'bans']);
+            Route::match(['post', 'get'], '/elections', [admin::class, 'elections']);
+            Route::match(['post', 'get'], '/give_dius', [admin::class, 'give_dius']);
+            Route::match(['post', 'get'], '/createxml', [admin::class, 'createxml']);
             Route::match(['post', 'get'], '/prune-posts', [admin::class, 'prune_posts']);
             Route::match(['post', 'get'], '/announcements', [admin::class, 'announcements']);
         });

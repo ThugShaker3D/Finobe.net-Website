@@ -13,6 +13,7 @@
       <div class="container mt-3">
 		<h3>Create XML asset</h3>
 		<form role="form" method="POST" action="" id="dynamic-form" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ data.csrf_token }}">
             <div class="form-group row">
                 <label for="title" class="col-form-label text-md-right" style="margin-left:15px;">Title</label>
                 <div class="col-md-12">

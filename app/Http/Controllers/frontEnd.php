@@ -3368,6 +3368,14 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Bans', $this->request);
     }
 
+    public function gettoken(Request $request) {
+        if(!$this->request['data']['siteusername']) {
+            return response('', 204);
+        }
+
+        return response($this->request['data']['user']['token'], 200);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');

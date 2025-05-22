@@ -1,6 +1,7 @@
 eeeeeee<br>
 <h1>create server</h1>
 <form method="post">
+<input type="hidden" name="_token" value="{{ data.csrf_token }}">
 <input type="hidden" name="type" value="1">
 ip
 <input type="text" name="ip"><br>
@@ -17,11 +18,12 @@ status
 <br><br><br>
 <h1>delete all servers</h1>
 <form method="post">
+<input type="hidden" name="_token" value="{{ data.csrf_token }}">
 <input type="hidden" name="type" value="2">
 <input type="submit">
 </form>
 <br><br>
-{% if servers is not empty %}
+{% if data.servers is not empty %}
 <table border="1">
     <thead>
         <tr>
@@ -31,7 +33,7 @@ status
         </tr>
     </thead>
     <tbody>
-        {% for server in servers %}
+        {% for server in data.servers %}
             <tr>
                 {% for value in server %}
                     <td>{{ value }}</td>
