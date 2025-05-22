@@ -419,7 +419,7 @@ class Asset extends Controller
                 '
                     local assetid, asseturl, url, fileExtension, x, y = ...
                     
-                    print("Render T-Shirt " .. assetid)
+                    print("Render Shirt " .. assetid)
                     
                     pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
                     game:GetService("ThumbnailGenerator").GraphicsMode = 4
@@ -427,7 +427,7 @@ class Asset extends Controller
                     player = game:GetService("Players"):CreateLocalPlayer(0)
                      player:LoadCharacter(false)
                     c = Instance.new("ShirtGraphic")
-                    c.Graphic = asseturl
+                    c.Graphic = game:GetObjects(asseturl)[1].Graphic
                     c.Parent = player.Character
 
                     t = game:GetService("ThumbnailGenerator")
