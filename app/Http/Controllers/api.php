@@ -226,10 +226,10 @@ class api extends Controller
         $user = Auth::user()->toArray();
         $data['videoId'] = intval($data['videoId']);
 
-        if($this->db->table('video_ratings')->where('sender', $user['username'])->where('type', $data['type'])->where('toid', $data['postId'])->count()) {
+        if($this->db->table('video_ratings')->where('sender', $user['username'])->where('rate_type', $data['rating'])->where('toid', $data['postId'])->count()) {
             $ratingData = (array) $this->db->table('video_ratings')
                 ->where('sender', $user['username'])
-                ->where('type', $data['type'])
+                ->where('rate_type', $data['rating'])
                 ->where('toid', $data['videoId'])
                 ->first();
             
