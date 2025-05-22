@@ -427,8 +427,8 @@ class Asset extends Controller
                     game:GetService("ScriptContext").ScriptsDisabled = true
                     player = game:GetService("Players"):CreateLocalPlayer(0)
                      player:LoadCharacter(false)
-                    c = Instance.new("Shirt")
-                    c.ShirtTemplate = game:GetObjects(asseturl)[1].ShirtTemplate
+                    c = Instance.new("ShirtGraphic")
+                    c.Graphic = game:GetObjects(asseturl)[1].Graphic
                     c.Parent = player.Character
 
                     t = game:GetService("ThumbnailGenerator")
