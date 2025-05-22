@@ -3443,10 +3443,11 @@ class frontEnd extends Controller
 
         if($this->request['data']['siteusername']) {
             if($this->db->table('video_ratings')->where('toid', $id)->where('sender', $this->request['data']['user']['username'])->count()) {
-                $video['userRating'] = (array) $this->db->table('video_ratings')
+                $video['userRating'] = $this->db->table('video_ratings')
+                    ->select('rate_type')
                     ->where('toid', $id)
                     ->where('sender', $this->request['data']['user']['username'])
-                    ->first();
+                    ->value('rate_type');
             }
         }
 
