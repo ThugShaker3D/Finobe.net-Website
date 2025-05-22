@@ -3469,7 +3469,7 @@ class frontEnd extends Controller
             return view($this->request['data']['user']['version'] . '/404', $this->request, 404);
         }
 
-        return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('file')->where('id', $id)->value('file'));
+        return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('filename')->where('id', $id)->value('filename'));
     }
 
     public function auth_form(Request $request) {
