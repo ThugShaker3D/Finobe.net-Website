@@ -351,4 +351,14 @@ class admin extends Controller
 
         return view($this->request['data']['user']['version'] . '/Admin/Ban', $this->request);
     }
+
+    public function decider(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Decider' . $this->request['data']['embeds']['title'];
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Admin/Decider', $this->request);
+    }
 }
