@@ -173,7 +173,9 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::get('/api/gameserver/alive/{jobId}', [rbxAPIs::class, 'aliveJobId']);
         Route::post('/api/gameserver/update', [rbxAPIs::class, 'update']);
         Route::get('/Asset/CharacterFetch.ashx', [rbxAPIs::class, 'characterFetch']);
+        Route::get('/asset/CharacterFetch.ashx', [rbxAPIs::class, 'characterFetch']);
         Route::get('/Asset/BodyColors.ashx', [rbxAPIs::class, 'bodyColors']);
+        Route::get('/asset/BodyColors.ashx', [rbxAPIs::class, 'bodyColors']);
         Route::get('/Login/Negotiate.ashx', [rbxAPIs::class, 'negotiateAshx']);
         Route::get('//Game/Studio.ashx', [rbxAPIs::class, 'studioAshx']);
         Route::any('/Game/PlaceLauncher.ashx', [rbxAPIs::class, 'placeLauncher']);
