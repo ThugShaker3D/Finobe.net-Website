@@ -137,7 +137,7 @@ class admin extends Controller
             $this->request['data']['embeds']['image'] .= 'logo.png';
         }
 
-        $this->request['data']['announcements'] = $this->db->table('announcements')
+        $this->request['data']['alerts']['announcements'] = $this->db->table('announcements')
             ->select('message', 'expire', 'author', 'color')
             ->where('expire', '>', now())
             ->orderBy('id', 'DESC')
