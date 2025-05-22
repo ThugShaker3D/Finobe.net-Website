@@ -117,7 +117,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::prefix('video')->group(function() {
                 Route::post('/rate', [api::class, 'video_rate']);
                 Route::post('/rating_number', [api::class, 'video_rating_number']);
-            })
+            });
         });
 
         Route::prefix('auth')->group(function() {
