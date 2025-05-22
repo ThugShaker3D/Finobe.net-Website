@@ -16,9 +16,10 @@ class Asset extends Controller
 
     public static function createAsset(string $name, int $assetType, int $author, $file, string $description, string $visibility, array $additional): int
     {
+        $instance = new self();
         $fileHash = uniqid();
         $additional = json_encode($additional);
-        $asset = $this->db->table('assets')->insertGetId([
+        $asset = $instance->db->table('assets')->insertGetId([
             'asset_type' => $assetType,
             'title' => $name,
             'author' => $author,
@@ -82,11 +83,12 @@ class Asset extends Controller
             $filename = uniqid() . ".png";
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
+            $instance = new self();
             $hatData = self::getAssetData($id);
             $additional = json_decode($hatData->additional);
             $additional->media->thumbnail = "https://cdn.finobe.net/thumbnails/{$filename}";
             $additional = json_encode($additional);
-            $this->db->table('assets')
+            $instance->db->table('assets')
                 ->where('id', $id)
                 ->update([
                     'additional' => $additional
@@ -223,11 +225,12 @@ class Asset extends Controller
                 $thumb = self::getImage($accessoryId);
             }
             
+            $instance = new self();
             $hatData = self::getAssetData($accessoryId);
             $additional = json_decode($hatData->additional);
             $additional->media->thumbnail = $thumb;
             $additional = json_encode($additional);
-            $this->db->table('assets')
+            $instance->db->table('assets')
                 ->where('id', $accessoryId)
                 ->update([
                     'additional' => $additional
@@ -259,13 +262,15 @@ class Asset extends Controller
 
     public static function isAssetExist(int $assetId) : bool
     {
-        return $this->db->table('assets')->where('id', $assetId)->exists();
+        $instance = new self();
+        return $instance->db->table('assets')->where('id', $assetId)->exists();
     }
 
     public static function getAssetData(int $assetId) : object
     {
-        if ($this->db->table('assets')->where('id', $assetId)->exists()) {
-            return $this->db->table('assets')->where('id', $assetId)->first();
+        $instance = new self();
+        if ($instance->db->table('assets')->where('id', $assetId)->exists()) {
+            return $instance->db->table('assets')->where('id', $assetId)->first();
         }
         return (object)[];
     }
@@ -339,11 +344,12 @@ class Asset extends Controller
             $filename = uniqid() . ".png";
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
+            $instance = new self();
             $hatData = self::getAssetData($id);
             $additional = json_decode($hatData->additional);
             $additional->media->thumbnail = "https://cdn.finobe.net/thumbnails/{$filename}";
             $additional = json_encode($additional);
-            $this->db->table('assets')
+            $instance->db->table('assets')
                 ->where('id', $id)
                 ->update([
                     'additional' => $additional
@@ -389,11 +395,12 @@ class Asset extends Controller
             $filename = uniqid() . ".png";
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
+            $instance = new self();
             $hatData = self::getAssetData($id);
             $additional = json_decode($hatData->additional);
             $additional->media->thumbnail = "https://cdn.finobe.net/thumbnails/{$filename}";
             $additional = json_encode($additional);
-            $this->db->table('assets')
+            $instance->db->table('assets')
                 ->where('id', $id)
                 ->update([
                     'additional' => $additional
@@ -439,11 +446,12 @@ class Asset extends Controller
             $filename = uniqid() . ".png";
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
+            $instance = new self();
             $hatData = self::getAssetData($id);
             $additional = json_decode($hatData->additional);
             $additional->media->thumbnail = "https://cdn.finobe.net/thumbnails/{$filename}";
             $additional = json_encode($additional);
-            $this->db->table('assets')
+            $instance->db->table('assets')
                 ->where('id', $id)
                 ->update([
                     'additional' => $additional
