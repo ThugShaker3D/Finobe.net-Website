@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -12,12 +13,10 @@ use Illuminate\Support\Facades\Validator;
 class admin extends Controller
 {
     protected $db;
-    protected $dataService;
     protected $request;
 
-    public function __construct(dataController $dataService, Request $request) {
+    public function __construct(Request $request) {
         $this->db = DB::connection('finobe');
-        $this->dataService = $dataService;
         $this->request = [
             'data' => [
                 'embeds' => [
