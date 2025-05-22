@@ -22,7 +22,7 @@
                                         <audio controls="controls" controlslist="nodownload"><source src="/dynamic/reviewing/{{ asset.file }}" type="audio/mpeg">Your browser does not support the audio element.</audio>
 										<p>Original</p>
                                         <audio controls="controls" controlslist="nodownload"><source src="/dynamic/temp/{{ asset.file }}" type="audio/mpeg">Your browser does not support the audio element.</audio>
-                                        {% elseif asset.asset_type == 11 or asset.asset_type == 12 or asset.asset_type == 18 %}
+                                        {% elseif asset.asset_type == 2 or asset.asset_type == 11 or asset.asset_type == 12 or asset.asset_type == 18 %}
                                         <div class="d-flex flex-row{{ (asset.asset_type == 18) ? ' justify-content-center' : '' }}">
                                             <img src="{{ asset.additional.media.thumbnail }}" style="width: 50%; height: auto;">
                                             {% if asset.asset_type != 18 %}
