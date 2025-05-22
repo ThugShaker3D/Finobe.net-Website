@@ -150,7 +150,7 @@ class admin extends Controller
     public function index(Request $request) {
         $this->request['data']['embeds']['title'] = 'Admin Panel' . $this->request['data']['embeds']['title'];
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['admin'] != 'admin') {
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
         }
 
@@ -160,7 +160,7 @@ class admin extends Controller
     public function assets(Request $request) {
         $this->request['data']['embeds']['title'] = 'Asset Moderation' . $this->request['data']['embeds']['title'];
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['admin'] != 'admin') {
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
         }
 
@@ -188,7 +188,7 @@ class admin extends Controller
     public function accept(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['admin'] != 'admin') {
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
         }
 
@@ -229,7 +229,7 @@ class admin extends Controller
     public function deny(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['admin'] != 'admin') {
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
         }
 
@@ -276,7 +276,7 @@ class admin extends Controller
         $this->request['data']['embeds']['title'] = 'User Moderation' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['admin'] != 'admin') {
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
         }
 
