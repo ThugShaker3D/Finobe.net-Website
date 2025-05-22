@@ -1597,7 +1597,7 @@ class frontEnd extends Controller
             "heads" => 17,
             "packages" => 32,
             "audio" => 3,
-            "model" => 10
+            "models" => 10
         ];
 
         if(!isset($sections[$section])) {

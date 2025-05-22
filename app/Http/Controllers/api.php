@@ -43,7 +43,7 @@ class api extends Controller
             "heads" => 17,
             "packages" => 32,
             "audio" => 3,
-            "model" => 10
+            "models" => 10
         ];
 
         $itemsPerPage = 12;
@@ -55,6 +55,13 @@ class api extends Controller
                 'data' => [] // WHY UNDEFINED WHEN NO ITEMS??
             ]
         ];
+
+        if(!isset($assetTypes[$data['type']])) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
 
         $items = $this->db->table('purchases')
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
