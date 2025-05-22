@@ -164,8 +164,6 @@ class admin extends Controller
             return redirect('/');
         }
 
-        dd($this->request['data']['announcements']);
-
         $assets = [];
         $results = $this->db->table('assets')
             ->where('visibility', 'r')
