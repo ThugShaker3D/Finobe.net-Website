@@ -145,8 +145,6 @@ class admin extends Controller
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
-        
-        dd($this->request['data']['announcements']);
     }
 
     public function index(Request $request) {
@@ -165,6 +163,8 @@ class admin extends Controller
         if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
         }
+
+        dd($this->request['data']['announcements']);
 
         $assets = [];
         $results = $this->db->table('assets')
