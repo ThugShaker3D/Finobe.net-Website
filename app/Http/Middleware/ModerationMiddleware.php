@@ -43,26 +43,14 @@ class ModerationMiddleware
                     'page' => strtok($_SERVER['REQUEST_URI'], '?'),
                     'dir' => str_replace('\\', '', '/' . explode('/', trim($_SERVER['REQUEST_URI'], '/'))[0] . '/'),
                     'alerts' => [
-                        'successv2' => Session::get('successv2', false),
-                        'success' => Session::get('success', false),
-                        'error' => Session::get('error', false),
+                        'successv2' => false,
+                        'success' => false,
+                        'error' => false,
                         'announcements' => []
                     ],
                     'lucky_number' => rand(0, User::count()) . '/' . User::count()
                 ]
             ];
-
-            if($this->request['data']['alerts']['successv2']) {
-                Session::forget('successv2');
-            }
-
-            if($this->request['data']['alerts']['success']) {
-                Session::forget('success');
-            }
-            
-            if($this->request['data']['alerts']['error']) {
-                Session::forget('error');
-            }
 
             $this->request['data']['user'] = Auth::user()->toArray();
             $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
@@ -135,6 +123,21 @@ class ModerationMiddleware
 
                 if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email') {
                     if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
+                        $this->request['data']['alerts']['successv2'] = Session::get('successv2', false);
+                        $this->request['data']['alerts']['success'] = Session::get('success', false);
+                        $this->request['data']['alerts']['error'] = Session::get('error', false);
+                        if($this->request['data']['alerts']['successv2']) {
+                            Session::forget('successv2');
+                        }
+
+                        if($this->request['data']['alerts']['success']) {
+                            Session::forget('success');
+                        }
+                        
+                        if($this->request['data']['alerts']['error']) {
+                            Session::forget('error');
+                        }
+
                         return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
                     }
                 }
