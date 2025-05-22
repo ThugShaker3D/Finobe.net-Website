@@ -148,7 +148,7 @@ class frontEnd extends Controller
 
         $this->request['data']['alerts']['announcements'] = $this->db->table('announcements')
             ->select('message', 'expire', 'author', 'color')
-            ->where('expire', '>', now())
+            ->where('expire', '>', DB::raw('NOW()'))
             ->orderBy('id', 'DESC')
             ->get()
             ->map(function ($item) {
