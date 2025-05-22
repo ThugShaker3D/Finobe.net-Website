@@ -3434,7 +3434,7 @@ class frontEnd extends Controller
         
         $video['title'] = strip_tags(htmlspecialchars($video['title']));
         $video['description'] = nl2br(strip_tags(htmlspecialchars($video['description'])));
-        $video['uuid'] = User::where('username', $video['author']);
+        $video['uuid'] = User::where('username', $video['author'])->value('id');
         $video['author'] = htmlspecialchars($video['author']);
         $video['rating'] = $this->db->table('video_ratings')->where('toid', $video['id'])->where('rate_type', 'l')->count();
         $video['upvotes'] = $video['rating'];
