@@ -93,6 +93,7 @@ class ModerationMiddleware
                 }
 
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                    $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
                     $this->request['data']['isCurrentlyBanned'] = true;
                     $this->request['data']['moderationType'] = 1;
                     $this->request['data']['ban_info'] = (array) $this->db->table('warning')
@@ -104,6 +105,7 @@ class ModerationMiddleware
                 }
 
                 if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                    $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
                     $this->request['data']['isCurrentlyBanned'] = $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->where(DB::raw('TIMESTAMPDIFF(SECOND, NOW(), expire)'), '>', 0)->exists();
                     $this->request['data']['moderationType'] = 2;
                     $this->request['data']['ban_info'] = (array) $this->db->table('bans')
@@ -141,8 +143,9 @@ class ModerationMiddleware
                     return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
                 }
 
-                if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email') {
+                if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email/') {
                     if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
+                        $this->request['data']['embeds']['title'] = 'Verify Email' . $this->request['data']['embeds']['title'];
                         $this->request['data']['alerts']['successv2'] = Session::get('successv2', false);
                         $this->request['data']['alerts']['success'] = Session::get('success', false);
                         $this->request['data']['alerts']['error'] = Session::get('error', false);
