@@ -26,10 +26,12 @@ Route::middleware([SetClientIp::class])->group(function() {
         });
 
         Route::get('/users', [frontEnd::class, 'users']);
+        Route::get('/videos', [frontEnd::class, 'videos']);
         Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [frontEnd::class, 'trades']);
         Route::get('/item/{id}', [frontEnd::class, 'item']);
         Route::get('/invites', [frontEnd::class, 'invites']);
+        Route::get('/video/{id}', [frontEnd::class, 'video']);
         Route::get('/password/reset', [frontEnd::class, 'password_reset']);
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
@@ -111,6 +113,11 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::post('/character', [api::class, 'character']);
             Route::post('/rating_number', [api::class, 'rating_number']);
             Route::match(['post', 'get'], '/connect', [frontEnd::class, 'api_connect']);
+
+            Route::prefix('video')->group(function() {
+                Route::post('/rate', [api::class, 'video_rate']);
+                Route::post('/rating_number', [api::class, 'video_rating_number']);
+            })
         });
 
         Route::prefix('auth')->group(function() {
