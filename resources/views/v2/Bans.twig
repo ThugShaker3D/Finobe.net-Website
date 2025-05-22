@@ -5,13 +5,13 @@
 	th, td {
 		padding: 1.5%;
 	}
-	{% if user.theme == 1 %}
+	{% if data.user.theme == 1 %}
 	tr {
 		border: 1px solid rgba(255, 255, 255, 0.1);
 	}
 	{% endif %}
 	tr:nth-child(even) {
-		{% if user.theme == 1 %}
+		{% if data.user.theme == 1 %}
         background-color: rgba(255, 255, 255, 0.01);
 		{% else %}
 		background-color: rgba(0, 0, 0, 0.05);
@@ -84,13 +84,13 @@
 	  <h3>Public Ban List</h3>
 	  <form method="get" action="" class="mt-3 mb-4 col-mb-3">
                     <div class="input-group input-group-lg search-input">
-                        <input type="text" name="q" placeholder="Search User" value="{{ search }}" class="form-control form-control-lg border-right-0 border">
+                        <input type="text" name="q" placeholder="Search User" value="{{ data.search }}" class="form-control form-control-lg border-right-0 border">
                         <span class="input-group-append">
                             <button type="submit" class="btn btn-secondary  border-left-0 border"><i class="far fa-search"></i></button>
                         </span>
                     </div>
                 </form>
-				{% if user.theme != 1 %}
+				{% if data.user.theme != 1 %}
 				<hr>
 				{% endif %}
 								<table class="full-width">
@@ -105,7 +105,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for ban in bans %}
+										{% for ban in data.bans %}
 										<tr>
 											<td>{{ ban.date }}</td>
 											<td>{{ ban.username }}</td>
@@ -115,7 +115,7 @@
 											<td>{{ (ban.undone == "n") ? "No" : "Yes" }}</td>
 										</tr>
 										{% endfor %}
-										{% if not bans|length %}
+										{% if not data.bans|length %}
 										<td>No results</td>
 										<td></td>
 										<td></td>

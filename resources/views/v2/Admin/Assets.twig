@@ -9,10 +9,10 @@
                 <strong><h3>Asset Moderation</h3></strong>
                 <div class="catalog_container">
                 <div class="row" style="margin: auto; display: ;">
-                    {% if not assets|length %}
+                    {% if not data.assets|length %}
                         <p>There are no items to moderate.</p>
                     {% endif %}
-                    {% for asset in assets %}
+                    {% for asset in data.assets %}
                         <div class="col-lg-4 mb-2">
                                 <div class="card">
                                     <div class="card-body" style="text-align: center;">

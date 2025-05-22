@@ -72,6 +72,26 @@ class ModerationMiddleware
             $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
 
             if(!$request->isMethod('post')) {
+                if(Session::has('siteipban')) {
+                    if(!$this->db->table('bans')->where('username', hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'))->exists()) {
+                        $this->db->table('bans')->insert([
+                            'username' => hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'),
+                            'reason' => 'tried to switch to different IP',
+                            'moderator' => 'Auto'
+                        ]);
+                    }
+                }
+
+                if($this->db->table('bans')->where('username', hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'))->exists()) {
+                    $this->request['data']['embeds']['title'] = 'IP Ban' . $this->request['data']['embeds']['title'];
+
+                    if(!Session::has('siteipban')) {
+                        Session::put('siteipban', 'true');
+                    }
+                    
+                    return response()->view($this->request['data']['user']['version'] . '/403', $this->request);
+                }
+
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
                     $this->request['data']['isCurrentlyBanned'] = true;
                     $this->request['data']['moderationType'] = 1;

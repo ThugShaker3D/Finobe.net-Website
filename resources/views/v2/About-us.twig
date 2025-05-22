@@ -597,7 +597,7 @@
                                 Who are we?
                             </div>
                             <div class="card-body">
-                                <p>Welcome to {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}! We aim to be the best and most reliable asset hosting service out there. We currently
+                                <p>Welcome to {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}! We aim to be the best and most reliable asset hosting service out there. We currently
                                     offer audios. Developers are free to do anything that conforms
                                     to our <a
                                         href="/legal/rules">rules</a>.
@@ -615,17 +615,17 @@
                                         href="/transparency/bans">here</a>.
                                     In addition, many additions or changes to the site are done by polling active users and
                                     asking them to vote in a semi-democratic way.</p>
-                                <p class="mb-0">Generally speaking, {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} is a <strong>not-for-profit website</strong>. While
+                                <p class="mb-0">Generally speaking, {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} is a <strong>not-for-profit website</strong>. While
                                     we don't have advertisements on the website, no revenue is used to pay for any of our monthly server
                                     costs.</p>
                             </div>
                         </div>
                         <div class="card mt-4">
                             <div class="card-header bg-primary text-white">
-                                What is unique about {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}?
+                                What is unique about {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}?
                             </div>
                             <div class="card-body">
-                                <p>{{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} has many features developed over the span of 2 years, like trading and reselling
+                                <p>{{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} has many features developed over the span of 2 years, like trading and reselling
                                     items. We have a virtual currency called Diu (denoted by the <img
                                         src="/s/img/diu_16.png"
                                         alt="Diu" title="Diu" class="img-responsive align-middle "> icon) which controls all of
@@ -641,18 +641,18 @@
                         </div>
                         <div class="card mt-4">
                             <div class="card-header bg-primary text-white">
-                                Why is {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} still a thing?
+                                Why is {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} still a thing?
                             </div>
                             <div class="card-body">
                                 <p>As stated above, we aim to be the asset hosting service. </p>
-                                <p class="mb-0">We believe that there is no true competitor to {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} at this very moment.
-                                {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} is very stable as well, as it does not follow the "cycle of projects" that leaves
+                                <p class="mb-0">We believe that there is no true competitor to {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} at this very moment.
+                                {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} is very stable as well, as it does not follow the "cycle of projects" that leaves
                                     projects dead after a month.</p>
                             </div>
                         </div>
                         <div class="card mt-4 mb-0">
                             <div class="card-header bg-primary text-white">
-                                Who works on {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}?
+                                Who works on {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}?
                             </div>
                             <div class="card-body">
                                 <p>We have 4 developers that work on different areas of the website.</p>
@@ -692,10 +692,10 @@
                                 How do I get started?
                             </div>
                             <div class="card-body">
-                                <p>Unfortunately, {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} is not currently <strong>invite-only</strong>. To join, you'll need an
+                                <p>Unfortunately, {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }} is not currently <strong>invite-only</strong>. To join, you'll need an
                                     <i>invite key</i>.</p>
-                                <p class="mb-0">The administrators do not give out invite keys. To join {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}, you'll need to
-                                    obtain one from a friend. If you do not have a friend that is in {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}, there is
+                                <p class="mb-0">The administrators do not give out invite keys. To join {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}, you'll need to
+                                    obtain one from a friend. If you do not have a friend that is in {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}, there is
                                     unfortunately no other way to join.</p>
                             </div>
                         </div>
@@ -703,9 +703,9 @@
                             <div class="left-line"></div>
                             <p class="mb-0">
                                 That is all. We are
-                                <img src="/s/img/{% if user.branding == "finobe" %}{% if user.logo == "v1" %}{{ "BUSY.png" }}{% elseif user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}"
+                                <img src="/s/img/{% if data.user.branding == "finobe" %}{% if data.user.logo == "v1" %}{{ "BUSY.png" }}{% elseif data.user.logo == "v2" %}{{ "finnobe3.png" }}{% else %}{{ "finnobe3logo.png" }}{% endif %}{% else %}{{ "logo.png" }}{% endif %}"
                                     alt="" class="d-inline align-middle pl-1" style="height: 28px;">
-                                {{ (user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}.
+                                {{ (data.user.branding == "finobe") ? 'Finobe' : 'Aesthetiful' }}.
                             </p>
                             <div class="right-line"></div>
                         </div>

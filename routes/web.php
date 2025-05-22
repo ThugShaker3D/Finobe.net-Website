@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api;
+use App\Http\Controllers\admin;
 use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
 use App\Http\Middleware\SetClientIp;
@@ -94,7 +95,9 @@ Route::middleware([SetClientIp::class])->group(function() {
 
         Route::prefix('api')->group(function() {
             Route::get('/mark', [api::class, 'mark']); // not mathmark reference >:D
+            Route::get('/deny', [admin::class, 'deny']);
             Route::get('/places', [api::class, 'places']);
+            Route::get('/accept', [admin::class, 'accept']);
             Route::get('/inventory', [api::class, 'inventory']);
             Route::post('/rate', [api::class, 'rate']);
             Route::post('/render', [api::class, 'render']);
@@ -108,6 +111,12 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::get('/form', [frontEnd::class, 'auth_form']);
             Route::match(['post', 'get'], '/login', [frontEnd::class, 'auth_login']);
             Route::match(['post', 'get'], '/register', [frontEnd::class, 'auth_register']);
+        });
+
+        Route::prefix('admin')->group(function() {
+            Route::get('/', [admin::class, 'index']);
+            Route::get('/assets', [admin::class, 'assets']);
+            Route::match(['post', 'get'], '/bans', [admin::class, 'bans']);
         });
     });
 
