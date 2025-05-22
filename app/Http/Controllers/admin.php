@@ -424,7 +424,7 @@ class admin extends Controller
             $validator = Validator::make($data, [
                 'message' => 'required|string|min:3|max:255',
                 'date' => 'required|date',
-                'time' => 'required|date',
+                'time' => 'required|date_format:H:i',
                 'color' => 'required|string|in:success,primary,danger,info,warning'
             ]);
 
