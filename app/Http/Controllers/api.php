@@ -371,7 +371,7 @@ class api extends Controller
 
         $item['additional'] = json_decode($item['additional'], true);
 
-        if(!in_array($item['asset_type'], [8, 11, 12, 18])) {
+        if(!in_array($item['asset_type'], [2, 8, 11, 12, 18])) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Invalid item type';
 
@@ -682,6 +682,51 @@ class api extends Controller
             } else {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You are wearing a face already';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user->avatar = json_encode($avatar);
+            $user->save();
+        } elseif($data['type'] == 't-shirt') {
+            if(!isset($data['assetid'])) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Bad request';
+
+                return response()->json($this->response, 400);
+            }
+
+            $user = Auth::user();
+            $avatar = json_decode($user->avatar, true);
+
+            $data['assetid'] = intval($data['assetid']);
+            $itemcount = 0;
+            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+
+            if($visibility != 'n') {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
+
+            foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
+                if($this->db->table('assets')->where('id', $key)->where('asset_type', 2)->exists()) {
+                    $itemcount++;
+                }
+            }
+
+            if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+                    $avatar[0]['equippedGearVersionIds'] = array_values(
+                        array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
+                    );
+                } else {
+                    $avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
+                }
+            } else {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You are wearing a t-shirt already';
 
                 return response()->json($this->response, 400);
             }

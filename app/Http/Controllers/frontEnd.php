@@ -1780,7 +1780,7 @@ class frontEnd extends Controller
                 ->where('id', $result['assetid'])
                 ->first();
 
-            if(!in_array($item['asset_type'], [8, 11, 12, 18])) {
+            if(!in_array($item['asset_type'], [2, 8, 11, 12, 18])) {
                 continue;
             }
 
@@ -1791,7 +1791,7 @@ class frontEnd extends Controller
             $result['author'] = User::select('username')->where('id', $item['author'])->value('username');
             $result['equipped'] = in_array($result['assetid'], $this->request['data']['user']['avatar'][0]['equippedGearVersionIds']);
 
-            if(in_array($item['asset_type'], [8, 11, 12, 18])) {
+            if(in_array($item['asset_type'], [2, 8, 11, 12, 18])) {
                 $result['thumbnail'] = $item['additional']['media']['thumbnail'];
             }
 

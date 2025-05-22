@@ -615,7 +615,25 @@
 							  </script>
                             </div>
                             <div class="tab-pane" id="t-shirts">
-                              <p>t-shirts</p>
+                              {% for item in data.purchases %}
+								  {% if item.asset_type == 2 %}
+									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
+										<div class="card">
+											<div class="card-body">
+												<div class="d-flex justify-content-center">
+													<img src="{{ item.thumbnail }}" style="width: 50%; height: auto;">
+												</div>
+												<p class="mt-2 mb-0"><a href="/item/{{ item.assetid }}">{{ item.title }}</a></p>
+												<p class="mt-0 mb-0">by {% if not item.uuid %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>
+												<button class="btn btn-{{ (item.equipped) ? 'danger' : 'primary' }} full-width mt-2" onclick=";wear('{{ item.assetid }}', 't-shirt');">{{ (item.equipped) ? 'unequip' : 'equip' }}</button>
+											</div>
+										</div>
+									</div>
+								  {% endif %}
+								{% endfor %}
+								{% if not data.purchases|filter(p => p.asset_type == 2)|length %}
+									<p>No results</p>
+								{% endif %}
                             </div>
                             <div class="tab-pane" id="shirts">
 								<div class="row">
@@ -635,6 +653,9 @@
 									</div>
 								  {% endif %}
 								{% endfor %}
+								{% if not data.purchases|filter(p => p.asset_type == 11)|length %}
+									<p>gear</p>
+								{% endif %}
 								</div>
                             </div>
                             <div class="tab-pane" id="pants">
@@ -655,6 +676,9 @@
 										</div>
 									{% endif %}
 								{% endfor %}
+								{% if not data.purchases|filter(p => p.asset_type == 12)|length %}
+									<p>No results</p>
+								{% endif %}
 								</div>
                             </div>
                             <div class="tab-pane" id="faces">
@@ -675,6 +699,9 @@
 										</div>
 									{% endif %}
 								{% endfor %}
+								{% if not data.purchases|filter(p => p.asset_type == 18)|length %}
+									<p>No results</p>
+								{% endif %}
 								</div>
                             </div>
                             <div class="tab-pane" id="gear">
