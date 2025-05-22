@@ -174,9 +174,9 @@
 	</div>
 </div>
 {% endif %}
-{% for announcement in data.announcements %}
+{% for announcement in data.alerts.announcements %}
 <div class="alert alert-{{ announcement.color }} alert-skinny my-0 text-center">
-	<p class="mb-0" style="color: white;">{{ announcement.message | raw }}e</p>
+	<p class="mb-0" style="color: white;">{{ announcement.message | raw }}</p>
 </div>
 {% endfor %}
 {% if data.alerts.successv2 %}
