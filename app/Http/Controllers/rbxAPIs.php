@@ -35,7 +35,7 @@ class rbxAPIs extends Controller
                     "FFlagTaskSchedulerUseSharedPtr" => "True",
                     "FFlagWaterEnabled" => "True",
                     "FLogAsserts" => "0",
-                    "FLogContentPoviderRequests" => "8";
+                    "FLogContentPoviderRequests" => "8",
                     "FLogRCCDataModelInit" => "7",
                     "FLogReplicationDataLifetime" => "0",
                     "FLogTaskSchedulerRun" => "0"
