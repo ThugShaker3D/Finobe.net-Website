@@ -3321,6 +3321,34 @@ class frontEnd extends Controller
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
+        
+        foreach($results as $result) {
+            if(!User::where('username', $result['username'])->exists()) {
+                continue;
+            }
+
+            $result['username'] = htmlspecialchars($result['username']);
+            $result['date'] = date('Y-m-d', strtotime($result['date']));
+            $result['expire'] = date('Y-m-d', strtotime($result['expire']));
+            $bans[] = $result;
+        }
+
+        $results = $this->db->table('warning')
+            ->whereIn('username', function ($subquery) {
+                $subquery->select('username')->from('users');
+            })
+            ->orderByDesc('id')
+            ->limit(50);
+
+        if(isset($data['q'])) {
+            $search = '%' . $data['q'] . '%';
+            $results->where('username', 'like', $search);
+        }
+
+        $results = $results->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
 
         foreach($results as $result) {
             if(!User::where('username', $result['username'])->exists()) {
