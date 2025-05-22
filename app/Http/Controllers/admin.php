@@ -210,7 +210,7 @@ class admin extends Controller
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
             }
-        } elseif($asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
+        } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
             $this->db->table('assets')
                 ->where('id', $asset['additional']['media']['textureAssetId'])
                 ->update([
@@ -258,7 +258,7 @@ class admin extends Controller
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
             }
-        } elseif($asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
+        } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
             if(!rename('/var/www/cdn.finobe.net/assets/' . $asset['file'], public_path('dynamic/denied/' . $asset['file']))) {
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
