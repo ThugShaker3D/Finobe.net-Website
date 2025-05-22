@@ -225,7 +225,7 @@ class admin extends Controller
             ]);
         
         $this->db->table('purchases')->insert([
-            'username' => User::where('id', $data['author'])->value('username'),
+            'username' => User::where('id', $asset['author'])->value('username'),
             'assetid' => $data['id'],
             'author' => $asset['author'],
             'amount' => 0
