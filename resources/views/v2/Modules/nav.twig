@@ -153,7 +153,7 @@
 								onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
 									class="far align-middle fa-fw fa-sign-out mr-1"></i> Logout</a>
 							<form id="logout-form" action="/logout" method="POST" style="display: none;">
-								<input type="hidden" name="_token" value="gma4YIw8AEaStI6KmB89iAdZ6El7Q4dNMuroxs7m">
+								<input type="hidden" name="_token" value="{{ data.csrf_token }}">
 							</form>
 						</div>
 					</li>
