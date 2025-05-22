@@ -43,10 +43,10 @@ Route::middleware([SetClientIp::class])->group(function() {
         Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);
 
         Route::prefix('legal')->group(function() {
-            Route::get('/about-us', [frontEnd::class, 'legal_about_us']);
-            Route::get('/welcome', [frontEnd::class, 'legal_welcome']);
-            Route::get('/legal_rules', [frontEnd::class, 'legal_rules']);
+            Route::get('/rules', [frontEnd::class, 'legal_rules']);
             Route::get('/terms', [frontEnd::class, 'legal_terms']);
+            Route::get('/welcome', [frontEnd::class, 'legal_welcome']);
+            Route::get('/about-us', [frontEnd::class, 'legal_about_us']);
         });
 
         Route::prefix('place')->group(function() {
