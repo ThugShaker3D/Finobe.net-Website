@@ -24,11 +24,11 @@
    {% include ('v2/Modules/nav.twig') %}
    <div class="container mt-3">
       <h3 class="font-weight-light mb-0">Videos</h3>
-	  {% if not IsLoggedIn %}
+	  {% if not data.siteusername %}
       <p class="mb-0"><strong>Note:</strong> More videos may be available after logging in.</p>
 	  {% endif %}
       <div class="mb-4"></div>
-      {% if not videos.data|length %}
+      {% if not data.videos.data|length %}
 	  <p>No results</p>
 	  {% endif %}
 	  {#
@@ -109,7 +109,7 @@
          </div>
       </div>
 	  #}
-	  {% for videosBatch in videos.data|batch(6) %}
+	  {% for videosBatch in data.videos.data|batch(6) %}
 			<div class="container-fluid content-row d-block d-md-none">
 				<div class="row">
 					{% for video in videosBatch %}
@@ -126,7 +126,7 @@
 				</div>
 			</div>
 		{% endfor %}
-	  {% for videosBatch in videos.data|batch(6) %}
+	  {% for videosBatch in data.videos.data|batch(6) %}
 			<div class="container-fluid content-row d-none d-md-block d-lg-none">
 				<div class="row">
 					{% for video in videosBatch %}
@@ -143,7 +143,7 @@
 				</div>
 			</div>
 		{% endfor %}
-		{% for videosBatch in videos.data|batch(6) %}
+		{% for videosBatch in data.videos.data|batch(6) %}
 			<div class="container-fluid content-row d-none d-lg-block">
 				<div class="row">
 					{% for video in videosBatch %}
@@ -162,40 +162,40 @@
 		{% endfor %}
 	  <div class="my-4">
         <ul class="pagination shadow-sm">
-			<li class="page-item{{ (videos.pages.info.previous_page == videos.pages.info.start_page) ? " disabled" : "" }}">
-			  <a class="page-link" id="previous-page" href="/videos?page={{ videos.pages.info.previous_page }}" rel="previous" aria-label="Previous <<" {{ (videos.pages.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
+			<li class="page-item{{ (data.videos.pages.info.previous_page == data.videos.pages.info.start_page) ? " disabled" : "" }}">
+			  <a class="page-link" id="previous-page" href="/videos?page={{ data.videos.pages.info.previous_page }}" rel="previous" aria-label="Previous <<" {{ (data.videos.pages.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
 			</li>
-			{% if videos.pages.info.start_page > 1 %}
+			{% if data.videos.pages.info.start_page > 1 %}
 			  <li class="page-item">
 				<a class="page-link" href="/videos?page=1">1</a>
 			  </li>
-			  {% if videos.pages.info.start_page > 2 %}
+			  {% if data.videos.pages.info.start_page > 2 %}
 				<li class="page-item">
 				  <a class="page-link" href="/videos?page=2">2</a>
 				</li>
 			  {% endif %}
 			  <li class="page-item"><span class="page-link">...</span></li>
 			{% endif %}
-			{% for page in videos.pages.data %}
+			{% for page in data.videos.pages.data %}
 			  <li class="page-item">
-				<a class="page-link{{ (page.page == videos.pages.info.current_page) ? " selected" : "" }}" href="/videos?page={{ page.page }}">
+				<a class="page-link{{ (page.page == data.videos.pages.info.current_page) ? " selected" : "" }}" href="/videos?page={{ page.page }}">
 				  {{ page.page }}
 				</a>
 			  </li>
 			{% endfor %}
-			{% if videos.pages.info.end_page < videos.pages.info.number_of_page %}
-			  {% if videos.pages.info.end_page + 1 < videos.pages.info.number_of_page %}
+			{% if data.videos.pages.info.end_page < data.videos.pages.info.number_of_pages %}
+			  {% if data.videos.pages.info.end_page + 1 < data.videos.pages.info.number_of_pages %}
 				<li class="page-item"><span class="page-link">...</span></li>
 			  {% endif %}
 			  <li class="page-item">
-				<a class="page-link" href="/videos?page={{ videos.pages.info.number_of_page - 1 }}">{{ videos.pages.info.number_of_page - 1 }}</a>
+				<a class="page-link" href="/videos?page={{ data.videos.pages.info.number_of_pages - 1 }}">{{ data.videos.pages.info.number_of_pages - 1 }}</a>
 			  </li>
 			  <li class="page-item">
-				<a class="page-link" href="/videos?page={{ videos.pages.info.number_of_page }}">{{ videos.pages.info.number_of_page }}</a>
+				<a class="page-link" href="/videos?page={{ data.videos.pages.info.number_of_pages }}">{{ data.videos.pages.info.number_of_pages }}</a>
 			  </li>
 			{% endif %}
-			<li class="page-item{{ (videos.pages.info.next_page == videos.pages.info.end_page) ? " disabled" : "" }}">
-			  <a class="page-link" id="next-page" href="/videos?page={{ videos.pages.info.next_page }}" rel="next" aria-label="Next >>" >»</a>
+			<li class="page-item{{ (data.videos.pages.info.next_page == data.videos.pages.info.end_page) ? " disabled" : "" }}">
+			  <a class="page-link" id="next-page" href="/videos?page={{ data.videos.pages.info.next_page }}" rel="next" aria-label="Next >>" >»</a>
 			</li>
 		  </ul>
         </div>

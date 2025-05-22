@@ -104,9 +104,9 @@ class api extends Controller
         }
 
         $validator = Validator::make($data, [
-            'type'   => 'required|string|size:1',
+            'type'   => 'required|string|in:1,2|size:1',
             'postId' => 'required|integer',
-            'rating' => 'required|string|size:1',
+            'rating' => 'required|string|in:l,d|size:1',
         ]);
 
         if($validator->fails()) {
@@ -118,8 +118,6 @@ class api extends Controller
         }
 
         $user = Auth::user()->toArray();
-        $data['type'] = ($data['type'] == '1') ? '1' : '2';
-        $data['rating'] = ($data['rating'] == 'l') ? 'l' : 'd';
         $data['postId'] = intval($data['postId']);
 
         if($this->db->table('forum_ratings')->where('sender', $user['username'])->where('type', $data['type'])->where('toid', $data['postId'])->count()) {
@@ -188,6 +186,100 @@ class api extends Controller
         $rating -= $this->db->table('forum_ratings')
             ->where('type', $data['type'])
             ->where('toid', $data['postId'])
+            ->where('rate_type', 'd')
+            ->count();
+        
+        $this->response['rating'] = $rating;
+        return response()->json($this->response, 200);
+    }
+
+    public function video_rate(Request $request) {
+        $data = $request->all();
+
+        if(!Auth::check()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
+        $validator = Validator::make($data, [
+            'videoId' => 'required|integer',
+            'rating' => 'required|string|in:l,d|size:1',
+        ]);
+
+        if($validator->fails()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+            $this->response['errors'] = $validator->errors();
+
+            return response()->json($this->response, 400);
+        }
+
+        $user = Auth::user()->toArray();
+        $data['videoId'] = intval($data['videoId']);
+
+        if($this->db->table('video_ratings')->where('sender', $user['username'])->where('type', $data['type'])->where('toid', $data['postId'])->count()) {
+            $ratingData = (array) $this->db->table('video_ratings')
+                ->where('sender', $user['username'])
+                ->where('type', $data['type'])
+                ->where('toid', $data['videoId'])
+                ->first();
+            
+            if($ratingData['rate_type'] != $data['rating']) {
+                $this->db->table('video_ratings')
+                    ->where('id', $ratingData['id'])
+                    ->update([
+                        'rate_type' => $data['rating']
+                    ]);
+            } else {
+                $this->db->table('video_ratings')
+                    ->where('sender', $user['username'])
+                    ->where('toid', $data['videoId'])
+                    ->delete();
+            }
+        } else {
+            $this->db->table('video_ratings')->insert([
+                'sender' => $user['username'],
+                'toid' => $data['videoId'],
+                'rate_type' => $data['rating']
+            ]);
+        }
+
+        return response()->json($this->response, 200);
+    }
+
+    public function video_rating_number(Request $request) {
+        $data = $request->all();
+
+        if(!Auth::check()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
+        $validator = Validator::make($data, [
+            'videoId' => 'required|integer'
+        ]);
+
+        if($validator->fails()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+            $this->response['errors'] = $validator->errors();
+
+            return response()->json($this->response, 400);
+        }
+
+        $data['videoId'] = intval($data['videoId']);
+
+        $rating = $this->db->table('video_ratings')
+            ->where('toid', $data['videoId'])
+            ->where('rate_type', 'l')
+            ->count();
+        
+        $rating -= $this->db->table('video_ratings')
+            ->where('toid', $data['videoId'])
             ->where('rate_type', 'd')
             ->count();
         

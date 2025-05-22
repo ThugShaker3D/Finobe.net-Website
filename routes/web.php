@@ -66,11 +66,8 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
             Route::match(['post', 'get'], '/inbox/message', [frontEnd::class, 'inbox_message']);
             Route::match(['post', 'get'], '/inbox/compose', [frontEnd::class, 'inbox_compose']);
+            Route::match(['post', 'get'], '/forum/new/post', [frontEnd::class, 'forum_new_post']);
             Route::match(['post', 'get', 'options'], '/settings', [frontEnd::class, 'app_settings']);
-
-            Route::prefix('forum')->group(function() {
-                Route::match(['post', 'get'], '/new/post', [frontEnd::class, 'forum_new_post']);
-            });
         });
 
         Route::prefix('catalog')->group(function() {

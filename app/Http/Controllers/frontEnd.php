@@ -1486,7 +1486,7 @@ class frontEnd extends Controller
                 $validator = Validator::make($data, [
                     'title' => 'required|string|min:3',
                     'content' => 'required|string|min:3|max:8192',
-                    'section' => 'required|integer|size:1'
+                    'section' => 'required|integer|min:1|max:10'
                 ]);
 
                 if($validator->fails()) {
@@ -3375,6 +3375,89 @@ class frontEnd extends Controller
         }
 
         return response($this->request['data']['user']['token'], 200);
+    }
+
+    public function videos(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Videos' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        $videos = $this->db->table('videos')->count();
+        
+        $pages_to_show = 10;
+        $results_per_page = 12;
+        $number_of_pages = ceil($videos / $results_per_page);
+        $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
+        $offset = ($currentPage - 1) * $results_per_page;
+        $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
+        $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+        $videos = $this->db->table('videos')
+            ->offset($offset)
+            ->limit($results_per_page)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        $this->request['data']['videos'] = [
+            'data' => $videos,
+            'pages' => [
+                'info' => [
+                    'current_page' => $currentPage,
+                    'previous_page' => max(1, $currentPage - 1),
+                    'next_page' => min($number_of_pages, $currentPage + 1),
+                    'start_page' => $start_page,
+                    'end_page' => $end_page,
+                    'number_of_pages' => $number_of_pages
+                ],
+                'data' =>[]
+            ]
+        ];
+
+        for ($page = $start_page; $page <= $end_page; $page++) {
+            $this->request['data']['videos']['pages']['data'][] = ['page' => $page];
+        }
+
+        if(!count($user['friends'])) {
+            $this->request['data']['videos']['pages']['data'][] = [
+                'page' => 1
+            ];
+        }
+
+        return view($this->request['data']['user']['version'] . '/Videos/Index', $this->request);
+    }
+
+    public function video(Request $request, $id) {
+        if(!$this->db->table('videos')->where('id', $id)->exists()) {
+            Session::put('error', 'Video not found');
+            return redirect('/videos');
+        }
+
+        $video = (array) $this->db->table('videos')
+            ->where('id', $id)
+            ->first();
+        
+        $video['title'] = strip_tags(htmlspecialchars($video['title']));
+        $video['description'] = nl2br(strip_tags(htmlspecialchars($place['description'])));
+        $video['uuid'] = User::where('username', $video['author']);
+        $video['author'] = htmlspecialchars($video['author']);
+        $video['rating'] = $this->db->table('video_ratings')->where('toid', $video['id'])->where('rate_type', 'l')->count();
+        $video['upvotes'] = $video['rating'];
+        $video['rating'] = $video['rating'] - $this->db->table('video_ratings')->where('toid', $video['id'])->where('rate_type', 'd')->count();
+        $video['downvotes'] = $this->db->table('video_ratings')->where('toid', $video['id'])->where('rate_type', 'd')->count();
+
+        if($this->request['data']['siteusername']) {
+            if($this->db->table('video_ratings')->where('toid', $id)->where('sender', $this->request['data']['user']['username'])->count()) {
+                $video['userRating'] = (array) $this->db->table('video_ratings')
+                    ->where('toid', $id)
+                    ->where('sender', $this->request['data']['user']['username'])
+                    ->first();
+            }
+        }
+
+        $this->request['data']['embeds']['title'] = $video['title'] . $this->request['data']['embeds']['title'];
+        $this->request['data']['video'] = $video;
+
+        return view($this->request['data']['user']['version'] . '/Videos/Video', $this->request);
     }
 
     public function auth_form(Request $request) {
