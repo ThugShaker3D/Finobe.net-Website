@@ -414,9 +414,39 @@ class admin extends Controller
 
     public function announcements(Request $request) {
         $this->request['data']['embeds']['title'] = 'Announcements' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
 
         if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
             return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'message' => 'required|string|min:3|max:255',
+                'date' => 'required|date',
+                'time' => 'required|date',
+                'color' => 'required|string|in:success,primary,danger,info,warning'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/admin/announcements');
+            }
+
+            $expire = $data['date'] . ' ' . $data['time'];
+            $timezone = new \DateTimeZone('America/Los_Angeles');
+            $dateTime = new \DateTime($expire, $timezone);
+            $expire = $dateTime->format('Y-m-d H:i:s');
+
+            $this->db->table('announcements')->insert([
+                'author' => $this->request['data']['user']['username'],
+                'message' => $data['message'],
+                'expire' => $expire,
+                'color' => $data['color']
+            ]);
+
+            Session::put('success', 'Successfully created.');
+            return redirect('/admin/announcements');
         }
 
         $html = [
