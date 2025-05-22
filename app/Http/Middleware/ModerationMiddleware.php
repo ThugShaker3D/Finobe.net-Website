@@ -41,9 +41,27 @@ class ModerationMiddleware
                     ],
                     'page' => strtok($_SERVER['REQUEST_URI'], '?'),
                     'dir' => str_replace('\\', '', '/' . explode('/', trim($_SERVER['REQUEST_URI'], '/'))[0] . '/'),
+                    'alerts' => [
+                        'successv2' => Session::get('successv2', false),
+                        'success' => Session::get('success', false),
+                        'error' => Session::get('error', false),
+                        'announcements' => []
+                    ]
                     'lucky_number' => rand(0, User::count()) . '/' . User::count()
                 ]
             ];
+
+            if($this->request['data']['alerts']['successv2']) {
+                Session::forget('successv2');
+            }
+
+            if($this->request['data']['alerts']['success']) {
+                Session::forget('success');
+            }
+            
+            if($this->request['data']['alerts']['error']) {
+                Session::forget('error');
+            }
 
             $this->request['data']['user'] = Auth::user()->toArray();
             $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
