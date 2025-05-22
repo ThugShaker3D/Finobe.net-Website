@@ -1330,7 +1330,7 @@ class frontEnd extends Controller
                     'lastreplied' => DB::raw('CURRENT_TIMESTAMP()')
                 ]);
             
-            $results_per_page = 12;
+            $results_per_page = 10;
             $position_in_list = $this->db->table('forum_replies')->where('id', '<=', $id)->where('toid', $data['id'])->count();
             $page_of_reply = ceil($position_in_list / $results_per_page);
 
