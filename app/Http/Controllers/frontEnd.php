@@ -2777,7 +2777,7 @@ class frontEnd extends Controller
 
                 $filename = uniqid();
                 $file = $request->file('file');
-                $file->move(public_path('dynamic/temp/' . $filename));
+                $file->move(public_path('dynamic/temp/'), $filename);
                 $ffmpeg = FFmpeg::create();
                 $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
                 $duration = $audio->getFormat()->get('duration');
@@ -3013,7 +3013,7 @@ class frontEnd extends Controller
                     return redirect('/app/settings');
                 }
 
-                $file->move('/var/www/cdn.finobe.net/avatar/' . $filename);
+                $file->move('/var/www/cdn.finobe.net/avatar/', $filename);
 
                 $user = User::find($this->request['data']['user']['id']);
                 $user->pfp = $filename;
