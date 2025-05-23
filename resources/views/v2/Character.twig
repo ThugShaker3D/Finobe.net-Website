@@ -479,10 +479,8 @@
 											  alert('Network response was not ok');
 											  return;
 											}
-											return response.text();
-										  })
-										  .then(text => {
 											closeCard();
+											return response.text();
 										  });
 									});
 								});
