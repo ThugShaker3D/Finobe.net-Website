@@ -693,7 +693,8 @@ class admin extends Controller
                 'onsale' => 'nullable|in:on,1,true,0,false,off',
                 'mesh' => 'nullable|file',
                 'xml' => 'required|file|mimetypes:text/plain',
-                'texture' => 'nullable|file|mimetypes:image/png'
+                'texture' => 'nullable|file|mimetypes:image/png',
+                'type' => 'required|string|in:hat,gear'
             ]);
 
             if($validator->fails()) {
@@ -706,7 +707,7 @@ class admin extends Controller
                 return redirect('/admin/createxml');
             }
 
-            $id = Asset::createHat(
+            $id = Asset::createHatOrGear(
                 $data['title'],
                 ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
                 ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
@@ -714,7 +715,8 @@ class admin extends Controller
                 $this->request['data']['user']['id'],
                 $data['description'] ?? '',
                 intval($data['price']),
-                isset($data['onsale'])
+                isset($data['onsale']),
+                ($data['type'] == 'hat' ? 8 : 19)
             );
 
             Session::put('success', 'Success');

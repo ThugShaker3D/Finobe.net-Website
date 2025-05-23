@@ -32,6 +32,15 @@
                     <input type="number" name="price" value="0" min="0" placeholder="price" class="form-control">
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="name" class="col-form-label text-md-right" style="margin-left:15px;">Asset type</label>
+                <div class="col-md-12">
+                    <select id="type" name="type" required="" class="form-control" onchange="toggleExpirationFields()">
+                        <option value="hat">Hat</option>
+                        <option value="gear">Gear</option>
+                    </select>
+                </div>
+            </div>
             <div class="custom-control custom-checkbox mt-3">
                 <input type="checkbox" name="onsale" class="custom-control-input" checked="">
                 <label for="onsale" class="custom-control-label pl-1">Onsale</label>

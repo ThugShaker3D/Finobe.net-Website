@@ -45,6 +45,8 @@ class Asset extends Controller
                     return self::renderShirt($id);
                 case 12:
                     return self::renderPants($id);
+                case 19:
+                    return self::renderGear($id);
                 default:
                     return "";
             }
@@ -99,7 +101,7 @@ class Asset extends Controller
         return "";
     }
 
-    public static function createHat(string $name, $texture = false, $mesh = false, array $xml, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, array $historicalPrice = []): int
+    public static function createHatOrGear(string $name, $texture = false, $mesh = false, array $xml, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, array $historicalPrice = [], int $type): int
     {
         if(is_array($texture)) {
             $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), "", "n", []);
@@ -136,7 +138,7 @@ class Asset extends Controller
             $xmltemplate =str_replace("MESHURLPLACEHOLDER",  "http://www.finobe.net/asset/?id=" . $meshId, $xmltemplate);
         }
 
-        $hatId = self::createAsset($name, 8, $author, $xmltemplate, $description, "n", [
+        $assetId = self::createAsset($name, $type, $author, $xmltemplate, $description, "n", [
             "price" => $price,
             "onSale" => $onSale,
             "isLimited" => $isLimited,
@@ -146,8 +148,13 @@ class Asset extends Controller
             ]
         ]);
 
-        self::renderHat($hatId);
-        return $hatId;
+        if($type == 8) {
+            self::renderHat($assetId);
+        } else {
+            self::renderGear($assetId);
+        }
+
+        return $assetId;
     }
 
     public static function createAccessory(string $name, array $texture, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, string $type = "face"): int //type: shirt/pants/tshirt/face
@@ -174,18 +181,18 @@ class Asset extends Controller
         } elseif($type == "tshirt") {
             $assetType = 2;
             $xmlTemplate = '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
-  <External>null</External>
-  <External>nil</External>
-  <Item class="ShirtGraphic" referent="RBX0">
-    <Properties>
-      <Content name="Graphic">
-        <url>TEXTUREURLPLACEHOLDER</url>
-      </Content>
-      <string name="Name">Shirt Graphic</string>
-      <bool name="archivable">true</bool>
-    </Properties>
-  </Item>
-</roblox>';
+                <External>null</External>
+                <External>nil</External>
+                <Item class="ShirtGraphic" referent="RBX0">
+                    <Properties>
+                    <Content name="Graphic">
+                        <url>TEXTUREURLPLACEHOLDER</url>
+                    </Content>
+                    <string name="Name">Shirt Graphic</string>
+                    <bool name="archivable">true</bool>
+                    </Properties>
+                </Item>
+            </roblox>';
         } elseif($type == "shirt") {
             $assetType = 11;
             $xmlTemplate = '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
@@ -440,6 +447,52 @@ class Asset extends Controller
                     c.Graphic = game:GetObjects(asseturl)[1].Graphic
                     c.Parent = player.Character
 
+                    t = game:GetService("ThumbnailGenerator")
+                    return t:Click(fileExtension, x, y, true, true)
+                ',
+                60,
+                0,
+                2,
+                "ScriptExecution",
+                [$id, "https://www.finobe.net/asset/?id={$id}", "https://www.finobe.net", "PNG", 768, 768]
+            );
+
+            $jobEx = $arbiter->OpenJobEx($constructedJob);
+
+            $filename = uniqid() . ".png";
+            file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
+
+            $instance = new self();
+            $hatData = self::getAssetData($id);
+            $additional = json_decode($hatData->additional);
+            $additional->media->thumbnail = "https://cdn.finobe.net/thumbnails/{$filename}";
+            $additional = json_encode($additional);
+            $instance->db->table('assets')
+                ->where('id', $id)
+                ->update([
+                    'additional' => $additional
+                ]);
+
+            return "https://cdn.finobe.net/thumbnails/{$filename}";
+        }
+        return "";
+    }
+
+    public static function renderGear(int $id) : string
+    {
+        if (self::isAssetExist($id)) {
+            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $constructedJob = $arbiter->ConstructJob(
+                RobloxUtilities::GenerateGUID(),
+                '
+                    local assetid, asseturl, url, fileExtension, x, y = ...
+                    
+                    print("Render Gear " .. assetid)
+                    
+                    pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
+                    game:GetService("ThumbnailGenerator").GraphicsMode = 4
+                    game:GetService("ScriptContext").ScriptsDisabled = true
+                    game:GetObjects(asseturl)[1].Parent = workspace
                     t = game:GetService("ThumbnailGenerator")
                     return t:Click(fileExtension, x, y, true, true)
                 ',
