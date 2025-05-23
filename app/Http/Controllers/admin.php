@@ -977,6 +977,7 @@ class admin extends Controller
             ->get("https://assetdelivery.roblox.com/v1/asset/", [
                 'id' => $data['assetid']
             ])->body();
+            $xml = mb_convert_encoding($xml, 'UTF-8', 'UTF-8');
 
             preg_match('/<Content name="MeshId"><url>(?:http:\/\/www\.roblox\.com\/asset\/\?id=|rbxassetid:\/\/)(\d+)\s*<\/url><\/Content>/', $xml, $matches);
             $meshId = $matches[1] ?? false;
