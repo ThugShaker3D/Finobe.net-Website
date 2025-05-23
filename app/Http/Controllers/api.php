@@ -766,7 +766,7 @@ class api extends Controller
 
         if(Carbon::now()->timezone('UTC')->diffInSeconds(Carbon::parse($user->render_cooldown)->timezone('UTC')) <= 30) {
             $this->response['code'] = 400;
-            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . Carbon::now() . ')';
+            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . Carbon::now() . ' ' . $user->render_cooldown . ')';
 
             return response()->json($this->response, 400);
         }
