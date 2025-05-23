@@ -563,6 +563,8 @@ class frontEnd extends Controller
                 $result['assetname'] = 'Place Slot';
             } elseif($result['type'] == 4) {
                 $result['assetname'] = 'Dius';
+            } elseif($result['type'] == 5) {
+                $result['assetname'] = 'Asset Upload Fee';
             }
 
             $result['uuid'] = User::where('id', $result['author'])->exists() ? User::where('id', $result['author'])->value('id') : false;
