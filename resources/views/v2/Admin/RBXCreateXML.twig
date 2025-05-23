@@ -11,7 +11,7 @@
     <div id="app">
       {% include ('v2/Modules/nav.twig') %}
       <div class="container mt-3">
-		<h3>New XML asset</h3>
+		<h3>Create XML asset</h3>
 		<form role="form" method="POST" action="" id="dynamic-form" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ data.csrf_token }}">
             <div class="form-group row">
@@ -32,25 +32,15 @@
                     <input type="number" name="price" value="0" min="0" placeholder="price" class="form-control">
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="assetid" class="col-form-label text-md-right" style="margin-left:15px;">ID</label>
+                <div class="col-md-12">
+                    <input type="number" name="assetid" value="0" min="0" placeholder="assetid" class="form-control">
+                </div>
+            </div>
             <div class="custom-control custom-checkbox mt-3">
                 <input type="checkbox" name="onsale" class="custom-control-input" checked="">
                 <label for="onsale" class="custom-control-label pl-1">Onsale</label>
-            </div>
-            <div class="form-group row d-flex justify-content-center">
-                <label for="mesh" class="col-form-label text-md-right" style="margin-left:15px;">Mesh</label>
-                <div class="col-md-4">
-                    <input type="file" name="mesh" value="" class="form-control">
-                </div>
-                <label for="xml" class="col-form-label text-md-right" style="margin-left:15px;">XML</label>
-                <div class="col-md-4">
-                    <input type="file" name="xml" value="" class="form-control">
-                </div>
-            </div>
-            <div class="form-group row d-flex justify-content-center">
-                <label for="xml" class="col-form-label text-md-right" style="margin-left:15px;">Texture</label>
-                <div class="col-md-4">
-                    <input type="file" name="texture" value="" class="form-control">
-                </div>
             </div>
             <div class="form-group" style="margin-top:40px;">
                 <button type="submit" class="btn btn-success full-width">create</button>

@@ -145,6 +145,7 @@ Route::middleware([SetClientIp::class])->group(function() {
             Route::match(['post', 'get'], '/createxml', [admin::class, 'createxml']);
             Route::match(['post', 'get'], '/give_badges', [admin::class, 'give_badges']);
             Route::match(['post', 'get'], '/prune-posts', [admin::class, 'prune_posts']);
+            Route::match(['post', 'get'], '/rbxcreatexml', [admin::class, 'rbxcreatexml']);
             Route::match(['post', 'get'], '/announcements', [admin::class, 'announcements']);
         });
     });
