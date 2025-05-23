@@ -774,7 +774,7 @@ class admin extends Controller
                 $users = User::all();
 
                 foreach($users as $user) {
-                    $user->Dius += intval($data['Dius']);
+                    $user->Dius += intval($data['amount']);
                     $user->save();
 
                     $this->db->table('purchases')->insert([
@@ -782,7 +782,7 @@ class admin extends Controller
                         'assetid' => 0,
                         'serial' => 0,
                         'author' => 0,
-                        'amount' => intval($data['Dius']),
+                        'amount' => intval($data['amount']),
                         'type' => 4
                     ]);
                 }
@@ -801,7 +801,7 @@ class admin extends Controller
                     'assetid' => 0,
                     'serial' => 0,
                     'author' => 0,
-                    'amount' => intval($data['Dius']),
+                    'amount' => intval($data['amount']),
                     'type' => 4
                 ]);
             }
