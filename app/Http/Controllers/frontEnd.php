@@ -1783,7 +1783,7 @@ class frontEnd extends Controller
                 ->where('id', $result['assetid'])
                 ->first();
 
-            if(!in_array($item['asset_type'], [2, 8, 11, 12, 18])) {
+            if(!in_array($item['asset_type'], [2, 8, 11, 12, 18, 19])) {
                 continue;
             }
 
