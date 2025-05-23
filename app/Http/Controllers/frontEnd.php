@@ -555,12 +555,14 @@ class frontEnd extends Controller
             $result['date'] = date('m/d/Y', strtotime($result['date']));
 
 
-            if($this->db->table('assets')->where('id', $result['assetid'])->exists()) {
+            if($result['type'] == 1 || $result['type'] == 2) {
                 $result['assetname'] = strip_tags(htmlspecialchars(
                     $this->db->table('assets')->select('title')->where('id', $result['assetid'])->value('title')
                 ));
-            } elseif($result['amount'] > 0 && $result['assetid'] == 0) {
-                $result['assetname'] = 'Dius';
+            } elseif($result['type'] == 3) {
+                $result['assetname'] = 'Place Slot';
+            } elseif($result['type'] == 4) {
+                $result['assetname'] = 'Awarded Dius';
             }
 
             $result['uuid'] = User::where('id', $result['author'])->exists() ? User::where('id', $result['author'])->value('id') : false;
@@ -3493,6 +3495,34 @@ class frontEnd extends Controller
 
         if($this->request['data']['user']['username'] != 'Aesthetiful') {
             return redirect('/');
+        }
+
+        $purchases = $this->db->table('purchases')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        foreach($purchases as $purchase) {
+            if($purchase['assetid'] == 0 && $purchase['amount'] == -625) {
+                $this->db->table('purchases')
+                    ->where('id', $purchase['id'])
+                    ->update([
+                        'type' => 3
+                    ]);
+            } elseif($purchase['assetid'] != 0 && $purchase['amount'] <= 0) {
+                $this->db->table('purchases')
+                    ->where('id', $purchase['id'])
+                    ->update([
+                        'type' => 1
+                    ]);
+            } elseif($purchase['assetid'] == 0 && $purchase['amount'] > 0) {
+                $this->db->table('purchases')
+                    ->where('id', $purchase['id'])
+                    ->update([
+                        'type' => 4
+                    ]);
+            }
         }
 
         return response('success!', 200);

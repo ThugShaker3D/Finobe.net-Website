@@ -28,7 +28,7 @@
                                     <hr class="mt-0">
                                     <div class="card-body row justify-content-between" style="padding-top: 0;padding-bottom: 0;">
                                         <p class="col-md-1">{{ purchase.date }}</p>
-                                        <p class="col-md-6" style="padding:0;">Purchased <a href="{{ (purchase.assetid != 0) ? "/item/" ~ purchase.assetid : "javascript:void(0)" }}">{{ purchase.assetname|raw }}</a> by {% if purchase.uuid %}<a href="/user/{{ purchase.uuid }}">{{ purchase.author }}</a>{% else %}{{ purchase.author }}{% endif %}</p>
+                                        <p class="col-md-6" style="padding:0;">{% if item.type == 1 %}Purchased{% elseif item.type == 2 %}Sold{% elseif item.type == 3 %}Purchased{% elseif item.type == 4 %}Awarded Dius{% endif %} <a href="{{ (purchase.type in [1, 2]) ? "/item/" ~ purchase.assetid : "javascript:void(0)" }}">{{ purchase.assetname|raw }}</a> by {% if purchase.uuid %}<a href="/user/{{ purchase.uuid }}">{{ purchase.author }}</a>{% else %}{{ purchase.author }}{% endif %}</p>
                                         <p class="col-md-2"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> <a class=" text-decoration-none" href="javascript:void(0);" style="{{ (purchase.amount < 0) ? 'color:#e3342f;' : 'color:black;' }}text-decoration:none;pointer-events:none;">{{ purchase.amount }}</a></p>
                                     </div>
                                     {% endfor %}
