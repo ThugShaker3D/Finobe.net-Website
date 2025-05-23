@@ -3499,6 +3499,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
+        /*
         $purchases = $this->db->table('purchases')
             ->get()
             ->map(function ($item) {
@@ -3526,6 +3527,7 @@ class frontEnd extends Controller
                     ]);
             }
         }
+        */
 
         return response('success!', 200);
     }
