@@ -776,6 +776,15 @@ class admin extends Controller
                 foreach($users as $user) {
                     $user->Dius += intval($data['Dius']);
                     $user->save();
+
+                    $this->db->table('purchases')->insert([
+                        'username' => $user->username,
+                        'assetid' => 0,
+                        'serial' => 0,
+                        'author' => 0,
+                        'amount' => intval($data['Dius']),
+                        'type' => 4
+                    ]);
                 }
             } else {
                 if(!User::where('username', $data['name'])->exists()) {
@@ -786,6 +795,15 @@ class admin extends Controller
                 $user = User::where('username', $data['name'])->first();
                 $user->Dius += intval($data['amount']);
                 $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'serial' => 0,
+                    'author' => 0,
+                    'amount' => intval($data['Dius']),
+                    'type' => 4
+                ]);
             }
 
             Session::put('success', 'Successfully given dius.');
