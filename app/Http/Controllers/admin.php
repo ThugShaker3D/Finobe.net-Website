@@ -1070,7 +1070,7 @@ class admin extends Controller
                 isset($data['onsale']),
                 false,
                 [],
-                ()
+                $assettype
             );
 
             Session::put('success', 'Success');
