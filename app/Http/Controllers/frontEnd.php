@@ -1745,7 +1745,7 @@ class frontEnd extends Controller
             $item['thumbnail'] = Cache::remember('thumbnail_' . $item['additional']['media']['imageAssetId'], 60 * 60, function() use ($item) { return $this->db->table('assets')->select('file')->where('id', $item['additional']['media']['imageAssetId'])->value('file'); });
         }
 
-        $item['isOwned'] = $this->db->table('purchases')->where('username', $this->request['data']['user']['username'])->where('assetid', $id)->exists();
+        $item['isOwned'] = $this->db->table('purchases')->where('username', $this->request['data']['user']['username'])->where('assetid', $id)->where('type', 1)->exists();
         $item['sales'] = number_format($this->db->table('purchases')->where('assetid', $id)->count());
 
         if($item['visibility'] == 'd') {
