@@ -849,6 +849,7 @@ class api extends Controller
         }
 
         $user = Auth::user();
+        $avatar = json_decode($user-.avatar)
 
         if($user->status != 'admin' && abs(Carbon::now()->diffInSeconds($user->render_cooldown)) <= 30) { // literally have no fucking clue why it goes into this (value is always negative)
             $this->response['code'] = 400;
@@ -869,7 +870,7 @@ class api extends Controller
                 pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
                 player = game:GetService("Players"):CreateLocalPlayer(0)
                 player.CharacterAppearance = asseturl
-                player.StarterPack.GearName.Parent = player.Character
+                --player.StarterPack:GetObjectByClassName("").Parent = player.Character
                 player:LoadCharacter(false)
                 
                 if player.Character then
