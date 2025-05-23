@@ -763,10 +763,11 @@ class api extends Controller
         }
 
         $user = Auth::user();
+        $cooldown = Carbon::parse($user->render_cooldown);
 
-        if(Carbon::now()->timezone('UTC')->diffInSeconds(Carbon::parse($user->render_cooldown)->timezone('UTC')) <= 30) {
+        if($cooldown->isFuture() && Carbon::now()->diffInSeconds($cooldown) <= 30) {
             $this->response['code'] = 400;
-            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . Carbon::now() . ' ' . $user->render_cooldown . ')';
+            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . Carbon::now() . ')';
 
             return response()->json($this->response, 400);
         }
