@@ -99,10 +99,15 @@ class Asset extends Controller
         return "";
     }
 
-    public static function createHat(string $name, array $texture, array $mesh, array $xml, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, array $historicalPrice = []): int
+    public static function createHat(string $name, $texture = false, $mesh = false, array $xml, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, array $historicalPrice = []): int
     {
-        $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), "", "n", []);
-        $meshId = self::createAsset("{$name} Mesh", 4, $author, file_get_contents($mesh['tmp_name']), "", "n", []);
+        if(is_array($texture)) {
+            $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), "", "n", []);
+        }
+        
+        if(is_array($mesh)) {
+            $meshId = self::createAsset("{$name} Mesh", 4, $author, file_get_contents($mesh['tmp_name']), "", "n", []);
+        }
 
         $xmltemplate = file_get_contents($xml['tmp_name']);
 
@@ -123,8 +128,13 @@ class Asset extends Controller
             $xmltemplate
         );
 
-        $xmltemplate =str_replace("MESHURLPLACEHOLDER",  "http://www.finobe.net/asset/?id=" . $meshId, $xmltemplate);
-        $xmltemplate =str_replace("TEXTUREURLPLACEHOLDER", "http://www.finobe.net/asset/?id=" . $textureId, $xmltemplate);
+        if(is_array($texture)) {
+            $xmltemplate =str_replace("TEXTUREURLPLACEHOLDER", "http://www.finobe.net/asset/?id=" . $textureId, $xmltemplate);
+        }
+
+        if(is_array($mesh)) {
+            $xmltemplate =str_replace("MESHURLPLACEHOLDER",  "http://www.finobe.net/asset/?id=" . $meshId, $xmltemplate);
+        }
 
         $hatId = self::createAsset($name, 8, $author, $xmltemplate, $description, "n", [
             "price" => $price,

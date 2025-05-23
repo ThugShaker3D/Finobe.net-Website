@@ -691,9 +691,9 @@ class admin extends Controller
                 'description' => 'nullable|string|max:8192',
                 'price' => 'required|integer|min:0',
                 'onsale' => 'nullable|in:on,1,true,0,false,off',
-                'mesh' => 'required|file',
+                'mesh' => 'nullable|file',
                 'xml' => 'required|file|mimetypes:text/plain',
-                'texture' => 'required|file|mimetypes:image/png'
+                'texture' => 'nullable|file|mimetypes:image/png'
             ]);
 
             if($validator->fails()) {
@@ -703,8 +703,8 @@ class admin extends Controller
 
             $id = Asset::createHat(
                 $data['title'],
-                ['tmp_name' => $request->file('texture')->getPathname()],
-                ['tmp_name' => $request->file('mesh')->getPathname()],
+                ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
+                ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
                 ['tmp_name' => $request->file('xml')->getPathname()],
                 $this->request['data']['user']['id'],
                 $data['description'] ?? '',
