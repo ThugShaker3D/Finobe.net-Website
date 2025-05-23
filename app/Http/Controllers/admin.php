@@ -716,6 +716,7 @@ class admin extends Controller
                 $data['description'] ?? '',
                 intval($data['price']),
                 isset($data['onsale']),
+                false,
                 [],
                 ($data['type'] == 'hat' ? 8 : 19)
             );
