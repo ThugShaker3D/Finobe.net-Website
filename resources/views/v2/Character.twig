@@ -613,6 +613,7 @@
 							  </script>
                             </div>
                             <div class="tab-pane" id="t-shirts">
+							  <div class="row">
                               {% for item in data.purchases %}
 								  {% if item.asset_type == 2 %}
 									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
@@ -632,6 +633,7 @@
 								{% if not data.purchases|filter(p => p.asset_type == 2)|length %}
 									<p>No results</p>
 								{% endif %}
+							  </div>
                             </div>
                             <div class="tab-pane" id="shirts">
 								<div class="row">
