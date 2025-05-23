@@ -2806,7 +2806,7 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 return redirect('/item/' . $id);
             } elseif($data['media-type'] == 'shirt') {
@@ -2838,7 +2838,7 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -2871,7 +2871,7 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -2909,7 +2909,7 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -2935,7 +2935,7 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]', 'Aesthetiful Bot');
+                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);

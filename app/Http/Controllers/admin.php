@@ -980,6 +980,7 @@ class admin extends Controller
             $textureId = $matches[1] ?? false;
 
             if(!$meshId || !$textureId) {
+                $this->dataService->send_discord_message('DEBUG: ' . $xml);
                 Session::put('error', 'Could not find MeshId or TextureId');
                 return redirect('/admin/rbxcreatexml');
             }

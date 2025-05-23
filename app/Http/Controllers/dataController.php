@@ -115,7 +115,7 @@ class dataController extends Controller
         return $clean_text;
     }
 
-    public function send_discord_message($message, $username, $avatar = false) {
+    public function send_discord_message($message, $username = 'Aesthetiful Bot', $avatar = false) {
 		$json_data = [
             "content" => $message,
             "username" => str_replace("@", "", $username),
