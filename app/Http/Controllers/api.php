@@ -849,7 +849,7 @@ class api extends Controller
         }
 
         $user = Auth::user();
-        $avatar = json_decode($user-.avatar)
+        $avatar = json_decode($user->avatar, true);
 
         if($user->status != 'admin' && abs(Carbon::now()->diffInSeconds($user->render_cooldown)) <= 30) { // literally have no fucking clue why it goes into this (value is always negative)
             $this->response['code'] = 400;
