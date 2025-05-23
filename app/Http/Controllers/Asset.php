@@ -295,7 +295,8 @@ class Asset extends Controller
     {
         If (self::isAssetExist($assetId)) {
             $assetinfo = (object)self::getAssetData($assetId);
-            return "http://cdn.finobe.net/assets/{$assetinfo->file}";
+            //return "http://cdn.finobe.net/assets/{$assetinfo->file}"; why?
+            return "/var/www/cdn.finobe.net/assets/{$assetinfo->file}";
         }
         return "http://cdn.finobe.net/";
     }
