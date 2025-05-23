@@ -545,6 +545,13 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
+            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You do not own this item';
+
+                return response()->json($this->response, 400);
+            }
+
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 8)->exists()) {
                     $itemcount++;
@@ -586,6 +593,13 @@ class api extends Controller
             if($visibility != 'n') {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
+
+            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You do not own this item';
 
                 return response()->json($this->response, 400);
             }
@@ -635,6 +649,13 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
+            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You do not own this item';
+
+                return response()->json($this->response, 400);
+            }
+
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 12)->exists()) {
                     $itemcount++;
@@ -676,6 +697,13 @@ class api extends Controller
             if($visibility != 'n') {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
+
+            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You do not own this item';
 
                 return response()->json($this->response, 400);
             }
@@ -725,6 +753,13 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
+            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You do not own this item';
+
+                return response()->json($this->response, 400);
+            }
+
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 2)->exists()) {
                     $itemcount++;
@@ -766,6 +801,13 @@ class api extends Controller
             if($visibility != 'n') {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not approved or is under review';
+
+                return response()->json($this->response, 400);
+            }
+
+            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+                $this->response['code'] = 400;
+                $this->response['message'] = 'You do not own this item';
 
                 return response()->json($this->response, 400);
             }
