@@ -997,7 +997,8 @@ class admin extends Controller
             ->accept('*/*')
             ->get("https://assetdelivery.roblox.com/v1/asset/", [
                 'id' => $meshId
-            ])->body()->getContents();
+            ])->body();
+            $mesh = mb_convert_encoding($mesh, 'UTF-8', 'UTF-8');
 
             if(!str_starts_with($mesh, 'version 1')) {
                 Session::put('error', 'Unsupported mesh format');
