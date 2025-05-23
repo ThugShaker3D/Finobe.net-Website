@@ -409,7 +409,7 @@ class rbxAPIs extends Controller
             $ids
         )) : "";
 
-        return response("http://www.finobe.net/Asset/BodyColors.ashx?userId={$userId}{$assetUrls}", 200);
+        return response("http://www.finobe.net/Asset/BodyColors.ashx?userId={$userId};{$assetUrls}", 200);
     }
 
     public function bodyColors(Request $request) {
