@@ -2780,13 +2780,14 @@ class frontEnd extends Controller
 
                 try {
                     $file = $request->file('file');
-                    $file->move(public_path('dynamic/temp/'), $filename);
+                    $file->move(public_path('dynamic/temp/'), $filename . '.' . $file->getClientOriginalExtension());
                     $ffmpeg = FFmpeg::create();
-                    $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
+                    $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()));
                     $duration = $audio->getFormat()->get('duration');
                     $format = new Mp3();
                     $format->setAudioKiloBitrate(96);
-                    $audio->save($format, public_path('/dynamic/reviewing/' . $filename));
+                    $audio->save($format, public_path('/dynamic/temp/' . $filename . '1.mp3'));
+                    rename(public_path('/dynamic/temp/' . $filename . '1.mp3'), public_path('/dynamic/reviewing/' . $filename)); //ffmpeg is fucking me in the ass without the .mp3 extention
                 } catch(ProcessFailedException $e) {
                     Session::put('error', $e->getProcess()->getErrorOutput());
                     return redirect('/catalog/new');
