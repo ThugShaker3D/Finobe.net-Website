@@ -1043,11 +1043,23 @@ class admin extends Controller
                 'id' => $textureId
             ])->body();
 
+            preg_match('/class="([^"]+)"/', $xml, $matches);
+            $classValue = $matches[1] ?? null;
+
+            if(in_array($classValue, ['Hat', 'Accessory'])) {
+                $assettype = 8;
+            } elseif(in_array($classValue, ['Tool'])) {
+                $assettype = 19;
+            } else {
+                Session::put('error', 'Unknown XML class type (' . $classValue . ')');
+                return redirect('/admin/rbxcreatexml');
+            }
+
             file_put_contents(public_path('dynamic/temp/' . $filename . '.xml'), $xml);
             file_put_contents(public_path('dynamic/temp/' . $filename . '.mesh'), $mesh);
             file_put_contents(public_path('dynamic/temp/' . $filename . '.png'), $texture);
 
-            $id = Asset::createHat(
+            $id = Asset::createHatOrGear(
                 $data['title'],
                 ['tmp_name' => public_path('dynamic/temp/' . $filename . '.png')],
                 ['tmp_name' => public_path('dynamic/temp/' . $filename . '.mesh')],
@@ -1055,7 +1067,10 @@ class admin extends Controller
                 $this->request['data']['user']['id'],
                 $data['description'] ?? '',
                 intval($data['price']),
-                isset($data['onsale'])
+                isset($data['onsale']),
+                false,
+                [],
+                ()
             );
 
             Session::put('success', 'Success');
