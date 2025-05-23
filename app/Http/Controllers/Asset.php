@@ -113,7 +113,7 @@ class Asset extends Controller
 
         // finds and replaces roblox links with MESHURLPLACEHOLDER or TEXTUREURLPLACEHOLDER automatically EDIT: also check rbxassetid format
         $xmltemplate = preg_replace_callback(
-            '/<Content name="MeshId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+)<\/url>\s*<\/Content>/i',
+            '/<Content name="MeshId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+|https?:\/\/assetdelivery\.roblox\.com\/v1\/asset\/\?id=\d+)<\/url>\s*<\/Content>/i',
             function ($matches) {
                 return str_replace($matches[1], 'MESHURLPLACEHOLDER', $matches[0]);
             },
@@ -121,7 +121,7 @@ class Asset extends Controller
         );
 
         $xmltemplate = preg_replace_callback(
-            '/<Content name="TextureId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+)<\/url>\s*<\/Content>/i',
+            '/<Content name="TextureId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+|https?:\/\/assetdelivery\.roblox\.com\/v1\/asset\/\?id=\d+)<\/url>\s*<\/Content>/i',
             function ($matches) {
                 return str_replace($matches[1], 'TEXTUREURLPLACEHOLDER', $matches[0]);
             },
