@@ -891,7 +891,7 @@ class api extends Controller
             $results = $this->db->table('assets')
                 ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->whereRaw('title LIKE :search')
+                ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.featured' = true")
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
@@ -902,7 +902,7 @@ class api extends Controller
             $results = $this->db->table('assets')
                 ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->whereRaw('title LIKE :search')
+                ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.featured' = true")
                 ->whereRaw("additional->>'$.version' = '2012'")
                 ->where('asset_type', 9)
@@ -914,7 +914,7 @@ class api extends Controller
             $results = $this->db->table('assets')
                 ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->whereRaw('title LIKE :search')
+                ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.featured' = true")
                 ->whereRaw("additional->>'$.version' = '2016'")
                 ->where('asset_type', 9)
@@ -926,7 +926,7 @@ class api extends Controller
             $results = $this->db->table('assets')
                 ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->whereRaw('title LIKE :search')
+                ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
                 ->orderByDesc('total_players')
@@ -936,7 +936,7 @@ class api extends Controller
             $results = $this->db->table('assets')
                 ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->whereRaw('title LIKE :search')
+                ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.version' = '2012'")
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
@@ -947,7 +947,7 @@ class api extends Controller
             $results = $this->db->table('assets')
                 ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
-                ->whereRaw('title LIKE :search')
+                ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.version' = '2016'")
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
@@ -961,10 +961,6 @@ class api extends Controller
             $this->response['message'] = 'Bad request';
 
             return response()->json($this->response, 400);
-        }
-
-        if($data['search'] != '') {
-            $results = $results->addBinding(['search' => '%' . htmlspecialchars($data['search']) . '%'], 'where');
         }
 
         $results = $results->get()
