@@ -764,9 +764,9 @@ class api extends Controller
 
         $user = Auth::user();
 
-        if(Carbon::now()->diffInSeconds($user->render_cooldown, true) <= 30) {
+        if(Carbon::now()->diffInSeconds($user->render_cooldown, false) <= 30) {
             $this->response['code'] = 400;
-            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . Carbon::now()->diffInSeconds($user->render_cooldown, true) . ')';
+            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . Carbon::now()->diffInSeconds($user->render_cooldown, false) . ')';
 
             return response()->json($this->response, 400);
         }
