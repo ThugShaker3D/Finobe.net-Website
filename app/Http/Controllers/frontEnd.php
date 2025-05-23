@@ -2780,9 +2780,9 @@ class frontEnd extends Controller
 
                 try {
                     $file = $request->file('file');
-                    $file->move(public_path('dynamic/temp/'), $filename . '.' . $file->getClientOriginalExtension());
+                    $file->move(public_path('dynamic/temp/'), $filename);
                     $ffmpeg = FFmpeg::create();
-                    $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()));
+                    $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
                     $duration = $audio->getFormat()->get('duration');
                     $format = new Mp3();
                     $format->setAudioKiloBitrate(96);
