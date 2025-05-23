@@ -876,7 +876,7 @@ class api extends Controller
                         if child:IsA("Tool") then
                             player.Character.Torso["Right Shoulder"].CurrentAngle = math.rad(90)
                             break
-                            end
+                        end
                     end
                 end
                 
