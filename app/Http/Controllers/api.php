@@ -895,6 +895,14 @@ class api extends Controller
     
         $jobEx = $arbiter->OpenJobEx($constructedJob);
         $filename = uniqid() . ".png";
+
+        if(empty(base64_decode($jobEx))) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'There was an error while rendering.';
+
+            return response()->json($this->response, 400);
+        }
+
         file_put_contents("/var/www/cdn.finobe.net/avatar/" . $filename, base64_decode($jobEx));
 
         $user->render_cooldown = now();
