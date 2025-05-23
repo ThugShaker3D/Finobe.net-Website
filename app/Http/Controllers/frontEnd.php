@@ -3486,6 +3486,18 @@ class frontEnd extends Controller
         return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('filename')->where('id', $id)->value('filename'));
     }
 
+    public function do_stuff_automatically(Request $request) { // this function is just for me to talk if im changing the format of the db or something
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($this->request['data']['user']['username'] != 'Aesthetiful') {
+            return redirect('/');
+        }
+
+        return response('success!', 200);
+    }
+
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
         $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');

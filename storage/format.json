@@ -1,0 +1,8 @@
+// purchase types
+
+{
+    "1": "Purchase",
+    "2": "Sold Item",
+    "3": "Purchased Place Slot",
+    "4": "Dius Awarded"
+}

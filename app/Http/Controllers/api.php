@@ -407,6 +407,16 @@ class api extends Controller
             $user = User::find($item['author']);
             $user->Dius += $item['additional']['price'];
             $user->save();
+
+            /*
+            $this->db->table('purchases')->insert([
+                'username' => $user['username'],
+                'assetid' => $data['assetid'],
+                'serial' => isset($data['serial']) ? $data['serial'] : 0,
+                'author' => $item['author'],
+                'amount' => -1 * $item['additional']['price']
+            ]);
+            */
         }
         
         return response()->json($this->response, 200);
