@@ -405,7 +405,7 @@ class rbxAPIs extends Controller
             $avatar[0]->backpackGearVersionIds ?? []
         );
         $assetUrls = $ids ? implode(";", array_map(
-            fn($id) => ";http://www.finobe.net/asset/?id=$id",
+            fn($id) => "http://www.finobe.net/asset/?id=$id",
             $ids
         )) : "";
 
