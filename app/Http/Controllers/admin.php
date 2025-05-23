@@ -772,20 +772,26 @@ class admin extends Controller
 
             if($data['name'] == '*') {
                 $users = User::all();
+                $insertData = [];
 
                 foreach($users as $user) {
                     $user->Dius += intval($data['amount']);
-                    $user->save();
 
-                    $this->db->table('purchases')->insert([
+                    $insertData[] = [
                         'username' => $user->username,
                         'assetid' => 0,
                         'serial' => 0,
                         'author' => 0,
                         'amount' => intval($data['amount']),
                         'type' => 4
-                    ]);
+                    ];
                 }
+
+                User::query()->get()->each(function ($user) use ($amount) {
+                    $user->increment('Dius', $amount);
+                });
+
+                $this->db->table('purchases')->insert($insertData);
             } else {
                 if(!User::where('username', $data['name'])->exists()) {
                     Session::put('error', 'User does not exist');
