@@ -2778,7 +2778,7 @@ class frontEnd extends Controller
                 $filename = uniqid();
                 $file = $request->file('file');
                 $file->move(public_path('dynamic/temp/'), $filename . '.' . $file->getClientOriginalExtension());
-                chmod(public_path('dynamic/temp/') . $filename . '.' . $file->getClientOriginalExtension(), 0644);
+                chmod(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()), 0644);
                 $ffmpeg = FFmpeg::create();
                 $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()));
                 $duration = $audio->getFormat()->get('duration');
