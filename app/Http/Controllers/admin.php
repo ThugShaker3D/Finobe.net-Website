@@ -787,8 +787,8 @@ class admin extends Controller
                     ];
                 }
 
-                User::query()->get()->each(function ($user) use ($amount) {
-                    $user->increment('Dius', $amount);
+                User::query()->get()->each(function ($user) use ($data) {
+                    $user->increment('Dius', intval($data['amount']));
                 });
 
                 $this->db->table('purchases')->insert($insertData);
