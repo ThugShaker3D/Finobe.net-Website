@@ -871,6 +871,7 @@ class api extends Controller
                 player = game:GetService("Players"):CreateLocalPlayer(0)
                 player.CharacterAppearance = asseturl
 
+                print("Grabbing stuff..")
                 for _, child in ipairs(player.StarterGear:GetChildren()) do
                     print(child.Name .. " (" .. child.ClassName .. ")")
                 end
