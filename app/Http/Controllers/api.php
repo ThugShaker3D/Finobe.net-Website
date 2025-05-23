@@ -371,7 +371,7 @@ class api extends Controller
 
         $item['additional'] = json_decode($item['additional'], true);
 
-        if(!in_array($item['asset_type'], [2, 8, 11, 12, 18])) {
+        if(!in_array($item['asset_type'], [2, 3, 8, 11, 12, 18])) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Invalid item type';
 
