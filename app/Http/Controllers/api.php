@@ -402,6 +402,12 @@ class api extends Controller
 
         $user->Dius -= $item['additional']['price'];
         $user->save();
+
+        if($user->id != $item['author']) {
+            $user = User::find($item['author']);
+            $user->Dius += $item['additional']['price'];
+            $user->save();
+        }
         
         return response()->json($this->response, 200);
     }
