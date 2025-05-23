@@ -764,9 +764,9 @@ class api extends Controller
 
         $user = Auth::user();
 
-        if(Carbon::now()->diffInSeconds($user->render_cooldown) <= 30) {
+        if(abs(Carbon::now()->diffInSeconds($user->render_cooldown)) >= 30) { // literally have no fucking clue why it goes into this (value is always negative)
             $this->response['code'] = 400;
-            $this->response['message'] = 'Whoa, cool down with the regeneration requests there! (' . abs(Carbon::now()->diffInSeconds($user->render_cooldown)) . ')';
+            $this->response['message'] = 'Whoa, cool down with the regeneration requests there!';
 
             return response()->json($this->response, 400);
         }
