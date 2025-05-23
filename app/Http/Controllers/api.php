@@ -385,7 +385,7 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
-        if($this->db->table('purchases')->where('username', $user['username'])->where('assetid', $data['assetid'])->where('serial', isset($data['serial']) ? $data['serial'] : 0)->exists()) {
+        if($this->db->table('purchases')->where('username', $user['username'])->where('assetid', $data['assetid'])->where('serial', isset($data['serial']) ? $data['serial'] : 0)->where('type', 1)->exists()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'This item has already been purchased';
 
