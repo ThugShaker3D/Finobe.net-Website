@@ -973,10 +973,10 @@ class admin extends Controller
                 'id' => $data['assetid']
             ])->body();
 
-            preg_match('/<Content name="MeshId"><url>(?:http:\/\/www\.roblox\.com\/asset\/\?id=|rbxassetid:\/\/)(\d+)<\/url><\/Content>/', $xml, $matches);
+            preg_match('/<Content name="MeshId"><url>(?:http:\/\/www\.roblox\.com\/asset\/\?id=|rbxassetid:\/\/)(\d+)\s*<\/url><\/Content>/', $xml, $matches);
             $meshId = $matches[1] ?? false;
 
-            preg_match('/<Content name="TextureId"><url>(?:http:\/\/www\.roblox\.com\/asset\/\?id=|rbxassetid:\/\/)(\d+)<\/url><\/Content>/', $xml, $matches);
+            preg_match('/<Content name="TextureId"><url>(?:http:\/\/www\.roblox\.com\/asset\/\?id=|rbxassetid:\/\/)(\d+)\s*<\/url><\/Content>/', $xml, $matches);
             $textureId = $matches[1] ?? false;
 
             if(!$meshId || !$textureId) {
