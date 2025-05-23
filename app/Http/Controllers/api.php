@@ -869,6 +869,7 @@ class api extends Controller
                 pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
                 player = game:GetService("Players"):CreateLocalPlayer(0)
                 player.CharacterAppearance = asseturl
+                player.Backpack.GearName.Parent = player.Character
                 player:LoadCharacter(false)
                 
                 if player.Character then
