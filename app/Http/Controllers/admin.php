@@ -701,7 +701,7 @@ class admin extends Controller
                 return redirect('/admin/createxml');
             }
 
-            if($request->hasFile('texture') && !str_starts_with(file_get_contents($request->file('texture')->getPathname()), 'version 1')) {
+            if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
                 Session::put('error', 'Unsupported mesh format');
                 return redirect('/admin/rbxcreatexml');
             }
