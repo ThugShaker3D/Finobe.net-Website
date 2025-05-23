@@ -498,7 +498,7 @@
 									  .then(response => response.json())
 									  .then(data => {
 										if(data.code != 200) {
-											alert(data);
+											alert(data.message);
 										} else {
 											avatarimg.src = "https://cdn.finobe.net/avatar/default.png";
 											setTimeout(() => {
