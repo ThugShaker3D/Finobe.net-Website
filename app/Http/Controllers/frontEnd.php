@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class frontEnd extends Controller
 {
@@ -2776,15 +2777,20 @@ class frontEnd extends Controller
                 }
 
                 $filename = uniqid();
-                $file = $request->file('file');
-                $file->move(public_path('dynamic/temp/'), $filename . '.' . $file->getClientOriginalExtension());
-                chmod(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()), 0777);
-                $ffmpeg = FFmpeg::create();
-                $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()));
-                $duration = $audio->getFormat()->get('duration');
-                $format = new Mp3();
-                $format->setAudioKiloBitrate(96);
-                $audio->save($format, public_path('/dynamic/reviewing/' . $filename));
+
+                try {
+                    $file = $request->file('file');
+                    $file->move(public_path('dynamic/temp/'), $filename . '.' . $file->getClientOriginalExtension());
+                    $ffmpeg = FFmpeg::create();
+                    $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename . '.' . $file->getClientOriginalExtension()));
+                    $duration = $audio->getFormat()->get('duration');
+                    $format = new Mp3();
+                    $format->setAudioKiloBitrate(96);
+                    $audio->save($format, public_path('/dynamic/reviewing/' . $filename . '.mp3'));
+                } catch(ProcessFailedException $e) {
+                    Session::put('error', $e->getProcess()->getErrorOutput());
+                    return redirect('/catalog/new');
+                }
 
                 $id = $this->db->table('assets')->insertGetId([
                     'asset_type' => $assetTypes[$data['media-type']],
