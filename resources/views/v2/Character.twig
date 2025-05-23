@@ -475,7 +475,7 @@
 										  })
 										  .then(response => response.json())
 										  .then(response => {
-											if (!response.ok) {
+											if(response.code != 200) {
 											  alert('Network response was not ok');
 											  return;
 											}
