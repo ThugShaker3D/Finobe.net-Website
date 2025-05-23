@@ -1768,6 +1768,7 @@ class frontEnd extends Controller
         $purchases = [];
         $results = $this->db->table('purchases')
             ->where('username', $this->request['data']['user']['username'])
+            ->where('type', 1)
             ->orderBy('id', 'DESC')
             ->get()
             ->map(function ($item) {
