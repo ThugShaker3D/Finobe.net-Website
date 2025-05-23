@@ -3156,7 +3156,8 @@ class frontEnd extends Controller
                 'username' => $user->username,
                 'assetid' => 0,
                 'author' => 1,
-                'amount' => -625
+                'amount' => -625,
+                'type' => 3
             ]);
 
             Session::put('successv2', 'Successfully purchased.');
