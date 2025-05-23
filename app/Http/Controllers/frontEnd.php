@@ -2797,7 +2797,7 @@ class frontEnd extends Controller
                     'title' => $data['title'],
                     'author' => $this->request['data']['user']['id'],
                     'file' => $filename,
-                    'description' => $data['description'],
+                    'description' => $data['description'] ?? '',
                     'visibility' => 'r',
                     'additional' => json_encode([
                         'duration' => $duration,
