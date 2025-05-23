@@ -475,11 +475,11 @@
 										  })
 										  .then(response => response.json())
 										  .then(response => {
+											closeCard();
 											if(response.code != 200) {
 											  alert('Network response was not ok');
 											  return;
 											}
-											closeCard();
 											return response.text();
 										  });
 									});
