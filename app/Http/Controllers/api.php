@@ -823,13 +823,8 @@ class api extends Controller
                     $avatar[0]['equippedGearVersionIds'] = array_values(
                         array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
                     );
-
-                    $avatar[0]['backpackGearVersionIds'] = array_values(
-                        array_diff($avatar[0]['backpackGearVersionIds'], [$data['assetid']])
-                    );
                 } else {
-                    $avatar[0]['backpackGearVersionIds'][] = $data['assetid'];
-                    $avatar[0]['backpackGearVersionIds'][] = $data['assetid'];
+                    $avatar[0]['equippedGearVersionIds'][] = $data['assetid'];
                 }
             } else {
                 $this->response['code'] = 400;
