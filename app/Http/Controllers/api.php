@@ -872,6 +872,7 @@ class api extends Controller
                 player.CharacterAppearance = asseturl
 
                 print("Grabbing stuff..")
+                print(player.CharacterAppearance)
                 for _, child in ipairs(player.StarterGear:GetChildren()) do
                     print(child.Name .. " (" .. child.ClassName .. ")")
                 end
