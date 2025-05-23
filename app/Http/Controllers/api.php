@@ -870,6 +870,11 @@ class api extends Controller
                 pcall(function() game:GetService("ContentProvider"):SetBaseUrl(url) end)
                 player = game:GetService("Players"):CreateLocalPlayer(0)
                 player.CharacterAppearance = asseturl
+
+                for _, child in ipairs(player.StarterPack:GetChildren()) do
+                    print(child.Name .. " (" .. child.ClassName .. ")")
+                end
+                
                 --player.StarterPack:GetObjectByClassName("").Parent = player.Character
                 player:LoadCharacter(false)
                 
