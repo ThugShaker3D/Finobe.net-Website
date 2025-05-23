@@ -735,7 +735,7 @@ class admin extends Controller
             ]);
 
             if($validator->fails()) {
-                Session::put('error', $validator->errors()->fails());
+                Session::put('error', $validator->errors()->first());
                 return redirect('/admin/give_dius');
             }
 
@@ -801,7 +801,7 @@ class admin extends Controller
             ]);
 
             if($validator->fails()) {
-                Session::put('error', $validator->errors()->fails());
+                Session::put('error', $validator->errors()->first());
                 return redirect('/admin/warn');
             }
 
@@ -839,7 +839,7 @@ class admin extends Controller
             ]);
 
             if($validator->fails()) {
-                Session::put('error', $validator->errors()->fails());
+                Session::put('error', $validator->errors()->first());
                 return redirect('/admin/give_badges');
             }
 
@@ -883,7 +883,7 @@ class admin extends Controller
             ]);
 
             if($validator->fails()) {
-                Session::put('error', $validator->errors()->fails());
+                Session::put('error', $validator->errors()->first());
                 return redirect('/admin/elections');
             }
 
