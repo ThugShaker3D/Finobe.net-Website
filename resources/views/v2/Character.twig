@@ -466,7 +466,7 @@
 										
 										const formData = new FormData();
 										formData.append('type', this.type);
-										formData.append('assetid', toRbxColor(color));
+										formData.append('color', toRbxColor(color));
 										formData.append('_token', '{{ data.csrf_token }}');
 										
 										fetch("/api/character", {
