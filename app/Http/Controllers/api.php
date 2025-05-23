@@ -439,9 +439,9 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
-            $user->avatar[0]['bodyColors']['headColorId'] = $data['color'];
-            $user->avatar = json_encode($user->avatar);
+            $avatar = json_decode($user->avatar, true);
+            $avatar[0]['bodyColors']['headColorId'] = $data['color'];
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'torso') {
             if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
@@ -452,9 +452,9 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
-            $user->avatar[0]['bodyColors']['torsoColorId'] = $data['color'];
-            $user->avatar = json_encode($user->avatar);
+            $avatar = json_decode($user->avatar, true);
+            $avatar[0]['bodyColors']['torsoColorId'] = $data['color'];
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'r-arm') {
             if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
@@ -465,9 +465,9 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
-            $user->avatar[0]['bodyColors']['rightArmColorId'] = $data['color'];
-            $user->avatar = json_encode($user->avatar);
+            $avatar = json_decode($user->avatar, true);
+            $avatar[0]['bodyColors']['rightArmColorId'] = $data['color'];
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'l-arm') {
             if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
@@ -478,9 +478,9 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
-            $user->avatar[0]['bodyColors']['leftArmColorId'] = $data['color'];
-            $user->avatar = json_encode($user->avatar);
+            $avatar = json_decode($user->avatar, true);
+            $avatar[0]['bodyColors']['leftArmColorId'] = $data['color'];
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'r-leg') {
             if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
@@ -491,9 +491,9 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
-            $user->avatar[0]['bodyColors']['rightLegColorId'] = $data['color'];
-            $user->avatar = json_encode($user->avatar);
+            $avatar = json_decode($user->avatar, true);
+            $avatar[0]['bodyColors']['rightLegColorId'] = $data['color'];
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'l-leg') {
             if(!isset($data['color']) || !in_array($data['color'], $idNumbers)) {
@@ -504,9 +504,9 @@ class api extends Controller
             }
 
             $user = Auth::user();
-            $user->avatar = json_decode($user->avatar, true);
-            $user->avatar[0]['bodyColors']['leftLegColorId'] = $data['color'];
-            $user->avatar = json_encode($user->avatar);
+            $avatar = json_decode($user->avatar, true);
+            $avatar[0]['bodyColors']['leftLegColorId'] = $data['color'];
+            $user->avatar = json_encode($avatar);
             $user->save();
         } elseif($data['type'] == 'hat') {
             if(!isset($data['assetid'])) {
