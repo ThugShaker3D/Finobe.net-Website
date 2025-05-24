@@ -1050,7 +1050,7 @@ class frontEnd extends Controller
         }
 
         $post['comment'] = $converter->convert($post['comment'])->getContent();
-        $post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
+        //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
         $post['rating'] -= $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
