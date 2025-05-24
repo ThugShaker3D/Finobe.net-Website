@@ -2125,7 +2125,7 @@ class frontEnd extends Controller
         ];
 
         $messages = $this->db->table('messages')
-            ->where('author', $this->request['data']['user']['id'])
+            ->where('touser', $this->request['data']['user']['id'])
             ->where('archived', 'y')
             ->count();
 
@@ -2135,7 +2135,7 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
 
         $messages = $this->db->table('messages')
-            ->where('author', $this->request['data']['user']['id'])
+            ->where('touser', $this->request['data']['user']['id'])
             ->where('archived', 'y')
             ->orderBy('date', 'DESC')
             ->offset($offset)
