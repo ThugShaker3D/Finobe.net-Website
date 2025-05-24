@@ -761,7 +761,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                $this->request['message'] .= ' ' . $key;
+                $this->response['message'] .= ' ' . $key;
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 2)->exists()) {
                     $itemcount++;
                 }
