@@ -3685,7 +3685,7 @@ class frontEnd extends Controller
             $eer .= ' ' . $message->author;
 
             $this->db->table('messages')
-                ->where('id', $message['id'])
+                ->where('id', $message->id)
                 ->update([
                     'author' => User::where('username', $message->author)->value('id'),
                     'touser' => User::where('username', $message->touser)->value('id')
