@@ -2187,7 +2187,7 @@ class frontEnd extends Controller
         $message['uid'] = $message['author'];
         $message['message'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($message['message']))));
         $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
-        $message['author'] = htmlspecialchars(User::where('id', $message['author']));
+        $message['author'] = htmlspecialchars(User::where('id', $message['author'])->value('username'));
         $message['date'] = date('M j, g:ia', strtotime($message['date']));
 
         if($message['readed'] == 'n' && $this->request['data']['user']['id'] != $message['uid']) {
