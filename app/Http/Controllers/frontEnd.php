@@ -1105,7 +1105,7 @@ class frontEnd extends Controller
                 $sticked['comment'] = strip_tags(htmlspecialchars($sticked['comment']));
             }
 
-            $sticked['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($sticked['comment'])->getContent());
+            $sticked['comment'] = preg_replace('/(?:^|(?<=>))(?<!src=")(https?:\/\/[^\s<]+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($sticked['comment'])->getContent());
             $sticked['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
                 if (strpos($matches[0], '<img') === 0) {
                     return $matches[0];
@@ -1199,7 +1199,7 @@ class frontEnd extends Controller
                 $reply['comment'] = strip_tags(htmlspecialchars($reply['comment']));
             }
 
-            $reply['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($reply['comment'])->getContent());
+            $reply['comment'] = preg_replace('/(?:^|(?<=>))(?<!src=")(https?:\/\/[^\s<]+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($reply['comment'])->getContent());
             $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
                 if (strpos($matches[0], '<img') === 0) {
                     return $matches[0];
