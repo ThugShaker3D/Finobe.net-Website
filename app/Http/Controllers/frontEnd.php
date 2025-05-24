@@ -3678,7 +3678,7 @@ class frontEnd extends Controller
             ->get();
         
         foreach($messages as $message) {
-            if(User::where('id', $message->author)->exists()) {
+            if(!User::where('username', $message->author)->exists()) {
                 continue;
             }
 
