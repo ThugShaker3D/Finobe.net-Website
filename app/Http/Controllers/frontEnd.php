@@ -26,6 +26,7 @@ use League\CommonMark\Node\Inline\Text;
 use League\CommonMark\Parser\Inline\InlineParserEngine;
 use League\CommonMark\Renderer\HtmlRenderer;
 use League\CommonMark\MarkdownConverter;
+use Parsedown;
 
 class frontEnd extends Controller
 {
@@ -1012,13 +1013,8 @@ class frontEnd extends Controller
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
-        $environment = new Environment([
-            'html_input' => 'strip',
-            'allow_unsafe_links' => false,
-        ]);
-
-        $environment->addExtension(new CommonMarkCoreExtension());
-        $converter = new MarkdownConverter($environment);
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
 
         $phrasesToReplace = [
             'fuck',
@@ -1050,10 +1046,10 @@ class frontEnd extends Controller
                 }
             }, $post['comment']));
         } else {
-            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment']))));
+            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $parsedown->text($post['comment'])));
         }
 
-        $post['comment'] = $converter->convert($post['comment'])->getContent();
+        //$post['comment'] = $converter->convert($post['comment'])->getContent();
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
