@@ -1199,8 +1199,7 @@ class frontEnd extends Controller
                 $reply['comment'] = strip_tags(htmlspecialchars($reply['comment']));
             }
 
-            $reply['comment'] = preg_replace('/(?:^|(?<=>))(?<!src=")(https?:\/\/[^\s<]+)/i', '<a href="$1" target="_blank">$1</a>', $reply['comment']);
-            $reply['comment'] = $converter->convert($reply['comment'])->getContent();
+            $reply['comment'] = preg_replace('/<[^>]+>|(https?:\/\/[^\s<]+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($reply['comment'])->getContent());
 
             if($reply['status'] == 'admin') {
                 $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
