@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use League\CommonMark\MarkdownConverter;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+
 
 class frontEnd extends Controller
 {
@@ -1005,6 +1009,13 @@ class frontEnd extends Controller
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
+        $environment = new Environment([
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]);
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $converter = new MarkdownConverter($environment);
+
         $phrasesToReplace = [
             'fuck',
             'fucking',
@@ -1038,6 +1049,8 @@ class frontEnd extends Controller
             $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment']))));
         }
 
+        $post['comment'] = $converter->convert($post['comment'])->getContent();
+        $post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
         $post['rating'] -= $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
