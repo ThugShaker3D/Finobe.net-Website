@@ -1013,6 +1013,14 @@ class frontEnd extends Controller
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
+        $environment = new Environment([
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]);
+
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $converter = new MarkdownConverter($environment);
+
         $parsedown = new Parsedown();
         $parsedown->setSafeMode(true);
 
