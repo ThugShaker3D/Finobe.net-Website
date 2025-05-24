@@ -766,6 +766,8 @@ class api extends Controller
                 }
             }
 
+            $this->response['message'] .= $itemcount;
+
             if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                     $avatar[0]['equippedGearVersionIds'] = array_values(
