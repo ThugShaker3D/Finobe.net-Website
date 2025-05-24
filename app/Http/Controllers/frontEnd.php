@@ -104,7 +104,7 @@ class frontEnd extends Controller
                 'ads' => (bool)env('FINOBE_ADS'),
                 'info' => [
                     'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
-                    'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
+                    'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['id'])->where('readed', 'n')->count(),
                     'incomingFriends' => 0
                 ]
             ];
@@ -2025,7 +2025,7 @@ class frontEnd extends Controller
         ];
 
         $messages = $this->db->table('messages')
-            ->where('touser', $this->request['data']['user']['username'])
+            ->where('touser', $this->request['data']['user']['id'])
             ->where('archived', 'n')
             ->count();
 
@@ -2035,7 +2035,7 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
 
         $messages = $this->db->table('messages')
-            ->where('touser', $this->request['data']['user']['username'])
+            ->where('touser', $this->request['data']['user']['id'])
             ->where('archived', 'n')
             ->orderBy('date', 'DESC')
             ->offset($offset)
@@ -2048,7 +2048,7 @@ class frontEnd extends Controller
         foreach($messages as $message) {
             $message['message'] = strip_tags(htmlspecialchars($message['message']));
             $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
-            $message['author'] = htmlspecialchars($message['author']);
+            $message['author'] = htmlspecialchars(User::where('id', $message['author'])->value('username'));
             $message['date'] = date('M j, Y | g:i A', strtotime($message['date']));
             $this->request['data']['messages']['data'][] = $message;
         }
@@ -2075,7 +2075,7 @@ class frontEnd extends Controller
         ];
 
         $messages = $this->db->table('messages')
-            ->where('author', $this->request['data']['user']['username'])
+            ->where('author', $this->request['data']['user']['id'])
             ->where('archived', 'n')
             ->count();
 
@@ -2085,7 +2085,7 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
 
         $messages = $this->db->table('messages')
-            ->where('author', $this->request['data']['user']['username'])
+            ->where('author', $this->request['data']['user']['id'])
             ->where('archived', 'n')
             ->orderBy('date', 'DESC')
             ->offset($offset)
@@ -2098,7 +2098,7 @@ class frontEnd extends Controller
         foreach($messages as $message) {
             $message['message'] = strip_tags(htmlspecialchars($message['message']));
             $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
-            $message['author'] = htmlspecialchars($message['author']);
+            $message['author'] = htmlspecialchars(User::where('id', $message['author'])->value('username'));
             $message['date'] = date('M j, Y | g:i A', strtotime($message['date']));
             $this->request['data']['messages']['data'][] = $message;
         }
@@ -2125,7 +2125,7 @@ class frontEnd extends Controller
         ];
 
         $messages = $this->db->table('messages')
-            ->where('author', $this->request['data']['user']['username'])
+            ->where('author', $this->request['data']['user']['id'])
             ->where('archived', 'y')
             ->count();
 
@@ -2135,7 +2135,7 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
 
         $messages = $this->db->table('messages')
-            ->where('author', $this->request['data']['user']['username'])
+            ->where('author', $this->request['data']['user']['id'])
             ->where('archived', 'y')
             ->orderBy('date', 'DESC')
             ->offset($offset)
@@ -2148,7 +2148,7 @@ class frontEnd extends Controller
         foreach($messages as $message) {
             $message['message'] = strip_tags(htmlspecialchars($message['message']));
             $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
-            $message['author'] = htmlspecialchars($message['author']);
+            $message['author'] = htmlspecialchars(User::where('id', $message['author'])->value('username'));
             $message['date'] = date('M j, Y | g:i A', strtotime($message['date']));
             $this->request['data']['messages']['data'][] = $message;
         }
@@ -2179,18 +2179,18 @@ class frontEnd extends Controller
             ->where('id', $data['id'])
             ->first();
 
-        if($this->request['data']['user']['username'] != $message['author'] && $this->request['data']['user']['username'] != $message['touser']) {
+        if($this->request['data']['user']['id'] != $message['author'] && $this->request['data']['user']['id'] != $message['touser']) {
             Session::put('error', 'You are not mentioned in this message');
             return redirect('/app/inbox');
         }
 
-        $message['uid'] = User::where('username', $message['author'])->value('id');
+        $message['uid'] = $message['author'];
         $message['message'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($message['message']))));
         $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
-        $message['author'] = htmlspecialchars($message['author']);
+        $message['author'] = htmlspecialchars(User::where('id', $message['author']));
         $message['date'] = date('M j, g:ia', strtotime($message['date']));
 
-        if($message['readed'] == 'n' && $this->request['data']['user']['username'] != $message['author']) {
+        if($message['readed'] == 'n' && $this->request['data']['user']['id'] != $message['uid']) {
             $this->db->table('messages')
                 ->where('id', $message['id'])
                 ->update([
@@ -2229,7 +2229,7 @@ class frontEnd extends Controller
                 return redirect('/app/inbox');
             }
 
-            if($this->db->table('messages')->where('author', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
+            if($this->db->table('messages')->where('author', $this->request['data']['user']['id'])->where('date', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
                 Session::put('error', 'Wait 5 minutes before sending another message');
                 return redirect('/app/inbox/compose');
             }
@@ -2240,8 +2240,8 @@ class frontEnd extends Controller
             }
 
             $this->db->table('messages')->insert([
-                'author' => $this->request['data']['user']['username'],
-                'touser' => $data['username'],
+                'author' => $this->request['data']['user']['id'],
+                'touser' => User::where('username', $data['username'])->value('id'),
                 'subject' => $data['subject'],
                 'message' => $data['message']
             ]);
@@ -2251,14 +2251,14 @@ class frontEnd extends Controller
         }
 
         if(isset($data['user'])) {
-            if(!User::where('username', $data['user'])->exists()) {
+            if(!User::find($data['user'])) {
                 Session::put('error', 'User not found');
                 return redirect('/app/inbox/compose');
             }
 
             $this->request['data']['sendto'] = [
-                'id' => User::where('username', $data['user'])->value('id'),
-                'username' => $data['user']
+                'id' => $data['user'],
+                'username' => User::where('id', $data['user'])->value('username')
             ];
         }
 
@@ -3649,6 +3649,25 @@ class frontEnd extends Controller
             }
         }
         */
+
+        $messages = $this->db->table('messages')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+        
+        foreach($messages as $message) {
+            if(User::where('id', $message['author'])->exists()) {
+                continue;
+            }
+
+            $this->db->table('messages')
+                ->where('id', $message['id'])
+                ->update([
+                    'author' => User::where('username', $message['author'])->value('id'),
+                    'touser' => User::where('username', $message['touser'])->value('id')
+                ]);
+        }
 
         return response('success!', 200);
     }
