@@ -1054,7 +1054,7 @@ class frontEnd extends Controller
             $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8')));
         }
 
-        $post['comment'] = str_replace('</p>', '', str_replace('<p>', '', nl2br($converter->convert($post['comment'])->getContent())));
+        $post['comment'] = nl2br($converter->convert($post['comment'])->getContent());
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
@@ -1102,10 +1102,10 @@ class frontEnd extends Controller
                     }
                 }, $sticked['comment']));
             } else {
-                $sticked['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($sticked['comment']))));
+                $sticked['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($sticked['comment'])));
             }
 
-            $sticked['comment'] = str_replace('<p></p>', '', $converter->convert($sticked['comment'])->getContent());
+            $sticked['comment'] = nl2br($converter->convert($sticked['comment'])->getContent());
             $sticked['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'l')->count();
             $sticked['upvotes'] = $sticked['rating'];
             $sticked['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
@@ -1188,10 +1188,10 @@ class frontEnd extends Controller
                     }
                 }, $reply['comment']));
             } else {
-                $reply['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($reply['comment']))));
+                $reply['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($reply['comment'])));
             }
 
-            $reply['comment'] = str_replace('<p></p>', '', $converter->convert($reply['comment'])->getContent());
+            $reply['comment'] = nl2br($converter->convert($reply['comment'])->getContent());
             $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
             $reply['upvotes'] = $reply['rating'];
             $reply['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
