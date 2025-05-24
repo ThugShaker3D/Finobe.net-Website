@@ -2184,6 +2184,28 @@ class frontEnd extends Controller
             return redirect('/app/inbox');
         }
 
+        if($request->isMethod('post')) {
+            if($message['archived'] == 'n') {
+                $this->db->table('message')
+                    ->where('id', $data['id'])
+                    ->update([
+                        'archived' => 'y'
+                    ]);
+                
+                Session::put('success', 'Successfully archived');
+            } else {
+                $this->db->table('message')
+                    ->where('id', $data['id'])
+                    ->update([
+                        'archived' => 'n'
+                    ]);
+                
+                Session::put('success', 'Successfully unarchived');
+            }
+
+            return redirect('/app/inbox/message');
+        }
+
         $message['uid'] = $message['author'];
         $message['message'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($message['message']))));
         $message['subject'] = strip_tags(htmlspecialchars($message['subject']));
@@ -3620,7 +3642,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        /*
+        /* purchases type rewrite
         $purchases = $this->db->table('purchases')
             ->get()
             ->map(function ($item) {
