@@ -766,7 +766,7 @@ class api extends Controller
                 }
             }
 
-            if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
+            if($itemcount < 0 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                     $avatar[0]['equippedGearVersionIds'] = array_values(
                         array_diff($avatar[0]['equippedGearVersionIds'], [$data['assetid']])
