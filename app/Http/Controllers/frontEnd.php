@@ -1021,9 +1021,6 @@ class frontEnd extends Controller
         $environment->addExtension(new CommonMarkCoreExtension());
         $converter = new MarkdownConverter($environment);
 
-        $parsedown = new Parsedown();
-        $parsedown->setSafeMode(true);
-
         $phrasesToReplace = [
             'fuck',
             'fucking',
@@ -1054,10 +1051,10 @@ class frontEnd extends Controller
                 }
             }, $post['comment']));
         } else {
-            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $parsedown->text($post['comment'])));
+            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment']))));
         }
 
-        //$post['comment'] = $converter->convert($post['comment'])->getContent();
+        $post['comment'] = $converter->convert($post['comment'])->getContent();
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
