@@ -2765,6 +2765,14 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'author' => 0,
+                    'amount' => -5,
+                    'type' => 5
+                ]);
+
                 return redirect('/video/' . $id);
             } elseif($data['media-type'] == 'audio') {
                 $validator = Validator::make($data, [
@@ -2819,6 +2827,14 @@ class frontEnd extends Controller
                 $user->Dius -= 5;
                 $user->save();
 
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'author' => 0,
+                    'amount' => -5,
+                    'type' => 5
+                ]);
+
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 return redirect('/item/' . $id);
@@ -2846,10 +2862,27 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'shirt');
+                $id = Asset::createAccessory(
+                    $data['title'],
+                    ['tmp_name' => $request->file('file')->getPathname()],
+                    $user->id,
+                    $data['description'] ?? '',
+                    intval($data['price']),
+                    true,
+                    false,
+                    'shirt'
+                );
 
                 $user->Dius -= 5;
                 $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'author' => 0,
+                    'amount' => -5,
+                    'type' => 5
+                ]);
 
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
@@ -2879,10 +2912,27 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'pants');
+                $id = Asset::createAccessory(
+                    $data['title'],
+                    ['tmp_name' => $request->file('file')->getPathname()],
+                    $user->id,
+                    $data['description'] ?? '',
+                    intval($data['price']),
+                    true,
+                    false,
+                    'pants'
+                );
 
                 $user->Dius -= 5;
                 $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'author' => 0,
+                    'amount' => -5,
+                    'type' => 5
+                ]);
 
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
@@ -2917,10 +2967,27 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'face');
+                $id = Asset::createAccessory(
+                    $data['title'],
+                    ['tmp_name' => $request->file('file')->getPathname()],
+                    $user->id,
+                    $data['description'] ?? '',
+                    intval($data['price']),
+                    true,
+                    false,
+                    'face'
+                );
 
                 $user->Dius -= 5;
                 $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'author' => 0,
+                    'amount' => -5,
+                    'type' => 5
+                ]);
 
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
@@ -2943,10 +3010,27 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory($data['title'], ['tmp_name' => $request->file('file')->getPathname()], $user->id, $data['description'] ?? '', intval($data['price']), true, false, 'tshirt');
+                $id = Asset::createAccessory(
+                    $data['title'],
+                    ['tmp_name' => $request->file('file')->getPathname()],
+                    $user->id,
+                    $data['description'] ?? '',
+                    intval($data['price']),
+                    true,
+                    false,
+                    'tshirt'
+                );
 
                 $user->Dius -= 5;
                 $user->save();
+
+                $this->db->table('purchases')->insert([
+                    'username' => $user->username,
+                    'assetid' => 0,
+                    'author' => 0,
+                    'amount' => -5,
+                    'type' => 5
+                ]);
 
                 $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
