@@ -2186,7 +2186,7 @@ class frontEnd extends Controller
 
         if($request->isMethod('post')) {
             if($message['archived'] == 'n') {
-                $this->db->table('message')
+                $this->db->table('messages')
                     ->where('id', $data['id'])
                     ->update([
                         'archived' => 'y'
@@ -2194,7 +2194,7 @@ class frontEnd extends Controller
                 
                 Session::put('success', 'Successfully archived');
             } else {
-                $this->db->table('message')
+                $this->db->table('messages')
                     ->where('id', $data['id'])
                     ->update([
                         'archived' => 'n'
