@@ -761,12 +761,11 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
+                $this->request['message'] .= ' ' . $key;
                 if($this->db->table('assets')->where('id', $key)->where('asset_type', 2)->exists()) {
                     $itemcount++;
                 }
             }
-
-            $this->response['message'] .= $itemcount;
 
             if($itemcount < 1 || in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 if(in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
