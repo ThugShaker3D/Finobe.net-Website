@@ -21,11 +21,11 @@ use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
-use League\CommonMark\Node\NodeWalker;
-use League\CommonMark\Node\Inline\Text;
-use League\CommonMark\Parser\Inline\InlineParserEngine;
-use League\CommonMark\Renderer\HtmlRenderer;
 use League\CommonMark\MarkdownConverter;
+use League\CommonMark\Extension\DisallowedRawHtml\DisallowedRawHtmlExtension;
+use League\CommonMark\Renderer\Block\ParagraphRenderer;
+use League\CommonMark\Node\Block\Paragraph;
+use League\CommonMark\Util\HtmlElement;
 use Parsedown;
 
 class frontEnd extends Controller
@@ -1019,6 +1019,13 @@ class frontEnd extends Controller
         ]);
 
         $environment->addExtension(new CommonMarkCoreExtension());
+        $environment->addExtension(new DisallowedRawHtmlExtension());
+        $environment->addRenderer(Paragraph::class, new class extends ParagraphRenderer {
+            public function render(Paragraph $block, $childRenderer, array $context = []): HtmlElement|string|null {
+                return $childRenderer->renderNodes($block->children(), $context);
+            }
+        });
+
         $converter = new MarkdownConverter($environment);
 
         $phrasesToReplace = [
