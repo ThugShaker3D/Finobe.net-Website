@@ -3674,23 +3674,20 @@ class frontEnd extends Controller
 
         $eer = "";
         $messages = $this->db->table('messages')
-            ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+            ->get();
         
         foreach($messages as $message) {
-            if(User::where('id', $message['author'])->exists()) {
+            if(User::where('id', $message->author)->exists()) {
                 continue;
             }
 
-            $err .= ' ' . $message['author'];
+            $eer .= ' ' . $message->author;
 
             $this->db->table('messages')
                 ->where('id', $message['id'])
                 ->update([
-                    'author' => User::where('username', $message['author'])->value('id'),
-                    'touser' => User::where('username', $message['touser'])->value('id')
+                    'author' => User::where('username', $message->author)->value('id'),
+                    'touser' => User::where('username', $message->touser)->value('id')
                 ]);
         }
 
