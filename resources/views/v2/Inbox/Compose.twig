@@ -15,7 +15,7 @@
                                     <div class="form-group">
                                         <input type="hidden" name="_token" value="{{ data.csrf_token }}">
                                         <label for="username" class="col-form-label">Username</label>
-                                        <input type="text" id="username" name="username" class="form-control mt-2" placeholder="Username" value="{{ data.sendto.username }}" required="">
+                                        <input type="text" id="username" name="username" class="form-control mt-2" placeholder="Username" value="{{ data.sendto.id }}" required="">
                                         <label for="subject" class="col-form-label">Subject</label>
                                         <input type="text" id="subject" name="subject" class="form-control mt-2" placeholder="Subject" value="{{ data.subject }}" required="">
                                         <label for="message" class="col-form-label">Message</label>

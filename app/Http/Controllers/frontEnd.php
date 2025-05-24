@@ -2273,7 +2273,7 @@ class frontEnd extends Controller
         }
 
         if(isset($data['user'])) {
-            if(!User::find($data['user'])) {
+            if(!User::where('username', $data['user'])->exists()) {
                 Session::put('error', 'User not found');
                 return redirect('/app/inbox/compose');
             }
