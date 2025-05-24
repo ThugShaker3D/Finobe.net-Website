@@ -1047,6 +1047,14 @@ class frontEnd extends Controller
         }
 
         $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($post['comment'])->getContent());
+        $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+            if (!empty($matches[1])) {
+                return $matches[1];
+            }
+
+            $url = htmlspecialchars($matches[2], ENT_QUOTES, 'UTF-8');
+            return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+        }, $post['comment']);
 
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
