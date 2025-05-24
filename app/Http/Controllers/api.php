@@ -540,7 +540,7 @@ class api extends Controller
 
             if($visibility != 'n') {
                 $this->response['code'] = 400;
-                $this->response['message'] = 'Item has not approved or is under review';
+                $this->response['message'] = 'Item has not been approved or is under review';
 
                 return response()->json($this->response, 400);
             }
@@ -592,7 +592,7 @@ class api extends Controller
 
             if($visibility != 'n') {
                 $this->response['code'] = 400;
-                $this->response['message'] = 'Item has not approved or is under review';
+                $this->response['message'] = 'Item has not been approved or is under review';
 
                 return response()->json($this->response, 400);
             }
@@ -644,7 +644,7 @@ class api extends Controller
 
             if($visibility != 'n') {
                 $this->response['code'] = 400;
-                $this->response['message'] = 'Item has not approved or is under review';
+                $this->response['message'] = 'Item has not been approved or is under review';
 
                 return response()->json($this->response, 400);
             }
@@ -696,7 +696,7 @@ class api extends Controller
 
             if($visibility != 'n') {
                 $this->response['code'] = 400;
-                $this->response['message'] = 'Item has not approved or is under review';
+                $this->response['message'] = 'Item has not been approved or is under review';
 
                 return response()->json($this->response, 400);
             }
@@ -748,7 +748,7 @@ class api extends Controller
 
             if($visibility != 'n') {
                 $this->response['code'] = 400;
-                $this->response['message'] = 'Item has not approved or is under review';
+                $this->response['message'] = 'Item has not been approved or is under review';
 
                 return response()->json($this->response, 400);
             }
@@ -800,7 +800,7 @@ class api extends Controller
 
             if($visibility != 'n') {
                 $this->response['code'] = 400;
-                $this->response['message'] = 'Item has not approved or is under review';
+                $this->response['message'] = 'Item has not been approved or is under review';
 
                 return response()->json($this->response, 400);
             }
