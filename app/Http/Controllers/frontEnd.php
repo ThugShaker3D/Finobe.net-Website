@@ -1046,7 +1046,14 @@ class frontEnd extends Controller
             $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
         }
 
-        $post['comment'] = $converter->convert($post['comment'])->getContent();
+        $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+            if (strpos($matches[0], '<img') === 0) {
+                return $matches[0];
+            } else {
+                return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+            }
+        }, $converter->convert($post['comment'])->getContent());
+        $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $post['comment']);
 
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
