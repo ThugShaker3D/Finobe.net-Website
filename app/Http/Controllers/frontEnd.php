@@ -1019,13 +1019,6 @@ class frontEnd extends Controller
         ]);
 
         $environment->addExtension(new CommonMarkCoreExtension());
-        $environment->addExtension(new DisallowedRawHtmlExtension());
-        $environment->addRenderer(Paragraph::class, new class extends ParagraphRenderer {
-            public function render(Paragraph $block, $childRenderer, array $context = []): HtmlElement|string|null {
-                return $childRenderer->renderNodes($block->children(), $context);
-            }
-        });
-
         $converter = new MarkdownConverter($environment);
 
         $phrasesToReplace = [
@@ -1061,7 +1054,7 @@ class frontEnd extends Controller
             $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8')));
         }
 
-        $post['comment'] = nl2br($converter->convert($post['comment'])->getContent());
+        $post['comment'] = str_replace('</p>', '', str_replace('<p>', '', nl2br($converter->convert($post['comment'])->getContent())));
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
