@@ -1054,7 +1054,7 @@ class frontEnd extends Controller
             $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8')));
         }
 
-        $post['comment'] = nl2br($converter->convert($post['comment'])->getContent());
+        $post['comment'] = $converter->convert($post['comment'])->getContent();
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
