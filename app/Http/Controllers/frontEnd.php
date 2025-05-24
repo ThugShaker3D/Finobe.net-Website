@@ -1204,7 +1204,7 @@ class frontEnd extends Controller
                 if (strpos($matches[0], '<img') === 0) {
                     return $matches[0];
                 } else {
-                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                    //return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
                 }
             }, $reply['comment']);
 
