@@ -553,7 +553,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $key)->where('asset_type', 8)->exists()) {
+                if($this->db->table('assets')->where('id', $value)->where('asset_type', 8)->exists()) {
                     $itemcount++;
                 }
             }
@@ -605,7 +605,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $key)->where('asset_type', 11)->exists()) {
+                if($this->db->table('assets')->where('id', $value)->where('asset_type', 11)->exists()) {
                     $itemcount++;
                 }
             }
@@ -657,7 +657,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $key)->where('asset_type', 12)->exists()) {
+                if($this->db->table('assets')->where('id', $value)->where('asset_type', 12)->exists()) {
                     $itemcount++;
                 }
             }
@@ -709,7 +709,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $key)->where('asset_type', 18)->exists()) {
+                if($this->db->table('assets')->where('id', $value)->where('asset_type', 18)->exists()) {
                     $itemcount++;
                 }
             }
@@ -761,8 +761,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                $this->response['message'] .= ' ' . $key;
-                if($this->db->table('assets')->where('id', $key)->where('asset_type', 2)->exists()) {
+                if($this->db->table('assets')->where('id', $value)->where('asset_type', 2)->exists()) {
                     $itemcount++;
                 }
             }
@@ -814,7 +813,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $key)->where('asset_type', 19)->exists()) {
+                if($this->db->table('assets')->where('id', $value)->where('asset_type', 19)->exists()) {
                     $itemcount++;
                 }
             }
