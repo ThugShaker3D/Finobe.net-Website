@@ -1050,7 +1050,9 @@ class frontEnd extends Controller
             '/\b((?:https?|ftp):\/\/\S+)/i',
             function ($matches) {
                 $url = $matches[1];
-                if (preg_match('/<[^>]+'.$url.'/', $matches[0])) {
+                $escapedUrl = preg_quote($url, '/');
+
+                if (preg_match('/<[^>]+'.$escapedUrl.'/i', $matches[0])) {
                     return $url;
                 }
 
