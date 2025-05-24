@@ -1200,16 +1200,13 @@ class frontEnd extends Controller
             }
 
             $reply['comment'] = preg_replace('/<[^>]+>|(https?:\/\/[^\s<]+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($reply['comment'])->getContent());
-
-            if($reply['status'] == 'admin') {
-                $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
-                    if (strpos($matches[0], '<img') === 0) {
-                        return $matches[0];
-                    } else {
-                        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
-                    }
-                }, $reply['comment']);
-            }
+            $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                if (strpos($matches[0], '<img') === 0) {
+                    return $matches[0];
+                } else {
+                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                }
+            }, $reply['comment']);
 
             $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
             $reply['upvotes'] = $reply['rating'];
