@@ -3672,7 +3672,7 @@ class frontEnd extends Controller
         }
         */
 
-        $eer = "";
+        $eer = "success";
         $messages = $this->db->table('messages')
             ->get();
         
