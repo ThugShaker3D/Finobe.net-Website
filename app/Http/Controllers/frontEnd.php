@@ -3633,7 +3633,7 @@ class frontEnd extends Controller
         return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('filename')->where('id', $id)->value('filename'));
     }
 
-    public function do_stuff_automatically(Request $request) { // this function is just for me to talk if im changing the format of the db or something
+    public function do_stuff_automatically(Request $request) { // this function is just for me to migrate stuff if im changing the format of the db or something
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
         }
@@ -3672,6 +3672,7 @@ class frontEnd extends Controller
         }
         */
 
+        $eer = "";
         $messages = $this->db->table('messages')
             ->get()
             ->map(function ($item) {
@@ -3683,6 +3684,8 @@ class frontEnd extends Controller
                 continue;
             }
 
+            $err .= ' ' . $message['author'];
+
             $this->db->table('messages')
                 ->where('id', $message['id'])
                 ->update([
@@ -3691,7 +3694,7 @@ class frontEnd extends Controller
                 ]);
         }
 
-        return response('success!', 200);
+        return response($eer, 200);
     }
 
     public function auth_form(Request $request) {
