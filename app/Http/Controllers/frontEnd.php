@@ -3674,6 +3674,7 @@ class frontEnd extends Controller
 
         $eer = "success";
         $messages = $this->db->table('messages')
+            ->limit(999999)
             ->get();
         
         foreach($messages as $message) {
