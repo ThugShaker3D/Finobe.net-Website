@@ -1051,7 +1051,7 @@ class frontEnd extends Controller
                 }
             }, $post['comment']));
         } else {
-            $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
+            $post['comment'] = strip_tags(htmlspecialchars(trim($post['comment']), ENT_QUOTES, 'UTF-8'));
         }
 
         $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($post['comment'])->getContent());
