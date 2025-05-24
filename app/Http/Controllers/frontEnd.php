@@ -1051,7 +1051,7 @@ class frontEnd extends Controller
                 }
             }, $post['comment']));
         } else {
-            $post['comment'] = strip_tags(htmlspecialchars(ltrim($post['comment']), ENT_QUOTES, 'UTF-8'));
+            $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
         }
 
         $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($post['comment'])->getContent());
@@ -1102,10 +1102,10 @@ class frontEnd extends Controller
                     }
                 }, $sticked['comment']));
             } else {
-                $sticked['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($sticked['comment'])));
+                $sticked['comment'] = strip_tags(htmlspecialchars($sticked['comment']));
             }
 
-            $sticked['comment'] = nl2br($converter->convert($sticked['comment'])->getContent());
+            $sticked['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($sticked['comment'])->getContent());
             $sticked['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'l')->count();
             $sticked['upvotes'] = $sticked['rating'];
             $sticked['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
@@ -1188,10 +1188,10 @@ class frontEnd extends Controller
                     }
                 }, $reply['comment']));
             } else {
-                $reply['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($reply['comment'])));
+                $reply['comment'] = strip_tags(htmlspecialchars($reply['comment']));
             }
 
-            $reply['comment'] = nl2br($converter->convert($reply['comment'])->getContent());
+            $reply['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($reply['comment'])->getContent());
             $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
             $reply['upvotes'] = $reply['rating'];
             $reply['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
