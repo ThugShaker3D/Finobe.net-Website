@@ -1014,7 +1014,7 @@ class frontEnd extends Controller
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
         $environment = new Environment([
-            'html_input' => 'strip',
+            'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
             'allow_unsafe_links' => false,
         ]);
 
@@ -1047,16 +1047,13 @@ class frontEnd extends Controller
         }
 
         $post['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($post['comment'])->getContent());
-
-        if($post['status'] == 'admin') {
-            $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
-                if (strpos($matches[0], '<img') === 0) {
-                    return $matches[0];
-                } else {
-                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
-                }
-            }, $post['comment']);
-        }
+        $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+            if (strpos($matches[0], '<img') === 0) {
+                return $matches[0];
+            } else {
+                return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+            }
+        }, $post['comment']);
 
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
@@ -1096,21 +1093,26 @@ class frontEnd extends Controller
                 return $replacements[array_rand($replacements)];
             }, $sticked['comment']);
 
+            $environment = new Environment([
+                'html_input' => ($sticked['status'] == 'admin' ? 'allow' : 'strip'),
+                'allow_unsafe_links' => false,
+            ]);
+
+            $environment->addExtension(new CommonMarkCoreExtension());
+            $converter = new MarkdownConverter($environment);
+
             if($sticked['status'] != "admin") {
                 $sticked['comment'] = strip_tags(htmlspecialchars($sticked['comment']));
             }
 
             $sticked['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($sticked['comment'])->getContent());
-
-            if($sticked['status'] == 'admin') {
-                $sticked['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
-                    if (strpos($matches[0], '<img') === 0) {
-                        return $matches[0];
-                    } else {
-                        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
-                    }
-                }, $sticked['comment']);
-            }
+            $sticked['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                if (strpos($matches[0], '<img') === 0) {
+                    return $matches[0];
+                } else {
+                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                }
+            }, $sticked['comment']);
 
             $sticked['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'l')->count();
             $sticked['upvotes'] = $sticked['rating'];
@@ -1185,21 +1187,26 @@ class frontEnd extends Controller
                 return $replacements[array_rand($replacements)];
             }, $reply['comment']);
 
+            $environment = new Environment([
+                'html_input' => ($reply['status'] == 'admin' ? 'allow' : 'strip'),
+                'allow_unsafe_links' => false,
+            ]);
+
+            $environment->addExtension(new CommonMarkCoreExtension());
+            $converter = new MarkdownConverter($environment);
+
             if($reply['status'] != "admin") {
                 $reply['comment'] = strip_tags(htmlspecialchars($reply['comment']));
             }
 
             $reply['comment'] = preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert($reply['comment'])->getContent());
-
-            if($reply['status'] == 'admin') {
-                $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
-                    if (strpos($matches[0], '<img') === 0) {
-                        return $matches[0];
-                    } else {
-                        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
-                    }
-                }, $reply['comment']);
-            }
+            $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                if (strpos($matches[0], '<img') === 0) {
+                    return $matches[0];
+                } else {
+                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                }
+            }, $reply['comment']);
 
             $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
             $reply['upvotes'] = $reply['rating'];
