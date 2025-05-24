@@ -1019,7 +1019,6 @@ class frontEnd extends Controller
 
         $environment->addExtension(new CommonMarkCoreExtension());
         $converter = new MarkdownConverter($environment);
-        $post['comment'] = $converter->convert($post['comment'])->getContent();
 
         $phrasesToReplace = [
             'fuck',
@@ -1051,7 +1050,7 @@ class frontEnd extends Controller
                 }
             }, $post['comment']));
         } else {
-            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment']))));
+            $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', $converter->convert(strip_tags(htmlspecialchars($post['comment'])))->getContent()));
         }
 
         //$post['comment'] = str_replace('<p></p>', '', $converter->convert($post['comment'])->getContent());
