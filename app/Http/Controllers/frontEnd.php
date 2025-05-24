@@ -1050,7 +1050,7 @@ class frontEnd extends Controller
             $post['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($post['comment']))));
         }
 
-        $post['comment'] = $converter->convert($post['comment'])->getContent();
+        $post['comment'] = str_replace('<p></p>', '', $converter->convert($post['comment'])->getContent());
         //$post['comment'] = preg_replace('/^<p>(.*?)<\/p>$/', '$1', $post['comment']);
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
@@ -1101,7 +1101,7 @@ class frontEnd extends Controller
                 $sticked['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($sticked['comment']))));
             }
 
-            $sticked['comment'] = $converter->convert($sticked['comment'])->getContent();
+            $sticked['comment'] = str_replace('<p></p>', '', $converter->convert($sticked['comment'])->getContent());
             $sticked['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'l')->count();
             $sticked['upvotes'] = $sticked['rating'];
             $sticked['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $sticked['id'])->where('rate_type', 'd')->count();
@@ -1187,7 +1187,7 @@ class frontEnd extends Controller
                 $reply['comment'] = nl2br(preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1" target="_blank">$1</a>', strip_tags(htmlspecialchars($reply['comment']))));
             }
 
-            $reply['comment'] = $converter->convert($reply['comment'])->getContent();
+            $reply['comment'] = str_replace('<p></p>', '', $converter->convert($reply['comment'])->getContent());
             $reply['rating'] = $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'l')->count();
             $reply['upvotes'] = $reply['rating'];
             $reply['rating'] -= $this->db->table('forum_ratings')->where('type', '2')->where('toid', $reply['id'])->where('rate_type', 'd')->count();
