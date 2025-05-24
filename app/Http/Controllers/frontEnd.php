@@ -2203,7 +2203,7 @@ class frontEnd extends Controller
                 Session::put('success', 'Successfully unarchived');
             }
 
-            return redirect('/app/inbox/message');
+            return redirect('/app/inbox/message?id=' . $data['id']);
         }
 
         $message['uid'] = $message['author'];
