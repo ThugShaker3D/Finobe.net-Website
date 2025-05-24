@@ -236,7 +236,7 @@
                                             {% if data.sticked.replyTo %}
                                             <blockquote class="greentext"><p>{{ data.sticked.replyComment }}</p></blockquote>
                                             {% endif %}
-                                            <p>{{ data.sticked.comment | raw }}</p>
+                                            {{ data.sticked.comment | raw }}
                                         </div>
                                         <div>
                                             <div data-v-73be696c="" class="forum-voter">
@@ -390,7 +390,7 @@
                                             {% if reply.replyTo %}
                                             <blockquote class="greentext"><p>{{ reply.replyComment }}</p></blockquote>
                                             {% endif %}
-                                            <p>{{ reply.comment | raw }}</p>
+                                            {{ reply.comment | raw }}
                                         </div>
                                         <div>
                                             <div data-v-73be696c="" class="forum-voter">
