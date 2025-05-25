@@ -321,6 +321,9 @@ class frontEnd extends Controller
             Session::put('error', 'User does not exist');
             return redirect('/');
         }
+        
+        Session::put('error', 'Using the friends feature is currently disabled');
+        return redirect('/user/' . $id);
 
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
@@ -358,6 +361,9 @@ class frontEnd extends Controller
             Session::put('error', 'User does not exist');
             return redirect('/');
         }
+
+        Session::put('error', 'Using the friends feature is currently disabled');
+        return redirect('/user/' . $id);
 
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
@@ -419,6 +425,9 @@ class frontEnd extends Controller
             Session::put('error', 'User does not exist');
             return redirect('/');
         }
+
+        Session::put('error', 'Using the friends feature is currently disabled');
+        return redirect('/user/' . $id);
 
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
