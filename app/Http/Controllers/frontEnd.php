@@ -3691,15 +3691,15 @@ class frontEnd extends Controller
             ->get();
         
         foreach($pms as $pm) {
-            if(!User::where('username', $pms->touser)->exists()) {
+            if(!User::where('username', $pm->touser)->exists()) {
                 continue;
             }
 
             $this->db->table('pms')
-                ->where('id', $pms->id)
+                ->where('id', $pm->id)
                 ->update([
-                    'touser' => User::where('username', $pms->touser)->value('id'),
-                    'owner' => User::where('username', $pms->owner)->value('id')
+                    'touser' => User::where('username', $pm->touser)->value('id'),
+                    'owner' => User::where('username', $pm->owner)->value('id')
                 ]);
         }
 
