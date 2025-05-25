@@ -3691,7 +3691,7 @@ class frontEnd extends Controller
             ->get();
         
         foreach($pms as $pm) {
-            if(!User::where('username', $pms->author)->exists()) {
+            if(!User::where('username', $pms->touser)->exists()) {
                 continue;
             }
 
