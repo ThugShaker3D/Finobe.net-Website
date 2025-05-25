@@ -2904,7 +2904,7 @@ class frontEnd extends Controller
 
                 if(intval($data['price']) < 5) {
                     Session::put('error', 'Price must be at least 5 Diu');
-                    return redurect('/catalog/new');
+                    return redirect('/catalog/new');
                 }
 
                 if($this->request['data']['user']['Dius'] - 5 < 0) {
@@ -2959,7 +2959,7 @@ class frontEnd extends Controller
 
                 if(intval($data['price']) < 5) {
                     Session::put('error', 'Price must be at least 5 Diu');
-                    return redurect('/catalog/new');
+                    return redirect('/catalog/new');
                 }
 
                 if($this->request['data']['user']['Dius'] - 5 < 0) {
@@ -3069,7 +3069,7 @@ class frontEnd extends Controller
 
                 if(intval($data['price']) < 2) {
                     Session::put('error', 'Price must be at least 2 Diu');
-                    return redurect('/catalog/new');
+                    return redirect('/catalog/new');
                 }
 
                 if($this->request['data']['user']['Dius'] - 5 < 0) {
