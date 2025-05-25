@@ -3671,18 +3671,15 @@ class frontEnd extends Controller
             }
         }
         */
-
-        $eer = "success";
+        
+        /* messages id rewrite
         $messages = $this->db->table('messages')
-            ->limit(999999)
             ->get();
         
         foreach($messages as $message) {
             if(!User::where('username', $message->author)->exists()) {
                 continue;
             }
-
-            $eer .= ' ' . $message->author;
 
             $this->db->table('messages')
                 ->where('id', $message->id)
@@ -3691,8 +3688,25 @@ class frontEnd extends Controller
                     'touser' => User::where('username', $message->touser)->value('id')
                 ]);
         }
+        */
 
-        return response($eer, 200);
+        $pms = $this->db->table('pms')
+            ->get();
+        
+        foreach($pms as $pm) {
+            if(!User::where('username', $pms->author)->exists()) {
+                continue;
+            }
+
+            $this->db->table('pms')
+                ->where('id', $pms->id)
+                ->update([
+                    'touser' => User::where('username', $pms->touser)->value('id'),
+                    'owner' => User::where('username', $pms->owner)->value('id')
+                ]);
+        }
+
+        return response('success', 200);
     }
 
     public function auth_form(Request $request) {
