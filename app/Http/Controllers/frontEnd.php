@@ -1318,7 +1318,6 @@ class frontEnd extends Controller
             if($post['author'] != $this->request['data']['user']['username']) {
                 $this->db->table('pms')->insert([
                     'owner' => $this->request['data']['user']['username'],
-                    'subject' => '',
                     'touser' => $post['author'],
                     'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
                     'forum_id' => $data['id'],
@@ -1336,7 +1335,6 @@ class frontEnd extends Controller
             foreach($subscriptions as $subscription) {
                 $this->db->table('pms')->insert([
                     'owner' => $this->request['data']['user']['username'],
-                    'subject' => '',
                     'touser' => $subscription['username'],
                     'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
                     'forum_id' => $data['id'],
@@ -1347,7 +1345,6 @@ class frontEnd extends Controller
             if(isset($data['reply']) && $this->db->table('forum_replies')->where('id', $data['reply'])->exists()) {
                 $this->db->table('pms')->insert([
                     'owner' => $this->request['data']['user']['username'],
-                    'subject' => '',
                     'touser' => $this->db->table('forum_replies')->select('author')->where('id', $data['reply'])->value('author'),
                     'message' => $this->request['data']['user']['username'] . ' replied to your reply on ' . $post['title'],
                     'forum_id' => $data['id']
