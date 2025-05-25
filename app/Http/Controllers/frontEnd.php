@@ -2902,6 +2902,11 @@ class frontEnd extends Controller
                     return redirect('/catalog/new');
                 }
 
+                if(intval($data['price']) < 5) {
+                    Session::put('error', 'Price must be at least 5 Diu');
+                    return redurect('/catalog/new');
+                }
+
                 if($this->request['data']['user']['Dius'] - 5 < 0) {
                     Session::put('error', 'Not enough dius');
                     return redirect('/catalog/new');
@@ -2950,6 +2955,11 @@ class frontEnd extends Controller
                 if($validator->fails()) {
                     Session::put('error', $validator->errors()->first());
                     return redirect('/catalog/new');
+                }
+
+                if(intval($data['price']) < 5) {
+                    Session::put('error', 'Price must be at least 5 Diu');
+                    return redurect('/catalog/new');
                 }
 
                 if($this->request['data']['user']['Dius'] - 5 < 0) {
@@ -3055,6 +3065,11 @@ class frontEnd extends Controller
                 if($validator->fails()) {
                     Session::put('error', $validator->errors()->first());
                     return redirect('/catalog/new');
+                }
+
+                if(intval($data['price']) < 2) {
+                    Session::put('error', 'Price must be at least 2 Diu');
+                    return redurect('/catalog/new');
                 }
 
                 if($this->request['data']['user']['Dius'] - 5 < 0) {
@@ -3687,6 +3702,7 @@ class frontEnd extends Controller
         }
         */
 
+        /* pms id rewrite
         $pms = $this->db->table('pms')
             ->get();
         
@@ -3702,6 +3718,7 @@ class frontEnd extends Controller
                     'owner' => User::where('username', $pm->owner)->value('id')
                 ]);
         }
+        */
 
         return response('success', 200);
     }
