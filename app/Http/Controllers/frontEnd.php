@@ -103,14 +103,14 @@ class frontEnd extends Controller
                 'data' => [],
                 'ads' => (bool)env('FINOBE_ADS'),
                 'info' => [
-                    'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
+                    'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['id'])->where('readed', 'n')->count(),
                     'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['id'])->where('readed', 'n')->count(),
                     'incomingFriends' => 0
                 ]
             ];
 
             $notifications = $this->db->table('pms')
-                ->where('touser', $this->request['data']['user']['username'])
+                ->where('touser', $this->request['data']['user']['id'])
                 ->orderBy('date', 'DESC')
                 ->get()
                 ->map(function ($item) {
@@ -1317,8 +1317,8 @@ class frontEnd extends Controller
 
             if($post['author'] != $this->request['data']['user']['username']) {
                 $this->db->table('pms')->insert([
-                    'owner' => $this->request['data']['user']['username'],
-                    'touser' => $post['author'],
+                    'owner' => $this->request['data']['user']['id'],
+                    'touser' => User::where('username', $post['author'])->value('id'),
                     'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
                     'forum_id' => $data['id'],
                     'reply_id' => $id
@@ -1334,8 +1334,8 @@ class frontEnd extends Controller
             
             foreach($subscriptions as $subscription) {
                 $this->db->table('pms')->insert([
-                    'owner' => $this->request['data']['user']['username'],
-                    'touser' => $subscription['username'],
+                    'owner' => $this->request['data']['user']['id'],
+                    'touser' => User::where('username', $subscription['username'])->value('id'),
                     'message' => $this->request['data']['user']['username'] . ' replied to ' . $post['title'],
                     'forum_id' => $data['id'],
                     'reply_id' => $id
@@ -1344,8 +1344,8 @@ class frontEnd extends Controller
 
             if(isset($data['reply']) && $this->db->table('forum_replies')->where('id', $data['reply'])->exists()) {
                 $this->db->table('pms')->insert([
-                    'owner' => $this->request['data']['user']['username'],
-                    'touser' => $this->db->table('forum_replies')->select('author')->where('id', $data['reply'])->value('author'),
+                    'owner' => $this->request['data']['user']['id'],
+                    'touser' => User::where('username', $this->db->table('forum_replies')->select('author')->where('id', $data['reply'])->value('author'))->value('id'), // place with inner query grabs id of user instead of this when forum userid rewrite
                     'message' => $this->request['data']['user']['username'] . ' replied to your reply on ' . $post['title'],
                     'forum_id' => $data['id']
                 ]);
