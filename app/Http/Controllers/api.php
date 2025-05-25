@@ -310,7 +310,7 @@ class api extends Controller
 
         if($data['id'] == 'all') {
             $this->db->table('pms')
-                ->where('touser', $user['username'])
+                ->where('touser', $user['id'])
                 ->update([
                     'readed' => 'y'
                 ]);
