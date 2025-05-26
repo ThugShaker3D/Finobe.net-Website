@@ -53,7 +53,7 @@
                                                     </a>
                                                 </p>
                                                 {% for friend in data.user.friends %}
-                                                    {% if friend.username == data.profile.username %}
+                                                    {% if friend.userid == data.profile.id %}
                                                         {% if friend.status == "pending" %}
                                                         <p>
                                                             <a class="btn btn-theme mr-2 nowrap disabled">
@@ -85,7 +85,7 @@
                                                     {% endif %}
                                                 {% endfor %}
                                                 {% for friend in data.profile.friends %}
-                                                    {% if friend.username == data.user.username and friend.status == "pending" %}
+                                                    {% if friend.userid == data.user.id and friend.status == "pending" %}
                                                     <p>
                                                         <a class="btn btn-theme mr-2 nowrap disabled">
                                                             pending request
@@ -100,7 +100,7 @@
                                                     {% endif %}
                                                 {% endfor %}
                                                 {#% if (not user.friends|filter(friend => friend.status != "pending")|length or not data.profile.friends|filter(friend2 => friend2.status != "pending")|length) and (not user.friends|filter(friend => friend.status == "pending")|length or not data.profile.friends|filter(friend2 => friend2.status == "pending")|length) %#}
-                                                {% if not data.profile.friends|default([])|filter(friend => friend.username == data.user.username)|length and not data.user.friends|default([])|filter(friend => friend.username == data.profile.username)|length %}
+                                                {% if not data.profile.friends|default([])|filter(friend => friend.userid == data.user.id)|length and not data.user.friends|default([])|filter(friend => friend.userid == data.profile.id)|length %}
                                                     <p>
                                                         <a href="/user/{{ data.profile.id }}/add" class="btn btn-primary mr-2 nowrap">
                                                             Send Friend Request

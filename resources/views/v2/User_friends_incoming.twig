@@ -17,9 +17,9 @@
                                         <div>
                                             <p class="mb-0"><a href="/user/{{ user.id }}">{{ user.username }}</a></p>
                                         </div>
-                                        <div class="btn-group"><a href="/user/{{ user.id }}/accept?feature=incoming" class="btn btn-success">accept</a><a href="/user/{{ user.id }}/remove?feature=incoming" class="btn btn-danger">deny</a></div>
+                                        <div class="btn-group"><a href="/user/{{ user.userid }}/accept?feature=incoming" class="btn btn-success">accept</a><a href="/user/{{ user.id }}/remove?feature=incoming" class="btn btn-danger">deny</a></div>
                                         <div class="ml-1">
-                                            <a href="/user/{{ user.id }}">
+                                            <a href="/user/{{ user.userid }}">
                                                 {% if user.pfp == "" %}
                                                 <img src="/s/img/spinnerv2.gif" style="max-width: 100px;">
                                                 {% else %}

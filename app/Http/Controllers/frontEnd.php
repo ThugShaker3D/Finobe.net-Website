@@ -273,13 +273,13 @@ class frontEnd extends Controller
         $user['friends'] = array_reverse($user['friends']);
 
         foreach($user['friends'] as $key => $friend) {
-            $user['friends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60 * 24 * 7, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
-            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+            $user['friends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('username'); });
+            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('pfp'); });
         }
 
         foreach($user['CurrentFriends'] as $key => $friend) {
-            $user['CurrentFriends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60 * 24 * 7, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
-            $user['CurrentFriends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+            $user['CurrentFriends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('username'); });
+            $user['CurrentFriends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('pfp'); });
         }
 
         $places = $this->db->table('assets')
@@ -328,19 +328,19 @@ class frontEnd extends Controller
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
-        if($user->username == $this->request['data']['user']['username']) {
+        if($user->id == $this->request['data']['user']['id']) {
             return redirect('/user/' . $id);
         }
 
         foreach($user->friends as $friend) {
-            if($friend['username'] == $this->request['data']['user']['username']) {
+            if($friend['userid'] == $this->request['data']['user']['id']) {
                 return redirect('/user/' . $id);
             }
         }
 
         $friends = $user->friends;
         $friends[] = [
-            'username' => $this->request['data']['user']['username'],
+            'userid' => $this->request['data']['user']['id'],
             'status' => 'pending'
         ];
 
@@ -368,7 +368,7 @@ class frontEnd extends Controller
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
-        if($user->username == $this->request['data']['user']['username']) {
+        if($user->id == $this->request['data']['user']['id']) {
             if(isset($data['feature'])) {
                 return redirect('/friends/incoming');
             } else {
@@ -377,7 +377,7 @@ class frontEnd extends Controller
         }
 
         foreach($user->friends as $friend) {
-            if($friend['username'] == $this->request['data']['user']['username']) {
+            if($friend['userid'] == $this->request['data']['user']['id']) {
                 Session::put('error', 'You already added this user');
                 if(isset($data['feature'])) {
                     return redirect('/friends/incoming');
@@ -389,7 +389,7 @@ class frontEnd extends Controller
 
         $friends = $user->friends;
         $friends[] = [
-            'username' => $this->request['data']['user']['username'],
+            'userid' => $this->request['data']['user']['id'],
             'status' => 'friends'
         ];
 
@@ -397,7 +397,7 @@ class frontEnd extends Controller
         $user->save();
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
-            if($friend['username'] == $user->username) {
+            if($friend['userid'] == $user->id) {
                 $this->request['data']['user']['friends'][$key]['status'] = 'friends';
                 break;
             }
@@ -432,7 +432,7 @@ class frontEnd extends Controller
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
-        if($user->username == $this->request['data']['user']['username']) {
+        if($user->id == $this->request['data']['user']['id']) {
             if(isset($data['feature'])) {
                 return redirect('/friends/incoming');
             } else {
@@ -443,7 +443,7 @@ class frontEnd extends Controller
         $friends = $user->friends;
 
         foreach($friends as $key => $friend) {
-            if($friend['username'] == $this->request['data']['user']['username']) {
+            if($friend['userid'] == $this->request['data']['user']['id']) {
                 unset($friends[$key]);
                 break;
             }
@@ -453,7 +453,7 @@ class frontEnd extends Controller
         $user->save();
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
-            if($friend['username'] == $user->username) {
+            if($friend['userid'] == $user->id) {
                 unset($this->request['data']['user']['friends'][$key]);
                 break;
             }
@@ -487,8 +487,8 @@ class frontEnd extends Controller
         }));
 
         foreach($user['friends'] as $key => $friend) {
-            $user['friends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
-            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+            $user['friends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('username'); });
+            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('pfp'); });
         }
 
         $pages_to_show = 10;
@@ -544,8 +544,8 @@ class frontEnd extends Controller
         }));
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
-            $this->request['data']['user']['friends'][$key]['id'] = Cache::remember('id_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('id'); });
-            $this->request['data']['user']['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['username'], 60 * 60, function() use ($friend) { return User::where('username', $friend['username'])->value('pfp'); });
+            $this->request['data']['user']['friends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('username'); });
+            $this->request['data']['user']['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['userid'], 60 * 60, function() use ($friend) { return User::where('id', $friend['userid'])->value('pfp'); });
         }
 
         return view($this->request['data']['user']['version'] . '/User_friends_incoming', $this->request);
@@ -3728,6 +3728,43 @@ class frontEnd extends Controller
                 ]);
         }
         */
+
+        $users = User::all();
+        $usernameSet = [];
+
+        foreach ($users as $user) {
+            $friends = json_decode($user->friends, true) ?? [];
+
+            foreach ($friends as $friend) {
+                if (!isset($friend['userid']) && isset($friend['username'])) {
+                    $usernameSet[] = $friend['username'];
+                }
+            }
+        }
+
+        $usernameSet = array_unique($usernameSet);
+        $userIds = User::whereIn('username', $usernameSet)->pluck('id', 'username')->toArray();
+
+        foreach ($users as $user) {
+            $friends = json_decode($user->friends, true) ?? [];
+            $modified = false;
+
+            foreach ($friends as $key => $friend) {
+                if (!isset($friend['userid']) && isset($friend['username'])) {
+                    $username = $friend['username'];
+                    if (isset($userIds[$username])) {
+                        $friends[$key]['userid'] = $userIds[$username];
+                        unset($friends[$key]['username']);
+                        $modified = true;
+                    }
+                }
+            }
+
+            if ($modified) {
+                $user->friends = json_encode($friends);
+                $user->save();
+            }
+        }
 
         return response('success', 200);
     }
