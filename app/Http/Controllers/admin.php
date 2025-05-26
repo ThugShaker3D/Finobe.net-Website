@@ -86,14 +86,14 @@ class admin extends Controller
                 'data' => [],
                 'ads' => (bool)env('FINOBE_ADS'),
                 'info' => [
-                    'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
-                    'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['username'])->where('readed', 'n')->count(),
+                    'number' => $this->db->table('pms')->where('touser', $this->request['data']['user']['id'])->where('readed', 'n')->count(),
+                    'inbox' => $this->db->table('messages')->where('touser', $this->request['data']['user']['id'])->where('readed', 'n')->count(),
                     'incomingFriends' => 0
                 ]
             ];
 
             $notifications = $this->db->table('pms')
-                ->where('touser', $this->request['data']['user']['username'])
+                ->where('touser', $this->request['data']['user']['id'])
                 ->orderBy('date', 'DESC')
                 ->get()
                 ->map(function ($item) {
