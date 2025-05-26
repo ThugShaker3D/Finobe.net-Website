@@ -62,16 +62,16 @@
                                                         </p>
                                                         {% elseif friend.status == "pending" %}
                                                         <div class="btn-group" role="group" style="display: block;">
-                                                            <a href="/user/{{ data.profile.id }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
+                                                            <a href="/user/{{ data.profile.userid }}/accept" class="btn btn-success mr-2 nowrap " style="margin-right: -2px !important;">
                                                                 accept
                                                             </a>
-                                                            <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap ">
+                                                            <a href="/user/{{ data.profile.userid }}/remove" class="btn btn-danger mr-2 nowrap ">
                                                                 decline
                                                             </a>
                                                         </div>
                                                         {% elseif friend.status == "friends" %}
                                                         <p>
-                                                            <a href="/user/{{ data.profile.id }}/remove" class="btn btn-danger mr-2 nowrap">
+                                                            <a href="/user/{{ data.profile.userid }}/remove" class="btn btn-danger mr-2 nowrap">
                                                                 remove friend
                                                             </a>
                                                         </p>{#
@@ -142,7 +142,7 @@
                                     <div class="row">
                                         {% for user in data.profile.CurrentFriends|slice(0, 3) %}
                                             <div class="col-md-4 text-center">
-                                                <a class="d-flex flex-column align-items-center" href="/user/{{ user.id }}">
+                                                <a class="d-flex flex-column align-items-center" href="/user/{{ user.userid }}">
                                                     <img src="{% if user.pfp %}{{ "https://cdn.finobe.net/" ~ user.pfp }}{% else %}{{ "/s/img/spinnerv2.gif" }}{% endif %}" height="64" width="64">
                                                     <span class="full-width">{{ user.username }}</span>
                                                 </a>
