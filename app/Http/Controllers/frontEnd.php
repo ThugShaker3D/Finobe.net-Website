@@ -3720,6 +3720,7 @@ class frontEnd extends Controller
         }
         */
 
+        /* friends userid rewrite
         $users = User::all();
         $usernameSet = [];
 
@@ -3756,6 +3757,7 @@ class frontEnd extends Controller
                 $user->save();
             }
         }
+        */
 
         return response('success', 200);
     }
