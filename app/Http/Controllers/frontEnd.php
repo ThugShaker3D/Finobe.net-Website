@@ -359,8 +359,10 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        Session::put('error', 'Currently disabled');
-        return redirect('/');
+        if($this->request['data']['user']['username'] != 'Aesthetiful') {
+            Session::put('error', 'Currently disabled');
+            return redirect('/');
+        }
 
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
