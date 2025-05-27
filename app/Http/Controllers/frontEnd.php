@@ -2436,7 +2436,7 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        if(!$this->db->table('elections')->where('expire', '>', DB::raw('CURDATE()'))) {
+        if(!$this->db->table('elections')->where('expire', '>', DB::raw('CURDATE()'))->exists()) {
             Session::put('error', 'There is currently no active elections');
             return redirect('/');
         }
