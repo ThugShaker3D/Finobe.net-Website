@@ -27,12 +27,12 @@
                           {% endif %}
                           <div class="card-body">
                               <p>{{ option.title | raw }}</p>
-                              <p><strong>Votes: {{ election.votes|filter(vote => vote.id == option.id)|length }}</strong></p>
+                              <p><strong>Votes: {{ data.election.votes|filter(vote => vote.id == option.id)|length }}</strong></p>
                           </div>
                           <form method="post" action="">
                             <div class="card-body">
                                 <input type="hidden" name="index" value="{{ option.id }}">
-                                <button class="btn btn-{{ (election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == data.user.username)) ? "success" : "secondary" }} full-width">vote{{ (election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == data.user.username)) ? "d" : "" }}</button>
+                                <button class="btn btn-{{ (data.election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == data.user.username)) ? "success" : "secondary" }} full-width">vote{{ (data.election.votes|filter(vote => vote.id == option.id)|filter(vote2 => vote2.username == data.user.username)) ? "d" : "" }}</button>
                             </div>
                           </form>
                       </div>
