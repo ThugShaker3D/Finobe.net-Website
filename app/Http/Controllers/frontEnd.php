@@ -1855,6 +1855,7 @@ class frontEnd extends Controller
             ->first();
         
         $place['additional'] = json_decode($place['additional'], true);
+        $this->request['data']['embeds']['title'] = strip_tags(htmlspecialchars($place['title'])) . $this->request['data']['embeds']['title'];
         
         if($place['asset_type'] != 9) {
             return redirect('/app/places');
