@@ -2462,7 +2462,7 @@ class frontEnd extends Controller
             }
 
             foreach($election['votes'] as $key => $vote) {
-                if($vote['id'] != $data['index'] && $vote['username'] == $this->request['data']['user']['username']) {
+                if($vote['id'] == $data['index'] && $vote['username'] == $this->request['data']['user']['username']) {
                     unset($election['votes'][$key]);
 
                     $this->db->table('elections')
