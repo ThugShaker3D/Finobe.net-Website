@@ -3888,6 +3888,8 @@ class frontEnd extends Controller
                 'token' => bin2hex(random_bytes(30))
             ]);
 
+            $this->dataService->send_discord_message('<@541523977475194880>, ' . $data['username'] . ' has sign up');
+
             if($this->request['data']['inviteKeys'] && isset($data['invite_key'])) {
                 $this->db->table('inviteKeys')
                     ->where('IID', $data['invite_key'])
