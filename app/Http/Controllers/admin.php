@@ -129,7 +129,7 @@ class admin extends Controller
                     ]);
                 */
                 
-                $user->Dius = $this->request['data']['user']['Dius'] + 25;
+                $user->Dius += 25;
                 $user->lastdiu = now()->addDay();
                 $user->save();
             }
