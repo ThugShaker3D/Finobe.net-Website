@@ -364,6 +364,16 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
+        if(empty(array_filter($this->request['data']['user']['friends'], function ($entry) use ($id) {
+            return $entry['userid'] == $id;
+        }))) {
+            if(isset($data['feature'])) {
+                return redirect('/friends/incoming');
+            } else {
+                return redirect('/user/' . $id);
+            }
+        }
+
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
@@ -428,6 +438,16 @@ class frontEnd extends Controller
         if($this->request['data']['user']['username'] != 'Aesthetiful') {
             Session::put('error', 'Currently disabled');
             return redirect('/');
+        }
+
+        if(empty(array_filter($this->request['data']['user']['friends'], function ($entry) use ($id) {
+            return $entry['userid'] == $id;
+        }))) {
+            if(isset($data['feature'])) {
+                return redirect('/friends/incoming');
+            } else {
+                return redirect('/user/' . $id);
+            }
         }
 
         $user = User::find($id);
