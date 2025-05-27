@@ -3786,7 +3786,7 @@ class frontEnd extends Controller
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
-                'username' => 'required|string|alpha_dash|unique:finobe.users,username|min:3|max:20',
+                'username' => 'required|string|regex:/^[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
                 'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
                 'email' => 'required|email|confirmed|unique:finobe.users,email'
             ]);
