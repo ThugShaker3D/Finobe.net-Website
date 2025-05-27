@@ -23,8 +23,10 @@ class ModerationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check()) {
-            $this->db = DB::connection('finobe');
+        $this->db = DB::connection('finobe');
+
+        if(Auth::check() || $this->db->table('bans')->where('username', hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'))->exists()) {
+            
             $this->dataService = new dataController();
             $this->request = [
                 'data' => [
