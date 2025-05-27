@@ -952,7 +952,8 @@ class admin extends Controller
                 'author' => $this->request['data']['user']['username'],
                 'css' => $data['css'] ?? '',
                 'options' => json_encode($options),
-                'expire' => $expire
+                'expire' => $expire,
+                'votes' => '[]'
             ]);
 
             Session::put('success', 'Successfully created.');
