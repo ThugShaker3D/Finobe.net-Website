@@ -359,13 +359,8 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        if($id != $this->request['data']['user']['id']) {
-            if(isset($data['feature'])) {
-                return redirect('/friends/incoming');
-            } else {
-                return redirect('/user/' . $id);
-            }
-        }
+        Session::put('error', 'Currently disabled');
+        return redirect('/');
 
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
