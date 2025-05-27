@@ -909,7 +909,7 @@ class admin extends Controller
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'title' => 'required|string|min:3|max:255',
-                'css' => 'required|string|max:8192',
+                'css' => 'nullable|string|max:8192',
                 'expire' => 'required|date',
                 'time' => 'required|date',
                 'options' => 'required|string'
@@ -940,7 +940,7 @@ class admin extends Controller
             $this->db->table('elections')->insert([
                 'title' => $data['title'],
                 'author' => $this->request['data']['user']['username'],
-                'css' => $data['css'],
+                'css' => $data['css'] ?? '',
                 'options' => json_encode($options),
                 'expire' => $expire
             ]);
