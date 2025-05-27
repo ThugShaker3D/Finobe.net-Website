@@ -229,7 +229,7 @@ class api extends Controller
         if($this->db->table('video_ratings')->where('sender', $user['username'])->where('toid', $data['videoId'])->count()) {
             $ratingData = (array) $this->db->table('video_ratings')
                 ->where('sender', $user['username'])
-                ->where('rate_type', $data['rating'])
+                //->where('rate_type', $data['rating'])
                 ->where('toid', $data['videoId'])
                 ->first();
             
