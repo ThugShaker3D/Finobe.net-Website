@@ -1251,6 +1251,9 @@ class frontEnd extends Controller
 
             if($reply['replyTo']) {
                 $reply['replyComment'] = $this->db->table('forum_replies')->select('comment')->where('id', $reply['replyTo'])->value('comment');
+                $reply['replyComment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                    return $replacements[array_rand($replacements)];
+                }, $reply['replyComment']);
             }
 
             if($this->request['data']['siteusername']) {
