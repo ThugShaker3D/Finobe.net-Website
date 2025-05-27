@@ -3824,6 +3824,11 @@ class frontEnd extends Controller
                 return redirect('/auth/form');
             }
 
+            if(!(bool)env('FINOBE_CREATE_ACCOUNT')) {
+                Session::put('error', 'Account creation is currently disabled');
+                return redirect('/auth/form');
+            }
+
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
 				'secret' => env('GOOGLE_RECAPTCHA_SECRET'),
 				'response' => $data['g-recaptcha-response']
