@@ -3770,7 +3770,7 @@ class frontEnd extends Controller
         }
         */
 
-        
+        /* remove friends of a userid
         $users = User::all();
         $count = 0;
 
@@ -3780,13 +3780,13 @@ class frontEnd extends Controller
             foreach($friends as $key => $friend) {
                 if(in_array($friend['userid'], [5136, 5135, 5130, 5124, 5131])) {
                     unset($friends[$key]);
+                    $user->friends = $friends;
+                    $user->save();
+                    $count++;
                 }
             }
-
-            $user->friends = $friends;
-            $user->save();
-            $count++;
         }
+        */
 
         return response('success', 200);
     }
