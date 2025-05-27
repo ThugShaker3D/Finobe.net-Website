@@ -1068,6 +1068,10 @@ class frontEnd extends Controller
             'blockland.us'
         ];
 
+        $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+            return $replacements[array_rand($replacements)];
+        }, $post['title']);
+
         $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
             return $replacements[array_rand($replacements)];
         }, $post['comment']);
@@ -1150,6 +1154,9 @@ class frontEnd extends Controller
 
             if($sticked['replyTo']) {
                 $sticked['replyComment'] = $this->db->table('forum_replies')->select('comment')->where('id', $sticked['replyTo'])->value('comment');
+                $sticked['replyComment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                    return $replacements[array_rand($replacements)];
+                }, $sticked['replyComment']);
             }
 
             if($this->request['data']['siteusername']) {
