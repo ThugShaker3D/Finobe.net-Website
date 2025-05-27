@@ -3777,7 +3777,7 @@ class frontEnd extends Controller
             $friends = json_decode($user->friends, true);
 
             foreach($friends as $key => $friend) {
-                if(in_array($friend['userid'], [5136, 5135, 5130])) {
+                if(in_array($friend['userid'], [5136, 5135, 5130, 5124])) {
                     unset($friends[$key]);
                     $user->friends = $friends;
                     $user->save();
