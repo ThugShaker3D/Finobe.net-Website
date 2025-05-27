@@ -917,7 +917,7 @@ class admin extends Controller
                 'css' => 'nullable|string|max:8192',
                 'expire' => 'required|date',
                 'time' => 'required|date_format:H:i',
-                'options' => 'required|json'
+                'options' => 'required|array'
             ]);
 
             if($validator->fails()) {
@@ -931,7 +931,12 @@ class admin extends Controller
             }
 
             $id = 1;
-            $options = json_decode($data['options'], true);
+
+            if(!is_array($data['options'])) {
+                $options = json_decode($data['options'], true);
+            } else {
+                $options = $data['options'];
+            }
 
             foreach($options as $key => $option) {
                 $options[$key]['id'] = $id;
