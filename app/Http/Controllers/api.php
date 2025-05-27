@@ -404,7 +404,7 @@ class api extends Controller
         $user->Dius -= $item['additional']['price'];
         $user->save();
 
-        if($user->id != $item['author']) {
+        if(User::where('id', $item['author'])->exists() && $user->id != $item['author']) {
             $user = User::find($item['author']);
             $user->Dius += $item['additional']['price'];
             $user->save();
