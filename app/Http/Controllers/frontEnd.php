@@ -3770,7 +3770,7 @@ class frontEnd extends Controller
         }
         */
 
-        /* to remove a specific user from all friends entries
+        
         $users = User::all();
         $count = 0;
 
@@ -3778,7 +3778,7 @@ class frontEnd extends Controller
             $friends = json_decode($user->friends, true);
 
             foreach($friends as $key => $friend) {
-                if(in_array($friend['userid'], [5136, 5135, 5130, 5124])) {
+                if(in_array($friend['userid'], [5136, 5135, 5130, 5124, 5131])) {
                     unset($friends[$key]);
                 }
             }
@@ -3787,7 +3787,6 @@ class frontEnd extends Controller
             $user->save();
             $count++;
         }
-        */
 
         return response('success', 200);
     }
