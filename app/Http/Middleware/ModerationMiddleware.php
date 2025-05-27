@@ -53,24 +53,26 @@ class ModerationMiddleware
                 ]
             ];
 
-            $this->request['data']['user'] = Auth::user()->toArray();
-            $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
-            $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
-            
-            if($this->request['data']['user']['branding'] == 'finobe') {
-                if($this->request['data']['user']['logo'] == 'v1') {
-                    $this->request['data']['embeds']['image'] .= 'BUSY.png';
-                } elseif($this->request['data']['user']['logo'] == 'v2') {
-                    $this->request['data']['embeds']['image'] .= 'finnobe3.png';
+            if(Auth::check()) {
+                $this->request['data']['user'] = Auth::user()->toArray();
+                $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
+                $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
+                
+                if($this->request['data']['user']['branding'] == 'finobe') {
+                    if($this->request['data']['user']['logo'] == 'v1') {
+                        $this->request['data']['embeds']['image'] .= 'BUSY.png';
+                    } elseif($this->request['data']['user']['logo'] == 'v2') {
+                        $this->request['data']['embeds']['image'] .= 'finnobe3.png';
+                    } else {
+                        $this->request['data']['embeds']['image'] .= 'finnobe3logo.png';
+                    }
                 } else {
-                    $this->request['data']['embeds']['image'] .= 'finnobe3logo.png';
+                    $this->request['data']['embeds']['image'] .= 'logo.png';
                 }
-            } else {
-                $this->request['data']['embeds']['image'] .= 'logo.png';
-            }
 
-            $this->request['data']['user']['friends'] = json_decode($this->request['data']['user']['friends'], true);
-            $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
+                $this->request['data']['user']['friends'] = json_decode($this->request['data']['user']['friends'], true);
+                $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
+            }
 
             if(!$request->isMethod('post') || $this->request['data']['page'] != '/') {
                 if(Session::has('siteipban')) {

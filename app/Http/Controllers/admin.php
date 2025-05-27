@@ -912,7 +912,7 @@ class admin extends Controller
                 'css' => 'nullable|string|max:8192',
                 'expire' => 'required|date',
                 'time' => 'required|date_format:H:i',
-                'options' => 'required|string'
+                'options' => 'required|json'
             ]);
 
             if($validator->fails()) {
