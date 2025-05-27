@@ -67,6 +67,7 @@ class api extends Controller
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
             ->where('purchases.username', $data['user'])
             ->where('purchases.assetid', '!=', 0)
+            ->where('purchases.type', 1)
             ->where('assets.asset_type', $assetTypes[$data['type']])
             ->orderBy('purchases.date', 'desc')
             ->select('assets.id', 'assets.title', 'assets.author', 'assets.asset_type', 'assets.additional')
