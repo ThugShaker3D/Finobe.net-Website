@@ -359,11 +359,6 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        if($this->request['data']['user']['username'] != 'Aesthetiful') {
-            Session::put('error', 'Currently disabled');
-            return redirect('/');
-        }
-
         if(empty(array_filter($this->request['data']['user']['friends'], function ($entry) use ($id) {
             return $entry['userid'] == $id;
         }))) {
@@ -432,11 +427,6 @@ class frontEnd extends Controller
 
         if(!User::where('id', $id)->exists()) {
             Session::put('error', 'User does not exist');
-            return redirect('/');
-        }
-
-        if($this->request['data']['user']['username'] != 'Aesthetiful') {
-            Session::put('error', 'Currently disabled');
             return redirect('/');
         }
 
