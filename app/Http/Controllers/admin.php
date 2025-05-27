@@ -925,7 +925,7 @@ class admin extends Controller
                 return redirect('/admin/elections');
             }
 
-            if($this->db->table('elections')->where('expire', '>', DB::raw('CURDATE()'))->exists()) {
+            if($this->db->table('elections')->where('expire', '>', now())->exists()) {
                 Session::put('error', 'There is an election already active');
                 return redirect('/admin/elections');
             }
