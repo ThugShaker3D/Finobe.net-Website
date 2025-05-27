@@ -2491,7 +2491,7 @@ class frontEnd extends Controller
 
         $this->request['data']['election'] = $election;
 
-        return view($this->request['data']['user']['username'] . '/Election', $this->request);
+        return view($this->request['data']['user']['version'] . '/Election', $this->request);
     }
 
     public function verify_email(Request $request) {
