@@ -3789,7 +3789,7 @@ class frontEnd extends Controller
         }
         */
 
-        return response('success' . $count, 200);
+        return response('success', 200);
     }
 
     public function auth_form(Request $request) {
