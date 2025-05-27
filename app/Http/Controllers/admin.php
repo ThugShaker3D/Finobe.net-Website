@@ -305,8 +305,8 @@ class admin extends Controller
                 ],
                 'reason' => 'required|string|min:3|max:255',
                 'type' => 'required|string|in:n,y|size:1',
-                'date' => 'required|date',
-                'time' => 'required|date_format:H:i'
+                'date' => 'nullable|date',
+                'time' => 'nullable|date_format:H:i'
             ]);
 
             if($validator->fails()) {
