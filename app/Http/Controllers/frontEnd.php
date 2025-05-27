@@ -365,7 +365,7 @@ class frontEnd extends Controller
         $user = User::find($id);
         $user->friends = json_decode($user->friends, true);
         
-        if($user->id == $this->request['data']['user']['id']) {
+        if($id == $this->request['data']['user']['id']) {
             if(isset($data['feature'])) {
                 return redirect('/friends/incoming');
             } else {
