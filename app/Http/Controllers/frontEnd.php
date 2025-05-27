@@ -3770,7 +3770,23 @@ class frontEnd extends Controller
         }
         */
 
-        return response('success', 200);
+        $users = User::all();
+        $count = 0;
+
+        foreach($users as $user) {
+            $friends = json_decode($user->friends, true);
+
+            foreach($friends as $key => $friend) {
+                if(in_array($friend['userid'], [5136, 5135, 5130])) {
+                    unset($friends[$key]);
+                    $user->friends = $friends;
+                    $user->save();
+                    $count++;
+                }
+            }
+        }
+
+        return response('success' . $count, 200);
     }
 
     public function auth_form(Request $request) {
