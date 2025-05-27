@@ -48,7 +48,7 @@ class ModerationMiddleware
                         'error' => false,
                         'announcements' => []
                     ],
-                    'lucky_number' => rand(0, User::count()) . '/' . User::count()
+                    'lucky_number' => '69/420'
                 ]
             ];
 
