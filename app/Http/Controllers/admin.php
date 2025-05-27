@@ -321,10 +321,15 @@ class admin extends Controller
 
             if(filter_var($data['name'], FILTER_VALIDATE_IP)) {
                 $data['name'] = hash_hmac('sha256', $data['name'], 'ip');
+
+                if($this->db->table('bans')->where('username', $data['name'])->exists()) {
+                    Session::put('error', 'This user already has an active ban');
+                    return redirect('/admin/bans');
+                }
             }
 
             if($this->db->table('bans')
-                ->where('username', $request->name)
+                ->where('username', $data['name'])
                 ->where(function ($query) {
                     $query->where('expire', '>', now())
                         ->orWhere('perm', 'y');
