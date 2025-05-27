@@ -620,11 +620,21 @@ class frontEnd extends Controller
 
         if(isset($data['search'])) {
             $search = '%' . htmlspecialchars($data['search']) . '%';
-            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+            $results = User::whereNotIn('username', function ($query) {
+                $query->select('username')
+                    ->from('bans')
+                    ->where('perm', 'y');
+                })
+                ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
                 ->orderBy('lastlogin', 'desc')
                 ->count();
         } else {
-            $results = User::orderBy('lastlogin', 'desc')
+            $results = User::whereNotIn('username', function ($query) {
+                $query->select('username')
+                    ->from('bans')
+                    ->where('perm', 'y');
+                })
+                ->orderBy('lastlogin', 'desc')
                 ->count();
         }
 
@@ -635,14 +645,24 @@ class frontEnd extends Controller
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
 
         if(isset($data['search'])) {
-            $results = User::whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
+            $results = User::whereNotIn('username', function ($query) {
+                $query->select('username')
+                    ->from('bans')
+                    ->where('perm', 'y');
+                })
+                ->whereRaw('LOWER(username) LIKE LOWER(?)', ["%{$search}%"])
                 ->orderBy('lastlogin', 'desc')
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
                 ->toArray();
         } else {
-            $results = User::orderBy('lastlogin', 'desc')
+            $results = User::whereNotIn('username', function ($query) {
+                $query->select('username')
+                    ->from('bans')
+                    ->where('perm', 'y');
+                })
+                ->orderBy('lastlogin', 'desc')
                 ->offset($offset)
                 ->limit($results_per_page)
                 ->get()
