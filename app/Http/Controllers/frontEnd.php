@@ -3813,6 +3813,11 @@ class frontEnd extends Controller
         }
 
         if($request->isMethod('post')) {
+            $forbiddenPhrases = [
+                'raped', 'dick', 'aesthetiful', 'instance', 'fuck', 'shit', 'fag', 'f@g', 'd1ck', 'pussy',
+                'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t'
+            ];
+
             $validator = Validator::make($data, [
                 'username' => 'required|string|regex:/^[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
                 'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
@@ -3827,6 +3832,14 @@ class frontEnd extends Controller
             if(!(bool)env('FINOBE_CREATE_ACCOUNT')) {
                 Session::put('error', 'Account creation is currently disabled');
                 return redirect('/auth/form');
+            }
+
+            $username = strtolower($data['username']);
+            foreach ($forbiddenPhrases as $phrase) {
+                if (str_contains($username, strtolower($phrase))) {
+                    Session::put('error', 'The username field must not be greater than 20 characters.');
+                    return redirect('/auth/form');
+                }
             }
 
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
