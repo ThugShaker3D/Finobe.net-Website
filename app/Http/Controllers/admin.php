@@ -911,7 +911,7 @@ class admin extends Controller
                 'title' => 'required|string|min:3|max:255',
                 'css' => 'nullable|string|max:8192',
                 'expire' => 'required|date',
-                'time' => 'required|date',
+                'time' => 'required|date_format:H:i',
                 'options' => 'required|string'
             ]);
 
