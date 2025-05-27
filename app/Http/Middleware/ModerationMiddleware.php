@@ -26,7 +26,6 @@ class ModerationMiddleware
         $this->db = DB::connection('finobe');
 
         if(Auth::check() || $this->db->table('bans')->where('username', hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'))->exists()) {
-            
             $this->dataService = new dataController();
             $this->request = [
                 'data' => [
