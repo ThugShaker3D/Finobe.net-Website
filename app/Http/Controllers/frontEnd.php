@@ -3855,7 +3855,7 @@ class frontEnd extends Controller
         if($request->isMethod('post')) {
             $forbiddenPhrases = [
                 'raped', 'dick', 'aesthetiful', 'instance', 'fuck', 'shit', 'fag', 'f@g', 'd1ck', 'pussy',
-                'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t', 'r@ped'
+                'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t', 'r@ped', 'tities', 't1t1es'
             ];
 
             $validator = Validator::make($data, [
