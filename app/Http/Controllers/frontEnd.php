@@ -1357,6 +1357,8 @@ class frontEnd extends Controller
                         'moderator' => 'Auto'
                     ]);
                 }
+
+                return redirect('/');
             }
 
             $id = $this->db->table('forum_replies')->insertGetId([
