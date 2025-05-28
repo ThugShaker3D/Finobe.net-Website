@@ -93,75 +93,77 @@ class ModerationMiddleware
                 return response()->view($this->request['data']['user']['version'] . '/403', $this->request);
             }
 
-            if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
-                $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
-                $this->request['data']['isCurrentlyBanned'] = true;
-                $this->request['data']['moderationType'] = 1;
-                $this->request['data']['ban_info'] = (array) $this->db->table('warning')
-                    ->where('username', $this->request['data']['user']['username'])
-                    ->where('reactivated', 'n')
-                    ->first();
-                    
-                return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
-            }
-
-            if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
-                $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
-                $this->request['data']['isCurrentlyBanned'] = $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->where(DB::raw('TIMESTAMPDIFF(SECOND, NOW(), expire)'), '>', 0)->exists();
-                $this->request['data']['moderationType'] = 2;
-                $this->request['data']['ban_info'] = (array) $this->db->table('bans')
-                    ->where('username', $this->request['data']['user']['username'])
-                    ->where('reactivated', 'n')
-                    ->first();
-                    
-                $currentDateTime = new \DateTime('now', new \DateTimeZone('America/Los_Angeles'));
-                $futureDateTime = new \DateTime($this->request['data']['ban_info']['expire'], new \DateTimeZone('America/Los_Angeles'));
-                    
-                $timeDifference = $currentDateTime->diff($futureDateTime);
+            if(Auth::check()) {
+                if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                    $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
+                    $this->request['data']['isCurrentlyBanned'] = true;
+                    $this->request['data']['moderationType'] = 1;
+                    $this->request['data']['ban_info'] = (array) $this->db->table('warning')
+                        ->where('username', $this->request['data']['user']['username'])
+                        ->where('reactivated', 'n')
+                        ->first();
                         
-                $days = $timeDifference->d;
-                $hours = $timeDifference->h;
-                $minutes = $timeDifference->i;
-                $seconds = $timeDifference->s;
-
-                $format = '';
-                if ($days > 0) {
-                    $format .= $days . ' day' . ($days > 1 ? 's' : '');
-                }
-                if ($hours > 0) {
-                    $format .= ($format !== '' ? ', ' : '') . $hours . ' hour' . ($hours > 1 ? 's' : '');
-                }
-                if ($minutes > 0) {
-                    $format .= ($format !== '' ? ' and ' : '') . $minutes . ' minute' . ($minutes > 1 ? 's' : '');                    }
-                if ($seconds > 0) {
-                    $format .= ($format !== '' ? ' and ' : '') . $seconds . ' second' . ($seconds > 1 ? 's' : '');
+                    return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
                 }
 
-                $this->request['data']['expiration'] = $format;
-                $this->request['data']['expiration_formatted'] = date('Y-m-d', strtotime($this->request['data']['ban_info']['expire']));
-                
-                return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
-            }
+                if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                    $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
+                    $this->request['data']['isCurrentlyBanned'] = $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->where(DB::raw('TIMESTAMPDIFF(SECOND, NOW(), expire)'), '>', 0)->exists();
+                    $this->request['data']['moderationType'] = 2;
+                    $this->request['data']['ban_info'] = (array) $this->db->table('bans')
+                        ->where('username', $this->request['data']['user']['username'])
+                        ->where('reactivated', 'n')
+                        ->first();
+                        
+                    $currentDateTime = new \DateTime('now', new \DateTimeZone('America/Los_Angeles'));
+                    $futureDateTime = new \DateTime($this->request['data']['ban_info']['expire'], new \DateTimeZone('America/Los_Angeles'));
+                        
+                    $timeDifference = $currentDateTime->diff($futureDateTime);
+                            
+                    $days = $timeDifference->d;
+                    $hours = $timeDifference->h;
+                    $minutes = $timeDifference->i;
+                    $seconds = $timeDifference->s;
 
-            if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email/') {
-                if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
-                    $this->request['data']['embeds']['title'] = 'Verify Email' . $this->request['data']['embeds']['title'];
-                    $this->request['data']['alerts']['successv2'] = Session::get('successv2', false);
-                    $this->request['data']['alerts']['success'] = Session::get('success', false);
-                    $this->request['data']['alerts']['error'] = Session::get('error', false);
-                    if($this->request['data']['alerts']['successv2']) {
-                        Session::forget('successv2');
+                    $format = '';
+                    if ($days > 0) {
+                        $format .= $days . ' day' . ($days > 1 ? 's' : '');
+                    }
+                    if ($hours > 0) {
+                        $format .= ($format !== '' ? ', ' : '') . $hours . ' hour' . ($hours > 1 ? 's' : '');
+                    }
+                    if ($minutes > 0) {
+                        $format .= ($format !== '' ? ' and ' : '') . $minutes . ' minute' . ($minutes > 1 ? 's' : '');                    }
+                    if ($seconds > 0) {
+                        $format .= ($format !== '' ? ' and ' : '') . $seconds . ' second' . ($seconds > 1 ? 's' : '');
                     }
 
-                    if($this->request['data']['alerts']['success']) {
-                        Session::forget('success');
-                    }
+                    $this->request['data']['expiration'] = $format;
+                    $this->request['data']['expiration_formatted'] = date('Y-m-d', strtotime($this->request['data']['ban_info']['expire']));
                     
-                    if($this->request['data']['alerts']['error']) {
-                        Session::forget('error');
-                    }
+                    return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
+                }
 
-                    return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
+                if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email/') {
+                    if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
+                        $this->request['data']['embeds']['title'] = 'Verify Email' . $this->request['data']['embeds']['title'];
+                        $this->request['data']['alerts']['successv2'] = Session::get('successv2', false);
+                        $this->request['data']['alerts']['success'] = Session::get('success', false);
+                        $this->request['data']['alerts']['error'] = Session::get('error', false);
+                        if($this->request['data']['alerts']['successv2']) {
+                            Session::forget('successv2');
+                        }
+
+                        if($this->request['data']['alerts']['success']) {
+                            Session::forget('success');
+                        }
+                        
+                        if($this->request['data']['alerts']['error']) {
+                            Session::forget('error');
+                        }
+
+                        return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
+                    }
                 }
             }
         }
