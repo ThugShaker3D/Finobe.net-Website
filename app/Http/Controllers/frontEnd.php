@@ -1650,10 +1650,6 @@ class frontEnd extends Controller
             return redirect('/forum/home');
         }
 
-        if(!$this->db->table('forum_threads')->where('id', $data['id'])->exists()) {
-            return redirect('/forum/home');
-        }
-
         if($this->db->table('subscriptions')->where('username', $this->request['data']['user']['username'])->where('forumId', $data['id'])->exists()) {
             $this->db->table('subscriptions')
                 ->where('username', $this->request['data']['user']['username'])
