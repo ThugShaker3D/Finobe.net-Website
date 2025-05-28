@@ -99,7 +99,7 @@ class ModerationMiddleware
                     Session::put('siteipban', 'true');
                 }
                 
-                if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                if(parse_url(env('APP_URL'), PHP_URL_HOST) != $request->getHost()) {
                     return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
                 }
 
@@ -108,7 +108,7 @@ class ModerationMiddleware
 
             if(Auth::check()) {
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
-                    if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                    if(parse_url(env('APP_URL'), PHP_URL_HOST) != $request->getHost()) {
                         return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
                     }
 
@@ -124,7 +124,7 @@ class ModerationMiddleware
                 }
 
                 if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('perm', 'y')->exists() || $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
-                    if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                    if(parse_url(env('APP_URL'), PHP_URL_HOST) != $request->getHost()) {
                         return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
                     }
                     
@@ -167,10 +167,10 @@ class ModerationMiddleware
 
                 if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email/') {
                     if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
-                        if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                        if(parse_url(env('APP_URL'), PHP_URL_HOST) != $request->getHost()) {
                             return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
                         }
-                        
+
                         $this->request['data']['embeds']['title'] = 'Verify Email' . $this->request['data']['embeds']['title'];
                         $this->request['data']['alerts']['successv2'] = Session::get('successv2', false);
                         $this->request['data']['alerts']['success'] = Session::get('success', false);
