@@ -114,7 +114,7 @@ class ModerationMiddleware
                     return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
                 }
 
-                if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('perm', 'y')->exists() || $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
                     $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
                     $this->request['data']['isCurrentlyBanned'] = $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->where(DB::raw('TIMESTAMPDIFF(SECOND, NOW(), expire)'), '>', 0)->exists();
                     $this->request['data']['moderationType'] = 2;
