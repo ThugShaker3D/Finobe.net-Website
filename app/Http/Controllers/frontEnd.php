@@ -190,6 +190,9 @@ class frontEnd extends Controller
                     ->update([
                         'reactivated' => 'y'
                     ]);
+            } else {
+                Session::put('error', 'This activity has been logged and your ban may be extended');
+                return redirect('/');
             }
 
             if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
