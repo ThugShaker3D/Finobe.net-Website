@@ -183,7 +183,7 @@ class frontEnd extends Controller
                 return redirect('/');
             }
 
-            if(Carbon::parse($ban->expire)->lt(now())) {
+            if(Carbon::parse($ban['expire'])->lt(now())) {
                 $this->db->table('bans')
                     ->where('username', $this->request['data']['user']['username'])
                     ->where('reactivated', 'n')
