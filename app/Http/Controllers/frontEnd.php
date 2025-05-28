@@ -1542,7 +1542,7 @@ class frontEnd extends Controller
 
         if($request->isMethod('post')) {
             if($request->hasFile('file')) {
-                if($this->request['data']['user']['status'] == 'admin') {
+                if($this->request['data']['user']['status'] != 'admin') {
                     return redirect('/app/forum/new/post');
                 }
 
@@ -1580,6 +1580,11 @@ class frontEnd extends Controller
 
                 if($validator->fails()) {
                     Session::put('error', $validator->errors()->first());
+                    return redirect('/app/forum/new/post');
+                }
+
+                if(Carbon::parse($this->request['data']['user']['post_cooldown'])->lt(now()->subMinutes(5))) {
+                    Session::put('error', 'You are posting too often');
                     return redirect('/app/forum/new/post');
                 }
 
