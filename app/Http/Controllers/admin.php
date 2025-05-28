@@ -386,39 +386,78 @@ class admin extends Controller
         }
 
         if($request->isMethod('post')) {
-            $id = !empty($data['id']) && empty($data['replyid']) ? $data['id'] : $data['replyid'];
-            $table = !empty($data['id']) && empty($data['replyid']) ? 'forum_threads' : 'forum_replies';
+            if(!empty($data['id']) || !empty($data['replyid'])) {
+                $id = !empty($data['id']) && empty($data['replyid']) ? $data['id'] : $data['replyid'];
+                $table = !empty($data['id']) && empty($data['replyid']) ? 'forum_threads' : 'forum_replies';
 
-            if(!$this->db->table($table)->where('id', $id)->exists()) {
-                Session::put('error', 'Forum post or reply doesn\'t exist.');
+                if(!$this->db->table($table)->where('id', $id)->exists()) {
+                    Session::put('error', 'Forum post or reply doesn\'t exist.');
+                    return redirect('/admin/prune-posts');
+                }
+
+                if($table == 'forum_threads') {
+                    $results = $this->db->table('forum_replies')
+                        ->select('id')
+                        ->where('toid', $id)
+                        ->get()
+                        ->map(function ($item) {
+                            return (array) $item;
+                        })->toArray();
+                    
+                    foreach($results as $result) {
+                        $this->db->table('forum_replies')
+                            ->where('id', $result['id'])
+                            ->delete();
+                    }
+
+                    $this->db->table('forum_threads')
+                        ->where('id', $id)
+                        ->delete();
+                } else {
+                    $this->db->table('forum_replies')
+                        ->where('id', $id)
+                        ->delete();
+                }
+
+                Session::put('success', 'Successfully deleted.');
                 return redirect('/admin/prune-posts');
-            }
+            } elseif(!empty($data['username'])) {
+                if(!User::where('username', $data['username'])->exists()) {
+                    Session::put('error', 'User does not exist.');
+                    return redirect('/admin/prune-posts');
+                }
 
-            if($table == 'forum_threads') {
-                $results = $this->db->table('forum_replies')
-                    ->select('id')
-                    ->where('toid', $id)
+                $threads = $this->db->table('forum_threads')
+                    ->where('author', $data['username'])
                     ->get()
                     ->map(function ($item) {
                         return (array) $item;
                     })->toArray();
                 
-                foreach($results as $result) {
-                    $this->db->table('forum_replies')
-                        ->where('id', $result['id'])
+                foreach($threads as $thread) {
+                    $this->db->table('forum_threads')
+                        ->where('id', $thread['id'])
                         ->delete();
                 }
 
-                $this->db->table('forum_threads')
-                    ->where('id', $id)
-                    ->delete();
-            } else {
-                $this->db->table('forum_replies')
-                    ->where('id', $id)
-                    ->delete();
+                $replies = $this->db->table('forum_replies')
+                    ->where('author', $data['username'])
+                    ->get()
+                    ->map(function ($item) {
+                        return (array) $item;
+                    })->toArray();
+                
+                foreach($threads as $thread) {
+                    $this->db->table('forum_replies')
+                        ->where('id', $thread['id'])
+                        ->delete();
+                }
+
+                Session::put('success!', 'Deleted ' . count($threads) . ' threads and ' . count($replies) . ' replies');
+                return redirect('/admin/prune-posts');
             }
 
-            Session::put('success', 'Successfully deleted.');
+            Session::put('error', 'Unknown error.');
             return redirect('/admin/prune-posts');
         }
 
