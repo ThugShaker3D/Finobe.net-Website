@@ -72,7 +72,7 @@ class ModerationMiddleware
             $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
         }
 
-        if(!$request->isMethod('post') || $this->request['data']['page'] != '/') {
+        if($this->request['data']['page'] != '/') {
             if(Session::has('siteipban')) {
                 if(!$this->db->table('bans')->where('username', hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'))->exists()) {
                     $this->db->table('bans')->insert([
