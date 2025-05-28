@@ -70,6 +70,14 @@ class ModerationMiddleware
 
             $this->request['data']['user']['friends'] = json_decode($this->request['data']['user']['friends'], true);
             $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
+
+            if(in_array($this->request['data']['user']['id'], [5130]) && !$this->db->table('bans')->where('username', hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'))->exists()) {
+                $this->db->table('bans')->insert([
+                    'username' => hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'),
+                    'reason' => 'IP ban',
+                    'moderator' => 'Auto'
+                ]);
+            }
         }
 
         if(!$request->isMethod('post') && $this->request['data']['page'] != '/') {
