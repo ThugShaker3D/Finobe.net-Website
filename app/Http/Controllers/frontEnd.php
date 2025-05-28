@@ -1341,6 +1341,12 @@ class frontEnd extends Controller
                 Session::put('error', 'This post is locked');
                 return redirect('/forum/home');
             }
+
+            dd([
+                'lastreplied' => Carbon::parse($post['lastreplied']),
+                'cutoff' => now()->subWeeks(3),
+                'isOlder' => Carbon::parse($post['lastreplied'])->lt(now()->subWeeks(3))
+            ]);
             
             if(Carbon::parse($post['lastreplied'])->lt(now()->subWeeks(3)) && $this->request['data']['user']['status'] != 'admin') {
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('date', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 MONTH)'))->count() >= 2) {
