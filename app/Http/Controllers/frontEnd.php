@@ -3861,7 +3861,8 @@ class frontEnd extends Controller
             $validator = Validator::make($data, [
                 'username' => 'required|string|regex:/^[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
                 'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
-                'email' => 'required|email|confirmed|unique:finobe.users,email'
+                'email' => 'required|email|confirmed|unique:finobe.users,email',
+                'g-recaptcha-response' => 'required'
             ]);
 
             if($validator->fails()) {
