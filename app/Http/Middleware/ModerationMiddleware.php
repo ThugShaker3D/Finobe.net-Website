@@ -98,12 +98,20 @@ class ModerationMiddleware
                 if(!Session::has('siteipban')) {
                     Session::put('siteipban', 'true');
                 }
-                    
+                
+                if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                    return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
+                }
+
                 return response()->view($this->request['data']['user']['version'] . '/403', $this->request);
             }
 
             if(Auth::check()) {
                 if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                    if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                        return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
+                    }
+
                     $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
                     $this->request['data']['isCurrentlyBanned'] = true;
                     $this->request['data']['moderationType'] = 1;
@@ -111,11 +119,15 @@ class ModerationMiddleware
                         ->where('username', $this->request['data']['user']['username'])
                         ->where('reactivated', 'n')
                         ->first();
-                        
+                    
                     return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
                 }
 
                 if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('perm', 'y')->exists() || $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                    if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                        return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
+                    }
+                    
                     $this->request['data']['embeds']['title'] = 'Moderation' . $this->request['data']['embeds']['title'];
                     $this->request['data']['isCurrentlyBanned'] = $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->where(DB::raw('TIMESTAMPDIFF(SECOND, NOW(), expire)'), '>', 0)->exists();
                     $this->request['data']['moderationType'] = 2;
@@ -155,6 +167,10 @@ class ModerationMiddleware
 
                 if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email/') {
                     if($this->request['data']['user']['verified'] == 'n' && $this->request['data']['page'] != '/legal/welcome') {
+                        if(parse_url(env('APP_URL'), PHP_URL_HOST) == $request->getHost()) {
+                            return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
+                        }
+                        
                         $this->request['data']['embeds']['title'] = 'Verify Email' . $this->request['data']['embeds']['title'];
                         $this->request['data']['alerts']['successv2'] = Session::get('successv2', false);
                         $this->request['data']['alerts']['success'] = Session::get('success', false);
