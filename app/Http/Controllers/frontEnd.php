@@ -1642,7 +1642,7 @@ class frontEnd extends Controller
         }
 
         $validator = Validator::make($data, [
-            'id' => 'required|integer|exists:forums,id'
+            'id' => 'required|integer|exists:finobe.forums,id'
         ]);
 
         if($validator->fails()) {
