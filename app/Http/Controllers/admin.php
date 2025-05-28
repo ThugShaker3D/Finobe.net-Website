@@ -453,7 +453,7 @@ class admin extends Controller
                         ->delete();
                 }
 
-                Session::put('success!', 'Deleted ' . count($threads) . ' threads and ' . count($replies) . ' replies');
+                Session::put('success!', 'Deleted successfully');
                 return redirect('/admin/prune-posts');
             }
 
