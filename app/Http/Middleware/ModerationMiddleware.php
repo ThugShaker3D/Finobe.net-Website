@@ -123,7 +123,7 @@ class ModerationMiddleware
                     return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
                 }
 
-                if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('perm', 'y')->exists() || $this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
+                if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
                     if(parse_url(env('APP_URL'), PHP_URL_HOST) != $request->getHost()) {
                         return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
                     }
