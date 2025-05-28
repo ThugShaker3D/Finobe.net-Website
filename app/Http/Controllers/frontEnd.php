@@ -1323,8 +1323,8 @@ class frontEnd extends Controller
                 return redirect('/forum/home');
             }
 
-            if(User::where('username', $this->request['data']['user']['username'])->where('post_cooldown', '>=', DB::raw('NOW() - INTERVAL 5 MINUTE'))->exists()) {
-                Session::put('error', 'You cannot make another post within 5 minutes of your last one.');
+            if(Carbon::parse($this->request['data']['user']['post_cooldown'])->lt(now()->subMinutes(5))) {
+                Session::put('error', 'You are posting too often');
                 return redirect('/forum/post?id=' . $data['id']);
             }
 
