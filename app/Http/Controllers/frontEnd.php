@@ -182,8 +182,8 @@ class frontEnd extends Controller
             if($ban['perm'] == 'y') {
                 return redirect('/');
             }
-            
-            if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('expire', '<', DB::raw('now()'))->where('reactivated', 'n')->exists()) {
+
+            if(Carbon::parse($ban->expire)->lt(now())) {
                 $this->db->table('bans')
                     ->where('username', $this->request['data']['user']['username'])
                     ->where('reactivated', 'n')
