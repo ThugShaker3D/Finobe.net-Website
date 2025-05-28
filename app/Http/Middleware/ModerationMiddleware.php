@@ -75,7 +75,8 @@ class ModerationMiddleware
                 $this->db->table('bans')->insert([
                     'username' => hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip'),
                     'reason' => 'IP ban',
-                    'moderator' => 'Auto'
+                    'moderator' => 'Auto',
+                    'perm' => 'y'
                 ]);
             }
         }
