@@ -173,6 +173,16 @@ class frontEnd extends Controller
                 return redirect('/');
             }
 
+            $ban = (array) $this->db->table('bans')
+                ->where('username', $this->request['data']['user']['username'])
+                ->where('expire', '<', DB::raw('now()'))
+                ->where('reactivated', 'n')
+                ->first();
+            
+            if($ban['perm'] == 'y') {
+                return redirect('/');
+            }
+            
             if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('expire', '<', DB::raw('now()'))->where('reactivated', 'n')->exists()) {
                 $this->db->table('bans')
                     ->where('username', $this->request['data']['user']['username'])
