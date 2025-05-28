@@ -1639,7 +1639,12 @@ class frontEnd extends Controller
             return redirect('/');
         }
 
-        if(!isset($data['id'])) {
+        $validator = Validator::make($data, [
+            'id' => 'required|integer|exists:forums,id'
+        ]);
+
+        if($validator->fails()) {
+            Session::put('error', $validator->errors()->first());
             return redirect('/forum/home');
         }
 
