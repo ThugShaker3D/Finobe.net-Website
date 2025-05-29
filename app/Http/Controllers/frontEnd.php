@@ -173,26 +173,28 @@ class frontEnd extends Controller
                 return redirect('/');
             }
 
-            $ban = (array) $this->db->table('bans')
-                ->where('username', $this->request['data']['user']['username'])
-                ->where('expire', '<', DB::raw('now()'))
-                ->where('reactivated', 'n')
-                ->first();
-            
-            if($ban['perm'] == 'y') {
-                return redirect('/');
-            }
-
-            if(Carbon::parse($ban['expire'])->lt(now())) {
-                $this->db->table('bans')
+            if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('expire', '<', DB::raw('now()'))->where('reactivated', 'n')->exists()) {
+                $ban = (array) $this->db->table('bans')
                     ->where('username', $this->request['data']['user']['username'])
+                    ->where('expire', '<', DB::raw('now()'))
                     ->where('reactivated', 'n')
-                    ->update([
-                        'reactivated' => 'y'
-                    ]);
-            } else {
-                Session::put('error', 'This activity has been logged and your ban may be extended');
-                return redirect('/');
+                    ->first();
+                
+                if($ban['perm'] == 'y') {
+                    return redirect('/');
+                }
+
+                if(Carbon::parse($ban['expire'])->lt(now())) {
+                    $this->db->table('bans')
+                        ->where('username', $this->request['data']['user']['username'])
+                        ->where('reactivated', 'n')
+                        ->update([
+                            'reactivated' => 'y'
+                        ]);
+                } else {
+                    Session::put('error', 'This activity has been logged and your ban may be extended');
+                    return redirect('/');
+                }
             }
 
             if($this->db->table('warning')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
