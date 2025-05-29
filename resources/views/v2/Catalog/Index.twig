@@ -61,7 +61,7 @@
                 <p class="mb-2{{ (data.user.theme == 0) ? " text-black" : "" }}" style="margin-left: auto;">Uploader</p>
             </div>
             {% endif %}
-            <div class="row catalog-items">
+            <div class="justify-content-center row catalog-items">
                 {% for item in data.items.data %}
                   {% if item.asset_type == 3 %}
                     <div class="col-md-12 mb-2">
