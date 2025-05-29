@@ -1356,7 +1356,7 @@ class frontEnd extends Controller
                 return redirect('/forum/home');
             }
 
-            if(Carbon::parse($this->request['data']['user']['post_cooldown'])->lt(now()->subMinutes(5))) {
+            if(Carbon::parse($this->request['data']['user']['post_cooldown'])->gt(Carbon::now()->subMinutes(5))) {
                 Session::put('error', 'You are posting too often');
                 return redirect('/forum/post?id=' . $data['id']);
             }
