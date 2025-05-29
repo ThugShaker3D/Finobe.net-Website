@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\SetClientIp;
+use App\Http\Middleware\ModerationMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,4 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
             '/Game/PlaceLauncher.ashx',
             '/api/gameserver/update'
         ]);
-    })->create();
+    })
+    ->withMiddleware([
+        SetClientIp::class,
+        ModerationMiddleware::class
+    ])
+    ->create();
