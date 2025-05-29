@@ -9,7 +9,7 @@ use App\Http\Middleware\LimitReqestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([SetClientIp::class, LimitReqestPerIp::class, ModerationMiddleware::class])->group(function() {
+Route::middleware([SetClientIp::class, ModerationMiddleware::class])->group(function() {
     Route::domain(parse_url(env('APP_URL'), PHP_URL_HOST))->group(function() {
         Route::fallback(function() {
             return response()->view('v2/404', [
