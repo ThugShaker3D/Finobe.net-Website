@@ -687,7 +687,7 @@ class frontEnd extends Controller
         foreach($results as $result) {
             $users[] = [
                 'id' => $result['id'],
-                'username' => strip_tags(htmlspecialchars($result['username'])),
+                'username' => $result['username'],
                 'pfp' => $result['pfp'],
                 'lastlogin' => date('m/d/Y h:i A', strtotime($result['lastlogin'])),
                 'IsOnline' => Carbon::parse($result['lastlogin'])->gt(Carbon::now()->subMinutes(2))
