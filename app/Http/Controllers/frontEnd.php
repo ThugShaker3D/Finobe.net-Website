@@ -2444,6 +2444,11 @@ class frontEnd extends Controller
                 return redirect('/invites');
             }
 
+            if($this->db->table('invitekeys')->where('author', $this->request['data']['user']['username'])->where('used', 'n')->count() >= 5) {
+                Session::put('error', 'You have too many unused keys');
+                return redirect('/invites');
+            }
+
             function inviteKey($length) {
                 $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
                 $randomString = '';
