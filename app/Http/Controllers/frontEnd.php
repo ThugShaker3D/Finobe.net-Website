@@ -1277,7 +1277,7 @@ class frontEnd extends Controller
             $converter = new MarkdownConverter($environment);
 
             if($reply['status'] != "admin") {
-                $reply['comment'] = strip_tags($reply['comment']);
+                $reply['comment'] = strip_tags(htmlspecialchars($reply['comment']));
             }
 
             $reply['comment'] = $converter->convert($reply['comment'])->getContent();
@@ -1285,7 +1285,7 @@ class frontEnd extends Controller
                 if (strpos($matches[0], '<img') === 0) {
                     return $matches[0];
                 } else {
-                    return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+                    return '<a href="' . htmlspecialchars($url, ENT_QUOTES) . '" target="_blank">' . $matches[0] . '</a>';
                 }
             }, $reply['comment']);
 
