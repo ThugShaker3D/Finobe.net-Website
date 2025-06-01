@@ -1277,7 +1277,7 @@ class frontEnd extends Controller
             $converter = new MarkdownConverter($environment);
 
             if($reply['status'] != "admin") {
-                $reply['comment'] = strip_tags(htmlspecialchars($reply['comment']));
+                $reply['comment'] = strip_tags($reply['comment']);
             }
 
             $reply['comment'] = $converter->convert($reply['comment'])->getContent();
