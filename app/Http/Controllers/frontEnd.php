@@ -1825,7 +1825,10 @@ class frontEnd extends Controller
         }
 
         if(count($results) && count($items) < 12) {
-            $items[] = [];
+            $missing = $results_per_page - count($items);
+            for ($i = 0; $i < $missing; $i++) {
+                $items[] = [];
+            }
         }
 
         $this->request['data']['items'] = [
