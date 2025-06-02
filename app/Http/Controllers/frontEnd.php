@@ -1099,6 +1099,23 @@ class frontEnd extends Controller
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
+        $phrasesToReplace = [
+            'fuck',
+            'fucking',
+            'roblox',
+            'rob lox',
+            'robux',
+            'ass',
+            'asshole',
+            'shit'
+        ];
+
+        $replacements = [
+            'OBAMA BALL',
+            'sonic 06',
+            'blockland.us'
+        ];
+        
         if(!isset($data['edit'])) {
             $environment = new Environment([
                 'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
@@ -1107,23 +1124,6 @@ class frontEnd extends Controller
 
             $environment->addExtension(new CommonMarkCoreExtension());
             $converter = new MarkdownConverter($environment);
-
-            $phrasesToReplace = [
-                'fuck',
-                'fucking',
-                'roblox',
-                'rob lox',
-                'robux',
-                'ass',
-                'asshole',
-                'shit'
-            ];
-
-            $replacements = [
-                'OBAMA BALL',
-                'sonic 06',
-                'blockland.us'
-            ];
 
             $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
                 return $replacements[array_rand($replacements)];
