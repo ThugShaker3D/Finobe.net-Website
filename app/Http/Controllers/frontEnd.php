@@ -2605,7 +2605,7 @@ class frontEnd extends Controller
         ]);
 
         if(!$response->successful()) {
-            Session::put('error', 'There was an error while sending the email, please try again.');
+            Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
             return redirect('/');
         }
 
