@@ -1824,7 +1824,7 @@ class frontEnd extends Controller
             $items[] = $result;
         }
 
-        if(count($results)) {
+        if(count($results) && count($items) < 12) {
             $items[] = [];
         }
 
