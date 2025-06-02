@@ -1811,7 +1811,9 @@ class frontEnd extends Controller
         }
 
         if(count($results)) {
-            $result[] = [];
+            $result[] = [
+                'id' => 0
+            ];
         }
 
         foreach($results as $result) {
