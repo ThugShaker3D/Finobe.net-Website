@@ -211,7 +211,7 @@ class frontEnd extends Controller
         }
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['gamess'] = [];
+            $this->request['data']['games'] = [];
 
             $games = Cache::remember('latest_places', 60 * 10, function() {
                 return $this->db->table('assets')
@@ -244,7 +244,7 @@ class frontEnd extends Controller
                 }
 
                 $thumbnail = $this->db->table('assets')
-                    ->select('file')
+                    ->select('filhe')
                     ->where('id', $game['additional']['media']['imageAssetId'])
                     ->value('file');
                 
