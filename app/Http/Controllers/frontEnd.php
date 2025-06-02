@@ -76,7 +76,18 @@ class frontEnd extends Controller
 		}
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['user'] = Auth::user()->toArray();
+            $this->request['data']['user'] = Auth::user();
+
+            if(!$this->request['data']['user']) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect('/');
+            }
+
+            $this->request['data']['user'] = $this->request['data']['user']->toArray();
+
             $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
             
