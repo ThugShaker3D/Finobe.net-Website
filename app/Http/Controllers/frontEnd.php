@@ -63,8 +63,6 @@ class frontEnd extends Controller
             ]
         ];
 
-        hrehre;
-
         if($this->request['data']['alerts']['successv2']) {
 			Session::forget('successv2');
 		}
