@@ -1115,7 +1115,7 @@ class frontEnd extends Controller
             'sonic 06',
             'blockland.us'
         ];
-        
+
         if(!isset($data['edit'])) {
             $environment = new Environment([
                 'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
@@ -1153,6 +1153,10 @@ class frontEnd extends Controller
             $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
                 return $replacements[array_rand($replacements)];
             }, $post['comment']);
+
+            if($post['status'] != "admin") {
+                $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
+            }
         }
 
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
