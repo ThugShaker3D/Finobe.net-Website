@@ -1824,7 +1824,7 @@ class frontEnd extends Controller
             $items[] = $result;
         }
 
-        if(count($results) && count($items) < 12) {
+        if($sections[$section] != 3 && count($results) && count($items) < 12) {
             $missing = $results_per_page - count($items);
             for ($i = 0; $i < $missing; $i++) {
                 $items[] = [];
