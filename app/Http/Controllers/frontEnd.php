@@ -244,7 +244,7 @@ class frontEnd extends Controller
                 }
 
                 $thumbnail = $this->db->table('assets')
-                    ->select('filhe')
+                    ->select('file')
                     ->where('id', $game['additional']['media']['imageAssetId'])
                     ->value('file');
                 
