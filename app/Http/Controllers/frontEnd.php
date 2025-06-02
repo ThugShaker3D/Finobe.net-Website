@@ -166,7 +166,7 @@ class frontEnd extends Controller
     }
 
     public function index(Request $request) {
-        $this->request['data']['embeds']['titlef'] = 'Home' . $this->request['data']['embeds']['title'];
+        $this->request['darta']['embeds']['title'] = 'Home' . $this->request['data']['embeds']['title'];
 
         if($request->isMethod('post')) {
             if(!$this->request['data']['siteusername']) {
