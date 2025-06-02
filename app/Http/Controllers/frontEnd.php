@@ -1099,51 +1099,61 @@ class frontEnd extends Controller
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
-        $environment = new Environment([
-            'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
-            'allow_unsafe_links' => false,
-        ]);
+        if(!isset($data['edit'])) {
+            $environment = new Environment([
+                'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
+                'allow_unsafe_links' => false,
+            ]);
 
-        $environment->addExtension(new CommonMarkCoreExtension());
-        $converter = new MarkdownConverter($environment);
+            $environment->addExtension(new CommonMarkCoreExtension());
+            $converter = new MarkdownConverter($environment);
 
-        $phrasesToReplace = [
-            'fuck',
-            'fucking',
-            'roblox',
-            'rob lox',
-            'robux',
-            'ass',
-            'asshole',
-            'shit'
-        ];
+            $phrasesToReplace = [
+                'fuck',
+                'fucking',
+                'roblox',
+                'rob lox',
+                'robux',
+                'ass',
+                'asshole',
+                'shit'
+            ];
 
-        $replacements = [
-            'OBAMA BALL',
-            'sonic 06',
-            'blockland.us'
-        ];
+            $replacements = [
+                'OBAMA BALL',
+                'sonic 06',
+                'blockland.us'
+            ];
 
-        $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
-            return $replacements[array_rand($replacements)];
-        }, $post['title']);
+            $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['title']);
 
-        $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
-            return $replacements[array_rand($replacements)];
-        }, $post['comment']);
+            $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['comment']);
 
-        if($post['status'] != "admin") {
-            $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        $post['comment'] = $converter->convert($post['comment'])->getContent();
-        $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
-            if (strpos($matches[0], '<img') === 0) {
-                return $matches[0];
-            } else {
-                return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
+            if($post['status'] != "admin") {
+                $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
             }
-        }, $post['comment']);
+
+            $post['comment'] = $converter->convert($post['comment'])->getContent();
+            $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                if (strpos($matches[0], '<img') === 0) {
+                    return $matches[0];
+                } else {
+                    return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
+                }
+            }, $post['comment']);
+        } else {
+            $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['title']);
+
+            $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['comment']);
+        }
 
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
