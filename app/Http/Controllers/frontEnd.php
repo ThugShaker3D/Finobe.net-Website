@@ -1810,6 +1810,10 @@ class frontEnd extends Controller
                 })->toArray();
         }
 
+        if(count($results)) {
+            $result[] = [];
+        }
+
         foreach($results as $result) {
             $result['additional'] = json_decode($result['additional'], true);
             $result['title'] = htmlspecialchars($result['title']);
