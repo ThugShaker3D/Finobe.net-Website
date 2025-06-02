@@ -1810,10 +1810,6 @@ class frontEnd extends Controller
                 })->toArray();
         }
 
-        if(count($results)) {
-            $items[] = [];
-        }
-
         foreach($results as $result) {
             $result['additional'] = json_decode($result['additional'], true);
             $result['title'] = htmlspecialchars($result['title']);
@@ -1826,6 +1822,10 @@ class frontEnd extends Controller
             $result['uuid'] = $user ? $user->toArray()['id'] : false;
             $result['author'] = htmlspecialchars($user['username'] ?? $result['additional']['oldUser']);
             $items[] = $result;
+        }
+
+        if(count($results)) {
+            $items[] = [];
         }
 
         $this->request['data']['items'] = [
