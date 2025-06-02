@@ -166,7 +166,7 @@ class frontEnd extends Controller
     }
 
     public function index(Request $request) {
-        $this->request['darta']['embeds']['title'] = 'Home' . $this->request['data']['embeds']['title'];
+        $this->request['data']['embeds']['title'] = 'Home' . $this->request['data']['embeds']['title'];
 
         if($request->isMethod('post')) {
             if(!$this->request['data']['siteusername']) {
@@ -211,7 +211,7 @@ class frontEnd extends Controller
         }
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['games'] = [];
+            $this->request['data']['gamess'] = [];
 
             $games = Cache::remember('latest_places', 60 * 10, function() {
                 return $this->db->table('assets')
