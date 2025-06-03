@@ -97,9 +97,6 @@ return [
             'retry_after' => 60,
         ],
 
-        'mailersend' => [
-            'transport' => 'mailersend',
-        ],
     ],
 
     /*
