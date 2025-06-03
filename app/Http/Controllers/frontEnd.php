@@ -7,10 +7,12 @@ use FFMpeg\Format\Audio\Mp3;
 use FFMpeg\Format\Video\X264;
 use FFMpeg\Coordinate\TimeCode;
 use Carbon\Carbon;
+use App\Mail\DynamicContentEmail;
 use App\Models\User;
 use App\Http\Controllers\dataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -2590,30 +2592,39 @@ class frontEnd extends Controller
 	    $replacementValues = [$this->request['data']['user']['id'], hash_hmac('sha256', 'testingthis', 'privatekey'), $verifyid];
         $html = str_replace($keywords, $replacementValues, $html);
 
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
-            'cache-control' => 'no-cache',
-            'content-type' => 'application/json',
-        ])->post('https://api.zeptomail.com/v1.1/email', [
-            "from" => [
-                "address" => "noreply@aesthetiful.com"
-            ],
-            "to" => [
-                [
-                    "email_address" => [
-                        "address" => $this->request['data']['user']['email'],
-                        "name" => $this->request['data']['user']['username']
+        if((int)env('FINOBE_MAIL_MODE') == 1) {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
+                'cache-control' => 'no-cache',
+                'content-type' => 'application/json',
+            ])->post('https://api.zeptomail.com/v1.1/email', [
+                "from" => [
+                    "address" => "noreply@aesthetiful.com"
+                ],
+                "to" => [
+                    [
+                        "email_address" => [
+                            "address" => $this->request['data']['user']['email'],
+                            "name" => $this->request['data']['user']['username']
+                        ]
                     ]
-                ]
-            ],
-            "subject" => "Verify Email Address",
-            "htmlbody" => $html
-        ]);
+                ],
+                "subject" => "Verify Email Address",
+                "htmlbody" => $html
+            ]);
 
-        if(!$response->successful()) {
-            Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
-            return redirect('/');
+            if(!$response->successful()) {
+                Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
+                return redirect('/');
+            }
+        } elseif((int)env('FINOBE_MAIL_MODE') == 2) {
+            Mail::to($this->request['data']['user']['email'])->send(new DynamicContentEmail($html, '', 'Verify Email Address'));
+
+            if(count(Mail::failures()) > 0) {
+                Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
+                return redirect('/');
+            }
         }
 
         $this->db->table('verify_email')->insert([
@@ -2703,35 +2714,49 @@ class frontEnd extends Controller
 	    $replacementValues = [$user->id, hash_hmac('sha256', 'testingthis', 'privatekey'), $resetid];
         $html = str_replace($keywords, $replacementValues, $html);
 
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
-            'cache-control' => 'no-cache',
-            'content-type' => 'application/json',
-        ])->post('https://api.zeptomail.com/v1.1/email', [
-            "from" => [
-                "address" => "noreply@aesthetiful.com"
-            ],
-            "to" => [
-                [
-                    "email_address" => [
-                        "address" => $data['email'],
-                        "name" => $user->username
+        if((int)env('FINOBE_MAIL_MODE') == 1) {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
+                'cache-control' => 'no-cache',
+                'content-type' => 'application/json',
+            ])->post('https://api.zeptomail.com/v1.1/email', [
+                "from" => [
+                    "address" => "noreply@aesthetiful.com"
+                ],
+                "to" => [
+                    [
+                        "email_address" => [
+                            "address" => $data['email'],
+                            "name" => $user->username
+                        ]
                     ]
-                ]
-            ],
-            "subject" => "Finobe Password Reset",
-            "htmlbody" => $html
-        ]);
+                ],
+                "subject" => "Finobe Password Reset",
+                "htmlbody" => $html
+            ]);
 
-        if(!$response->successful()) {
-            $this->db->table('reset_password')
-                ->where('username', $user->username)
-                ->where('used', 'n')
-                ->delete();
-            
-            Session::put('error', 'There was an error while sending the email, please try again.');
-            return redirect('/');
+            if(!$response->successful()) {
+                $this->db->table('reset_password')
+                    ->where('username', $user->username)
+                    ->where('used', 'n')
+                    ->delete();
+                
+                Session::put('error', 'There was an error while sending the email, please try again.');
+                return redirect('/');
+            }
+        } elseif((int)env('FINOBE_MAIL_MODE') == 2) {
+            Mail::to($data['email'])->send(new DynamicContentEmail($html, '', 'Finobe Password Reset'));
+
+            if(count(Mail::failures()) > 0) {
+                $this->db->table('reset_password')
+                    ->where('username', $user->username)
+                    ->where('used', 'n')
+                    ->delete();
+
+                Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
+                return redirect('/');
+            }
         }
 
         return redirect('/password/reset');

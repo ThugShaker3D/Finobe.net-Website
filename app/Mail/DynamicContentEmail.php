@@ -3,51 +3,38 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Arr;
+use MailerSend\Helpers\Builder\Personalization;
+use MailerSend\LaravelDriver\MailerSendTrait;
 
 class DynamicContentEmail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, MailerSendTrait;
+
+    public string $htmlContent;
+    public string $textContent;
+    public string $subjectLine;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(string $htmlContent, string $textContent = "", string $subjectLine)
     {
-        //
+        $this->htmlContent = $htmlContent;
+        $this->textContent = $textContent;
+        $this->subjectLine = $subjectLine;
     }
 
     /**
-     * Get the message envelope.
+     * Build email message
      */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'Dynamic Content Email',
-        );
-    }
+        //$to = Arr::get($this->to, '0.address');
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->subject($this->subjectLine)
+            ->html($this->htmlContent);
     }
 }
