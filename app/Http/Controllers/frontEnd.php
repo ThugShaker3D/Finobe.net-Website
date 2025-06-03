@@ -2625,8 +2625,8 @@ class frontEnd extends Controller
                 'content-type' => 'application/json',
             ])->post('https://us-api.smtp2go.com/v3/email/send', [
                 "sender" => "Finobe <noreply@aesthetiful.com>",
-                "to" => $data['email'] . " <" . $user->username . ">",
-                "subject" => "Finobe Password Reset",
+                "to" => $this->request['data']['user']['username'] . " <" . $this->request['data']['user']['email'] . ">",
+                "subject" => "Verify Email Address",
                 "html_body" => $html
             ]);
 
