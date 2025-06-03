@@ -2628,9 +2628,9 @@ class frontEnd extends Controller
                 "to" => $this->request['data']['user']['username'] . " <" . $this->request['data']['user']['email'] . ">",
                 "subject" => "Verify Email Address",
                 "html_body" => $html
-            ])->json();
+            ]);
 
-            if(!$response->successful() || !$response['data']['succeeded']) {
+            if(!$response->successful() || !$response->json()['data']['succeeded']) {
                 $this->db->table('reset_password')
                     ->where('username', $user->username)
                     ->where('used', 'n')
