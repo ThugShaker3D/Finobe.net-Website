@@ -2631,11 +2631,6 @@ class frontEnd extends Controller
             ]);
 
             if(!$response->successful() || !$response->json()['data']['succeeded']) {
-                $this->db->table('reset_password')
-                    ->where('username', $user->username)
-                    ->where('used', 'n')
-                    ->delete();
-                
                 Session::put('error', 'There was an error while sending the email, please try again.');
                 return redirect('/');
             }
