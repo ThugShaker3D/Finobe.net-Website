@@ -2619,10 +2619,24 @@ class frontEnd extends Controller
                 return redirect('/');
             }
         } elseif((int)env('FINOBE_MAIL_MODE') == 2) {
-            Mail::to($this->request['data']['user']['email'])->send(new DynamicContentEmail($html, '', 'Verify Email Address'));
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-Smtp2go-Api-Key' => env('FINOBE_SMTP2GO_API_KEY'),
+                'content-type' => 'application/json',
+            ])->post('https://us-api.smtp2go.com/v3/email/send', [
+                "sender" => "Finobe <noreply@aesthetiful.com>",
+                "to" => $data['email'] . " <" . $user->username . ">",
+                "subject" => "Finobe Password Reset",
+                "html_body" => $html
+            ]);
 
-            if(count(Mail::failures()) > 0) {
-                Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
+            if(!$response->successful()) {
+                $this->db->table('reset_password')
+                    ->where('username', $user->username)
+                    ->where('used', 'n')
+                    ->delete();
+                
+                Session::put('error', 'There was an error while sending the email, please try again.');
                 return redirect('/');
             }
         }
@@ -2746,15 +2760,24 @@ class frontEnd extends Controller
                 return redirect('/');
             }
         } elseif((int)env('FINOBE_MAIL_MODE') == 2) {
-            Mail::to($data['email'])->send(new DynamicContentEmail($html, '', 'Finobe Password Reset'));
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-Smtp2go-Api-Key' => env('FINOBE_SMTP2GO_API_KEY'),
+                'content-type' => 'application/json',
+            ])->post('https://us-api.smtp2go.com/v3/email/send', [
+                "sender" => "Finobe <noreply@aesthetiful.com>",
+                "to" => $data['email'] . " <" . $user->username . ">",
+                "subject" => "Finobe Password Reset",
+                "html_body" => $html
+            ]);
 
-            if(count(Mail::failures()) > 0) {
+            if(!$response->successful()) {
                 $this->db->table('reset_password')
                     ->where('username', $user->username)
                     ->where('used', 'n')
                     ->delete();
-
-                Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
+                
+                Session::put('error', 'There was an error while sending the email, please try again.');
                 return redirect('/');
             }
         }
