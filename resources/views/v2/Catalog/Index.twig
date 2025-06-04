@@ -96,6 +96,8 @@
                           </div>
                       </div>
                     </div>
+                  {% else %}
+                    <div style="width: 21%; {% if loop.index is not divisible by(4) %}margin-right: 3.5%;{% endif %}"></div>
                   {% endif %}
                 {% endfor %}
                 {% if not data.items.data|length %}

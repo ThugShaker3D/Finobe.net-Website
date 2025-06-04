@@ -7,10 +7,12 @@ use FFMpeg\Format\Audio\Mp3;
 use FFMpeg\Format\Video\X264;
 use FFMpeg\Coordinate\TimeCode;
 use Carbon\Carbon;
+use App\Mail\DynamicContentEmail;
 use App\Models\User;
 use App\Http\Controllers\dataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -76,7 +78,18 @@ class frontEnd extends Controller
 		}
 
         if($this->request['data']['siteusername']) {
-            $this->request['data']['user'] = Auth::user()->toArray();
+            $this->request['data']['user'] = Auth::user();
+
+            if(!$this->request['data']['user']) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect('/');
+            }
+
+            $this->request['data']['user'] = $this->request['data']['user']->toArray();
+
             $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
             
@@ -1088,14 +1101,6 @@ class frontEnd extends Controller
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
 
-        $environment = new Environment([
-            'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
-            'allow_unsafe_links' => false,
-        ]);
-
-        $environment->addExtension(new CommonMarkCoreExtension());
-        $converter = new MarkdownConverter($environment);
-
         $phrasesToReplace = [
             'fuck',
             'fucking',
@@ -1113,26 +1118,48 @@ class frontEnd extends Controller
             'blockland.us'
         ];
 
-        $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
-            return $replacements[array_rand($replacements)];
-        }, $post['title']);
+        if(!isset($data['edit'])) {
+            $environment = new Environment([
+                'html_input' => ($post['status'] == 'admin' ? 'allow' : 'strip'),
+                'allow_unsafe_links' => false,
+            ]);
 
-        $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
-            return $replacements[array_rand($replacements)];
-        }, $post['comment']);
+            $environment->addExtension(new CommonMarkCoreExtension());
+            $converter = new MarkdownConverter($environment);
 
-        if($post['status'] != "admin") {
-            $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
-        }
+            $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['title']);
 
-        $post['comment'] = $converter->convert($post['comment'])->getContent();
-        $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
-            if (strpos($matches[0], '<img') === 0) {
-                return $matches[0];
-            } else {
-                return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
+            $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['comment']);
+
+            if($post['status'] != "admin") {
+                $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
             }
-        }, $post['comment']);
+
+            $post['comment'] = $converter->convert($post['comment'])->getContent();
+            $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+                if (strpos($matches[0], '<img') === 0) {
+                    return $matches[0];
+                } else {
+                    return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
+                }
+            }, $post['comment']);
+        } else {
+            $post['title'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['title']);
+
+            $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $post['comment']);
+
+            if($post['status'] != "admin") {
+                $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
+            }
+        }
 
         $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
         $post['upvotes'] = $post['rating'];
@@ -1797,6 +1824,13 @@ class frontEnd extends Controller
             $result['uuid'] = $user ? $user->toArray()['id'] : false;
             $result['author'] = htmlspecialchars($user['username'] ?? $result['additional']['oldUser']);
             $items[] = $result;
+        }
+
+        if($sections[$section] != 3 && count($results) && count($items) < 12) {
+            $missing = $results_per_page - count($items);
+            for ($i = 0; $i < $missing; $i++) {
+                $items[] = [];
+            }
         }
 
         $this->request['data']['items'] = [
@@ -2558,30 +2592,48 @@ class frontEnd extends Controller
 	    $replacementValues = [$this->request['data']['user']['id'], hash_hmac('sha256', 'testingthis', 'privatekey'), $verifyid];
         $html = str_replace($keywords, $replacementValues, $html);
 
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
-            'cache-control' => 'no-cache',
-            'content-type' => 'application/json',
-        ])->post('https://api.zeptomail.com/v1.1/email', [
-            "from" => [
-                "address" => "noreply@aesthetiful.com"
-            ],
-            "to" => [
-                [
-                    "email_address" => [
-                        "address" => $this->request['data']['user']['email'],
-                        "name" => $this->request['data']['user']['username']
+        if((int)env('FINOBE_MAIL_MODE') == 1) {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
+                'cache-control' => 'no-cache',
+                'content-type' => 'application/json',
+            ])->post('https://api.zeptomail.com/v1.1/email', [
+                "from" => [
+                    "address" => "noreply@aesthetiful.com"
+                ],
+                "to" => [
+                    [
+                        "email_address" => [
+                            "address" => $this->request['data']['user']['email'],
+                            "name" => $this->request['data']['user']['username']
+                        ]
                     ]
-                ]
-            ],
-            "subject" => "Verify Email Address",
-            "htmlbody" => $html
-        ]);
+                ],
+                "subject" => "Verify Email Address",
+                "htmlbody" => $html
+            ]);
 
-        if(!$response->successful()) {
-            Session::put('error', 'There was an error while sending the email, please try again.');
-            return redirect('/');
+            if(!$response->successful()) {
+                Session::put('error', 'There was an error while sending the email, please try again. (this is most likely a issue with our backend system)');
+                return redirect('/');
+            }
+        } elseif((int)env('FINOBE_MAIL_MODE') == 2) {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-Smtp2go-Api-Key' => env('FINOBE_SMTP2GO_API_KEY'),
+                'content-type' => 'application/json',
+            ])->post('https://us-api.smtp2go.com/v3/email/send', [
+                "sender" => "Finobe <noreply@aesthetiful.com>",
+                "to" => $this->request['data']['user']['username'] . " <" . $this->request['data']['user']['email'] . ">",
+                "subject" => "Verify Email Address",
+                "html_body" => $html
+            ]);
+
+            if(!$response->successful() || !$response->json()['data']['succeeded']) {
+                Session::put('error', 'There was an error while sending the email, please try again.');
+                return redirect('/');
+            }
         }
 
         $this->db->table('verify_email')->insert([
@@ -2671,35 +2723,58 @@ class frontEnd extends Controller
 	    $replacementValues = [$user->id, hash_hmac('sha256', 'testingthis', 'privatekey'), $resetid];
         $html = str_replace($keywords, $replacementValues, $html);
 
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
-            'cache-control' => 'no-cache',
-            'content-type' => 'application/json',
-        ])->post('https://api.zeptomail.com/v1.1/email', [
-            "from" => [
-                "address" => "noreply@aesthetiful.com"
-            ],
-            "to" => [
-                [
-                    "email_address" => [
-                        "address" => $data['email'],
-                        "name" => $user->username
+        if((int)env('FINOBE_MAIL_MODE') == 1) {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'authorization' => 'Zoho-enczapikey ' . env('FINOBE_ZOHO_API_KEY'),
+                'cache-control' => 'no-cache',
+                'content-type' => 'application/json',
+            ])->post('https://api.zeptomail.com/v1.1/email', [
+                "from" => [
+                    "address" => "noreply@aesthetiful.com"
+                ],
+                "to" => [
+                    [
+                        "email_address" => [
+                            "address" => $data['email'],
+                            "name" => $user->username
+                        ]
                     ]
-                ]
-            ],
-            "subject" => "Finobe Password Reset",
-            "htmlbody" => $html
-        ]);
+                ],
+                "subject" => "Finobe Password Reset",
+                "htmlbody" => $html
+            ]);
 
-        if(!$response->successful()) {
-            $this->db->table('reset_password')
-                ->where('username', $user->username)
-                ->where('used', 'n')
-                ->delete();
-            
-            Session::put('error', 'There was an error while sending the email, please try again.');
-            return redirect('/');
+            if(!$response->successful()) {
+                $this->db->table('reset_password')
+                    ->where('username', $user->username)
+                    ->where('used', 'n')
+                    ->delete();
+                
+                Session::put('error', 'There was an error while sending the email, please try again.');
+                return redirect('/');
+            }
+        } elseif((int)env('FINOBE_MAIL_MODE') == 2) {
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-Smtp2go-Api-Key' => env('FINOBE_SMTP2GO_API_KEY'),
+                'content-type' => 'application/json',
+            ])->post('https://us-api.smtp2go.com/v3/email/send', [
+                "sender" => "Finobe <noreply@aesthetiful.com>",
+                "to" => $data['email'] . " <" . $user->username . ">",
+                "subject" => "Finobe Password Reset",
+                "html_body" => $html
+            ]);
+
+            if(!$response->successful()) {
+                $this->db->table('reset_password')
+                    ->where('username', $user->username)
+                    ->where('used', 'n')
+                    ->delete();
+                
+                Session::put('error', 'There was an error while sending the email, please try again.');
+                return redirect('/');
+            }
         }
 
         return redirect('/password/reset');
@@ -3907,7 +3982,7 @@ class frontEnd extends Controller
             ];
 
             $validator = Validator::make($data, [
-                'username' => 'required|string|regex:/^[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
+                'username' => 'required|string|regex:/^(?!_)(?!.*_$)(?!.*_.*_)[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
                 'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
                 'email' => 'required|email|confirmed|unique:finobe.users,email',
                 'g-recaptcha-response' => 'required'
