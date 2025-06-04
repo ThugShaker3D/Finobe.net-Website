@@ -2370,8 +2370,8 @@ class frontEnd extends Controller
             }
 
             $this->request['data']['sendto'] = [
-                'id' => $data['user'],
-                'username' => User::where('id', $data['user'])->value('username')
+                'id' => User::where('username', $data['user'])->value('id'),
+                'username' => $data['user']
             ];
         }
 
