@@ -131,7 +131,7 @@ class dataController extends Controller
         return;
 	}
 
-    public function arbiter_pool() {
+    public static function arbiter_pool() {
         // returns random arbiter instance
         $arbiters = [
             '45.131.65.123',
