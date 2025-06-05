@@ -167,6 +167,10 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     });
 
     Route::domain('www.finobe.net')->group(function() {
+        Route::fallback(function() {
+            return redirect(env('APP_URL'));
+        });
+
         Route::get('/Game/Gameserver.lua', [rbxAPIs::class, 'gameServerLua']);
         Route::any('/asset/GetScriptState.ashx', [rbxAPIs::class, 'getScriptStateAshx']);
         Route::get('/asset/', [rbxAPIs::class, 'asset']);
