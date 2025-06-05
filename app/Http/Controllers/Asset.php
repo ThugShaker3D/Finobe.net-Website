@@ -58,7 +58,7 @@ class Asset extends Controller
     public static function renderHat(int $id) : string
     {
         if (self::isAssetExist($id)) {
-            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $arbiter = new RobloxArbiterUtilities(DataController::arbiter_pool(), 64989);
             $constructedJob = $arbiter->ConstructJob(
                 RobloxUtilities::GenerateGUID(),
                 '
@@ -329,7 +329,7 @@ class Asset extends Controller
     public static function renderPants(int $id)
     {
         if (self::isAssetExist($id)) {
-            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $arbiter = new RobloxArbiterUtilities(DataController::arbiter_pool(), 64989);
             $constructedJob = $arbiter->ConstructJob(
                 RobloxUtilities::GenerateGUID(),
                 '
@@ -380,7 +380,7 @@ class Asset extends Controller
     public static function renderShirt(int $id)
     {
         if (self::isAssetExist($id)) {
-            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $arbiter = new RobloxArbiterUtilities(DataController::arbiter_pool(), 64989);
             $constructedJob = $arbiter->ConstructJob(
                 RobloxUtilities::GenerateGUID(),
                 '
@@ -431,7 +431,7 @@ class Asset extends Controller
     public static function renderTShirt(int $id)
     {
         if (self::isAssetExist($id)) {
-            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $arbiter = new RobloxArbiterUtilities(DataController::arbiter_pool(), 64989);
             $constructedJob = $arbiter->ConstructJob(
                 RobloxUtilities::GenerateGUID(),
                 '
@@ -482,7 +482,7 @@ class Asset extends Controller
     public static function renderGear(int $id) : string
     {
         if (self::isAssetExist($id)) {
-            $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+            $arbiter = new RobloxArbiterUtilities(DataController::arbiter_pool(), 64989);
             $constructedJob = $arbiter->ConstructJob(
                 RobloxUtilities::GenerateGUID(),
                 '
