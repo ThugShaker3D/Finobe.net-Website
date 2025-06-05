@@ -138,6 +138,6 @@ class dataController extends Controller
             '74.208.123.25'
         ];
 
-        return $arbiters[random_int(0, count($arbiters))];
+        return $arbiters[random_int(0, count($arbiters) - 1)];
     }
 }
