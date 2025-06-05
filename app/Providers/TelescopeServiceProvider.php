@@ -37,6 +37,15 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
             return true;
         });
+
+        Telescope::tag(function (IncomingEntry $entry) {
+            if ($entry->isRequest()) {
+                $request = $entry->content['request'] ?? null;
+                $ip = $request['headers']['HTTP_CF_CONNECTING_IP'] ?? request()->ip();
+                return ['ip' => $ip, 'path' => $request['uri'] ?? request()->getRequestUri()];
+            }
+            return [];
+        });
     }
 
     /**
