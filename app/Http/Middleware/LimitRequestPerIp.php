@@ -18,7 +18,7 @@ class LimitRequestPerIp
     {
         $ip = $request->ip();
         $lockKey = "request_lock:$ip";
-        $maxWaitTime = 5;
+        $maxWaitTime = 10;
         $waited = 0;
 
         while (!Redis::setnx($lockKey, now()->timestamp)) {
