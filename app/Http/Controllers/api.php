@@ -107,7 +107,8 @@ class api extends Controller
         
         $this->response['data']['items']['pagination'] = [
             'current_page' => $currentPage,
-            'number_of_pages' => ceil($itemcount / $itemsPerPage)
+            'number_of_pages' => ceil($itemcount / $itemsPerPage),
+            'number_of_items' => $itemcount
         ];
 
         return response()->json($this->response, 200);
