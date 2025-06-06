@@ -788,7 +788,7 @@ class admin extends Controller
                     $data['title'],
                     1,
                     $this->request['data']['user']['id'],
-                    file_get_contents($request->file('mesh')->getPathname()),
+                    file_get_contents($request->file('texture')->getPathname()),
                     '',
                     'n',
                     []
