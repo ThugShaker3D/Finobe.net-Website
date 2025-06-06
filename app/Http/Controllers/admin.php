@@ -775,7 +775,7 @@ class admin extends Controller
                 }
 
                 $id = Asset::createAsset(
-                    $title,
+                    $data['title'],
                     4,
                     $this->request['data']['user']['id'],
                     file_get_contents($request->file('mesh')->getPathname()),
@@ -785,7 +785,7 @@ class admin extends Controller
                 );
             } elseif($data['type'] == 'texture') {
                 $id = Asset::createAsset(
-                    $title,
+                    $data['title'],
                     1,
                     $this->request['data']['user']['id'],
                     file_get_contents($request->file('mesh')->getPathname()),
