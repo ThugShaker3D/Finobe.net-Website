@@ -774,7 +774,7 @@ class admin extends Controller
                     return redirect('/admin/createxml');
                 }
 
-                Asset::createAsset(
+                $id = Asset::createAsset(
                     $title,
                     4,
                     $this->request['data']['user']['id'],
@@ -784,7 +784,7 @@ class admin extends Controller
                     []
                 );
             } elseif($data['type'] == 'texture') {
-                Asset::createAsset(
+                $id = Asset::createAsset(
                     $title,
                     1,
                     $this->request['data']['user']['id'],
@@ -795,7 +795,7 @@ class admin extends Controller
                 );
             }
 
-            Session::put('success', 'Success');
+            Session::put('success', 'Success (http://www.finobe.net/asset/?id=' . $id);
             return redirect('/admin/createxml');
         }
 
