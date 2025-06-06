@@ -795,7 +795,7 @@ class admin extends Controller
                 );
             }
 
-            Session::put('success', 'Success (http://www.finobe.net/asset/?id=' . $id);
+            Session::put('success', 'Success (http://www.finobe.net/asset/?id=' . $id . ')');
             return redirect('/admin/createxml');
         }
 
