@@ -736,37 +736,67 @@ class admin extends Controller
                 'price' => 'required|integer|min:0',
                 'onsale' => 'nullable|in:on,1,true,0,false,off',
                 'mesh' => 'nullable|file',
-                'xml' => 'required|file|mimetypes:text/plain',
+                'xml' => 'nullable|file|mimetypes:text/plain',
                 'texture' => 'nullable|file|mimetypes:image/png',
-                'type' => 'required|string|in:hat,gear'
+                'type' => 'required|string|in:hat,gear,mesh,texture'
             ]);
 
             if($validator->fails()) {
                 Session::put('error', $validator->errors()->first());
                 return redirect('/admin/createxml');
             }
+            
+            if(in_array($data['type'], ['hat', 'gear'])) {
+                if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
+                    Session::put('error', 'Unsupported mesh format');
+                    return redirect('/admin/createxml');
+                }
 
-            if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
-                Session::put('error', 'Unsupported mesh format');
-                return redirect('/admin/createxml');
+                $id = Asset::createHatOrGear(
+                    $data['title'],
+                    ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
+                    ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
+                    ['tmp_name' => $request->file('xml')->getPathname()],
+                    $this->request['data']['user']['id'],
+                    $data['description'] ?? '',
+                    intval($data['price']),
+                    isset($data['onsale']),
+                    false,
+                    [],
+                    ($data['type'] == 'hat' ? 8 : 19)
+                );
+
+                Session::put('success', 'Success');
+                return redirect('/item/' . $id);
+            } elseif($data['type'] == 'mesh') {
+                if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
+                    Session::put('error', 'Unsupported mesh format');
+                    return redirect('/admin/createxml');
+                }
+
+                Asset::createAsset(
+                    $title,
+                    4,
+                    $this->request['data']['user']['id'],
+                    file_get_contents($request->file('mesh')->getPathname()),
+                    '',
+                    'n',
+                    []
+                );
+            } elseif($data['type'] == 'texture') {
+                Asset::createAsset(
+                    $title,
+                    1,
+                    $this->request['data']['user']['id'],
+                    file_get_contents($request->file('mesh')->getPathname()),
+                    '',
+                    'n',
+                    []
+                );
             }
 
-            $id = Asset::createHatOrGear(
-                $data['title'],
-                ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
-                ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
-                ['tmp_name' => $request->file('xml')->getPathname()],
-                $this->request['data']['user']['id'],
-                $data['description'] ?? '',
-                intval($data['price']),
-                isset($data['onsale']),
-                false,
-                [],
-                ($data['type'] == 'hat' ? 8 : 19)
-            );
-
             Session::put('success', 'Success');
-            return redirect('/item/' . $id);
+            return redirect('/admin/createxml');
         }
 
         return view($this->request['data']['user']['version'] . '/Admin/CreateXML', $this->request);
