@@ -37,7 +37,7 @@ class ProcessVideo implements ShouldQueue
     {
         $ffmpeg = FFMpeg::create();
         $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
-        $format = new WebM('libopus', 'libvpx-vp9');
+        $format = new WebM('libvorbis', 'libvpx-vp9');
         $format->setKiloBitrate(1750);
 
         $video->frame(TimeCode::fromSeconds(1))
