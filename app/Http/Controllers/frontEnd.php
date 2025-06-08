@@ -2972,7 +2972,7 @@ class frontEnd extends Controller
                 $thumbnail = $filename . '.jpg';
                 $filename .= '.mp4';
 
-                $file = $request->file('file')->store('private/videos');
+                $file = $request->file('file')->store('videos');
                 $ffmpeg = FFmpeg::create();
                 $video = $ffmpeg->open(storage_path('app' . $file));
                 $format = new X264('aac', 'libx264');
