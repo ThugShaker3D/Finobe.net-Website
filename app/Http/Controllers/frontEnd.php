@@ -3733,6 +3733,7 @@ class frontEnd extends Controller
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
         $videos = $this->db->table('videos')
+            ->orderBy('id', 'DESC')
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
