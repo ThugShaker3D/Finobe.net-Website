@@ -38,8 +38,8 @@ class ProcessVideo implements ShouldQueue
         $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
         $format = new X264('aac', 'libx264');
 
-        $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
         $video->frame(TimeCode::fromSeconds(1))
               ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
+        $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
     }
 }
