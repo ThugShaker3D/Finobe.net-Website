@@ -40,7 +40,8 @@ class ProcessVideo implements ShouldQueue
         $format = new WebM('libvorbis', 'libvpx-vp9');
         $format->setKiloBitrate(1750);
 
-        $video->frame(TimeCode::fromSeconds(1))
+        $thumbnailVideo = $ffmpeg->open(storage_path('app/private/' . $this->file));
+        $thumbnailVideo->frame(TimeCode::fromSeconds(1))
               ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
         $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
 
