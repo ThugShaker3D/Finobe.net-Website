@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Redis;
 
 class ProcessVideo implements ShouldQueue
 {
@@ -41,5 +42,7 @@ class ProcessVideo implements ShouldQueue
         $video->frame(TimeCode::fromSeconds(1))
               ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
         $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
+
+        Redis::del("video_processing:{$this->filename}");
     }
 }

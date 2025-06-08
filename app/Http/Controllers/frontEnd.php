@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -2985,6 +2986,7 @@ class frontEnd extends Controller
                     ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $thumbnail);
                 */
 
+                Redis::set("video_processing:{$filename}", true);
                 ProcessVideo::dispatch($file, $filename, $thumbnail);
                 exec('cd /var/www/Finobe && php artisan queue:work --timeout=2400 --sleep=3 --tries=3 > /dev/null 2>&1 &');
                 
@@ -3747,6 +3749,12 @@ class frontEnd extends Controller
             ->map(function ($item) {
                 return (array) $item;
             })->toArray();
+        
+        foreach($videos as $key => $video) {
+            if(Redis::exists("video_processing:{$video['filename']}")) {
+                unset($videos[$key]);
+            }
+        }
         
         $this->request['data']['videos'] = [
             'data' => $videos,
