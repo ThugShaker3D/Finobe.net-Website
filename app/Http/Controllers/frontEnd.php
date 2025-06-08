@@ -1557,7 +1557,7 @@ class frontEnd extends Controller
                     'edited_date' => DB::raw('CURRENT_TIMESTAMP()')
                 ]);
             
-            $results_per_page = 12;
+            $results_per_page = 10;
             $position_in_list = $this->db->table('forum_replies')->where('id', '<=', $data['id'])->where('toid', $data['postId'])->count();
             $page_of_reply = ceil($position_in_list / $results_per_page);
 
