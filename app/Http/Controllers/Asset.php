@@ -114,21 +114,25 @@ class Asset extends Controller
         $xmltemplate = file_get_contents($xml['tmp_name']);
 
         // finds and replaces roblox links with MESHURLPLACEHOLDER or TEXTUREURLPLACEHOLDER automatically EDIT: also check rbxassetid format
-        $xmltemplate = preg_replace_callback(
-            '/<Content name="MeshId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+|https?:\/\/assetdelivery\.roblox\.com\/v1\/asset\/\?id=\d+)<\/url>\s*<\/Content>/i',
-            function ($matches) {
-                return str_replace($matches[1], 'MESHURLPLACEHOLDER', $matches[0]);
-            },
-            $xmltemplate
-        );
-
-        $xmltemplate = preg_replace_callback(
-            '/<Content name="TextureId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+|https?:\/\/assetdelivery\.roblox\.com\/v1\/asset\/\?id=\d+)<\/url>\s*<\/Content>/i',
-            function ($matches) {
-                return str_replace($matches[1], 'TEXTUREURLPLACEHOLDER', $matches[0]);
-            },
-            $xmltemplate
-        );
+        if(is_array($mesh)) {
+            $xmltemplate = preg_replace_callback(
+                '/<Content name="MeshId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+|https?:\/\/assetdelivery\.roblox\.com\/v1\/asset\/\?id=\d+)<\/url>\s*<\/Content>/i',
+                function ($matches) {
+                    return str_replace($matches[1], 'MESHURLPLACEHOLDER', $matches[0]);
+                },
+                $xmltemplate
+            );
+        }
+        
+        if(is_array($texture)) {
+            $xmltemplate = preg_replace_callback(
+                '/<Content name="TextureId">\s*<url>(https?:\/\/www\.roblox\.com\/asset\/\?id=\d+|rbxassetid:\/\/\d+|https?:\/\/assetdelivery\.roblox\.com\/v1\/asset\/\?id=\d+)<\/url>\s*<\/Content>/i',
+                function ($matches) {
+                    return str_replace($matches[1], 'TEXTUREURLPLACEHOLDER', $matches[0]);
+                },
+                $xmltemplate
+            );
+        }
 
         if(is_array($texture)) {
             $xmltemplate =str_replace("TEXTUREURLPLACEHOLDER", "http://www.finobe.net/asset/?id=" . $textureId, $xmltemplate);

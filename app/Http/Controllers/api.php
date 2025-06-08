@@ -63,6 +63,16 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
+        $itemcount = $this->db->table('purchases')
+            ->join('assets', 'purchases.assetid', '=', 'assets.id')
+            ->where('purchases.username', $data['user'])
+            ->where('purchases.assetid', '!=', 0)
+            ->where('purchases.type', 1)
+            ->where('assets.asset_type', $assetTypes[$data['type']])
+            ->orderBy('purchases.date', 'desc')
+            ->select('assets.id', 'assets.title', 'assets.author', 'assets.asset_type', 'assets.additional')
+            ->count();
+        
         $items = $this->db->table('purchases')
             ->join('assets', 'purchases.assetid', '=', 'assets.id')
             ->where('purchases.username', $data['user'])
@@ -95,7 +105,8 @@ class api extends Controller
         
         $this->response['data']['items']['pagination'] = [
             'current_page' => $currentPage,
-            'number_of_pages' => ceil(count($this->response['data']['items']['data'] ?? []) / $itemsPerPage)
+            'number_of_pages' => ceil($itemcount / $itemsPerPage),
+            'number_of_items' => $itemcount
         ];
 
         return response()->json($this->response, 200);
