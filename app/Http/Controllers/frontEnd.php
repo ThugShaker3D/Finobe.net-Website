@@ -9,6 +9,7 @@ use FFMpeg\Coordinate\TimeCode;
 use Carbon\Carbon;
 use App\Mail\DynamicContentEmail;
 use App\Models\User;
+use App\Jobs\ProcessVideo;
 use App\Http\Controllers\dataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -2973,6 +2974,8 @@ class frontEnd extends Controller
                 $filename .= '.mp4';
 
                 $file = $request->file('file')->store('videos');
+
+                /*
                 $ffmpeg = FFmpeg::create();
                 $video = $ffmpeg->open(storage_path('app/private/' . $file));
                 $format = new X264('aac', 'libx264');
@@ -2980,6 +2983,10 @@ class frontEnd extends Controller
                 $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $filename);
                 $video->frame(TimeCode::fromSeconds(1))
                     ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $thumbnail);
+                */
+
+                ProcessVideo::dispatch($file, $filename, $thumbnail);
+                exec('php artisan queue:work redis &');
                 
                 $id = $this->db->table('videos')->insertGetId([
                     'title' => $data['title'],
