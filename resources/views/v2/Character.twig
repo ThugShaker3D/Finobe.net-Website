@@ -202,7 +202,7 @@
 							  </div>
                             </div>
                             <div class="tab-pane" id="hats">
-                              <div class="row">
+                              <div class="{{ (data.purchases|filter(p => p.asset_type == 8)|length) ? 'row' : '' }}">
 							  	{% for item in data.purchases %}
 								  {% if item.asset_type == 8 %}
 									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
@@ -613,7 +613,7 @@
 							  </script>
                             </div>
                             <div class="tab-pane" id="t-shirts">
-							  <div class="row">
+							  <div class="{{ (data.purchases|filter(p => p.asset_type == 2)|length) ? 'row' : '' }}">
                               {% for item in data.purchases %}
 								  {% if item.asset_type == 2 %}
 									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
@@ -636,7 +636,7 @@
 							  </div>
                             </div>
                             <div class="tab-pane" id="shirts">
-								<div class="row">
+								<div class="{{ (data.purchases|filter(p => p.asset_type == 11)|length) ? 'row' : '' }}">
                               	{% for item in data.purchases %}
 								  {% if item.asset_type == 11 %}
 									<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
@@ -659,7 +659,7 @@
 								</div>
                             </div>
                             <div class="tab-pane" id="pants">
-								<div class="row">
+								<div class="{{ (data.purchases|filter(p => p.asset_type == 12)|length) ? 'row' : '' }}">
 								{% for item in data.purchases %}
 									{% if item.asset_type == 12 %}
 										<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
@@ -682,7 +682,7 @@
 								</div>
                             </div>
                             <div class="tab-pane" id="faces">
-                              	<div class="row">
+                              	<div class="{{ (data.purchases|filter(p => p.asset_type == 18)|length) ? 'row' : '' }}">
 								{% for item in data.purchases %}
 									{% if item.asset_type == 18 %}
 										<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
@@ -705,7 +705,7 @@
 								</div>
                             </div>
                             <div class="tab-pane" id="gear">
-                              	<div class="row">
+                              	<div class="{{ (data.purchases|filter(p => p.asset_type == 19)|length) ? 'row' : '' }}">
 								{% for item in data.purchases %}
 									{% if item.asset_type == 19 %}
 										<div class="col-md-4 mb-4 pr-3 {{ (item.equipped) ? 'equipped' : 'unequipped' }}" id="{{ item.assetid }}">
