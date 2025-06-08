@@ -2976,7 +2976,7 @@ class frontEnd extends Controller
                 $ffmpeg = FFmpeg::create();
                 $video = $ffmpeg->open(storage_path('app/private/' . $file));
                 $format = new X264('aac', 'libx264');
-                $format->setAdditionalParameters(['-movflags', '+faststart']);
+                //$format->setAdditionalParameters(['-movflags', '+faststart']);
                 $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $filename);
                 $video->frame(TimeCode::fromSeconds(1))
                     ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $thumbnail);
