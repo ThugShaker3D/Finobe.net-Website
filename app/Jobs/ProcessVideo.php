@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
-use FFMpeg\Format\Video\X264;
+use FFMpeg\Format\Video\WebM;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -36,7 +36,7 @@ class ProcessVideo implements ShouldQueue
     {
         $ffmpeg = FFMpeg::create();
         $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
-        $format = new X264('aac', 'libx264');
+        $format = new WebM('libvorbis', 'vp8');
 
         $video->frame(TimeCode::fromSeconds(1))
               ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
