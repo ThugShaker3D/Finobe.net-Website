@@ -2993,7 +2993,7 @@ class frontEnd extends Controller
                     'author' => $this->request['data']['user']['username'],
                     'filename' => $filename,
                     'thumbnail' => $thumbnail,
-                    'description' => $data['description'] ?? ''
+                    'description' => $data['description']
                 ]);
 
                 $user = User::find($this->request['data']['user']['id']);
