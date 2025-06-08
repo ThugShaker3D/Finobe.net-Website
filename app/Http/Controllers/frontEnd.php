@@ -2986,7 +2986,7 @@ class frontEnd extends Controller
                 */
 
                 ProcessVideo::dispatch($file, $filename, $thumbnail);
-                exec('nohup php artisan queue:work redis --sleep=3 --tries=3 > /dev/null 2>&1 &');
+                exec('php artisan queue:work --timeout=600 --sleep=3 --tries=3 > /dev/null 2>&1 &');
                 
                 $id = $this->db->table('videos')->insertGetId([
                     'title' => $data['title'],
