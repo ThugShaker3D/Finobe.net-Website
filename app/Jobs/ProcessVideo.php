@@ -35,28 +35,21 @@ class ProcessVideo implements ShouldQueue
      */
     public function handle()
     {
-        if(!Redis::exists("video_processing:{$this->filename}")) {
-            Redis::set("video_processing:{$this->filename}", true);
+        $ffmpeg = FFMpeg::create();
+        $format = new WebM('libvorbis', 'libvpx-vp9');
+        $format->setKiloBitrate(1750);
+        $format->setAdditionalParameters([
+            '-crf', '34',
+            '-cpu-used', '4',
+            '-threads', '4',
+        ]);
 
-            $ffmpeg = FFMpeg::create();
-            $format = new WebM('libvorbis', 'libvpx-vp9');
-            $format->setKiloBitrate(1750);
-            $format->setAdditionalParameters([
-                '-crf', '34',
-                '-cpu-used', '4',
-                '-threads', '4',
-            ]);
+        $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
+        $thumbnail->frame(TimeCode::fromSeconds(1))
+            ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
+        $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
+        $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
 
-            $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
-            $thumbnail->frame(TimeCode::fromSeconds(1))
-                ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
-            $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
-            $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
-
-            Redis::del("video_processing:{$this->filename}");
-            return true;
-        }
-
-        return false;
+        Redis::del("video_processing:{$this->filename}");
     }
 }

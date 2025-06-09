@@ -2986,8 +2986,12 @@ class frontEnd extends Controller
                     ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $thumbnail);
                 */
 
+                Redis::set("video_processing:{$this->filename}", true);
                 ProcessVideo::dispatch($file, $filename, $thumbnail);
-                exec('cd /var/www/Finobe && php artisan queue:work --timeout=21600 > /dev/null 2>&1 &');
+
+                if(empty(exec("pgrep -f 'php artisan queue:work'"))) {
+                    exec('cd /var/www/Finobe && php artisan queue:work --timeout=21600 > /dev/null 2>&1 &');
+                }
                 
                 $id = $this->db->table('videos')->insertGetId([
                     'title' => $data['title'],
