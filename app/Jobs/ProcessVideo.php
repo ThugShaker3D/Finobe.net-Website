@@ -35,21 +35,27 @@ class ProcessVideo implements ShouldQueue
      */
     public function handle()
     {
-        $ffmpeg = FFMpeg::create();
-        $format = new WebM('libvorbis', 'libvpx-vp9');
-        $format->setKiloBitrate(1750);
-        $format->setAdditionalParameters([
-            '-crf', '34',
-            '-cpu-used', '4',
-            '-threads', '4',
-        ]);
+        try {
+            $ffmpeg = FFMpeg::create();
 
-        $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
-        $thumbnail->frame(TimeCode::fromSeconds(1))
-            ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
-        $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
-        $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
+            $format = new WebM('libvorbis', 'libvpx-vp9');
+            $format->setKiloBitrate(1750);
+            $format->setAdditionalParameters([
+                '-crf', '34',
+                '-cpu-used', '4',
+                '-threads', '4',
+            ]);
 
-        Redis::del("video_processing:{$this->filename}");
+            $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
+            $thumbnail->frame(TimeCode::fromSeconds(1))
+                ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $this->thumbnail);
+
+            $video = $ffmpeg->open(storage_path('app/private/' . $this->file));
+            $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
+        } catch (\Exception $e) {
+            \Log::error("FFMpeg job failed: " . $e->getMessage());
+        } finally {
+            Redis::del("video_processing:{$this->filename}");
+        }
     }
 }
