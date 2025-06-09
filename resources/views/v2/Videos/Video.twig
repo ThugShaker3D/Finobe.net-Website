@@ -19,7 +19,7 @@
        <div class="container mt-3">
            <p class="mt-0 mb-3"><a href="/videos" class="btn btn-theme btn-sm border mr-2"><i class="far fa-chevron-left mr-2"></i> Back</a></p>
            <h3 class="mt-2 mb-1 font-light">
-    			{{ data.video.title }}
+    			{{ data.video.title|raw }}
     		</h3>
     		<p class="mt-0 mb-1">by <a href="/user/{{ data.video.uuid }}">{{ data.video.author }}</a></p>
     		<div class="mt-1 mb-4"><div data-v-73be696c="" class="forum-voter"><div data-v-73be696c="" id="video-number-main" class="total border">
