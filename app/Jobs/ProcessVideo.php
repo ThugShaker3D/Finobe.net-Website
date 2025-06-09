@@ -41,9 +41,11 @@ class ProcessVideo implements ShouldQueue
             $ffmpeg = FFMpeg::create();
             $format = new WebM('libvorbis', 'libvpx-vp9');
             $format->setKiloBitrate(1750);
-            $format->addExtraOption('-crf', '34')
-                ->addExtraOption('-cpu-used', '4')
-                ->addExtraOption('-threads', '4');
+            $format->setAdditionalParameters([
+                '-crf', '34',
+                '-cpu-used', '4',
+                '-threads', '4',
+            ]);
 
             $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
             $thumbnail->frame(TimeCode::fromSeconds(1))
