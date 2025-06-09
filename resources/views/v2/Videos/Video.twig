@@ -30,7 +30,7 @@
         		{{ data.video.downvotes }}
         	</div></div></div>
         	<video id="player" controls crossorigin playsinline data-poster="https://finobe.net/video/thumb/{{ data.video.id }}">
-              <source src="https://finobe.net/video/data/{{ data.video.id }}" type="video/mp4">
+              <source src="https://finobe.net/video/data/{{ data.video.id }}" type="video/{{ data.video.filename matches '/webm$/' ? 'webm' : 'mp4' }}">
             </video>
             <script>
               const player = new Plyr('#player');
