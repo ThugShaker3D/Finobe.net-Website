@@ -54,6 +54,9 @@ class ProcessVideo implements ShouldQueue
             $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
 
             Redis::del("video_processing:{$this->filename}");
+            return true;
         }
+
+        return false;
     }
 }
