@@ -3009,7 +3009,8 @@ class frontEnd extends Controller
                     'type' => 5
                 ]);
 
-                return redirect('/video/' . $id);
+                Session::put('success', 'Video is processing, the video will automatically publish when finished processing.');
+                return redirect('/videos');
             } elseif($data['media-type'] == 'audio') {
                 $validator = Validator::make($data, [
                     'file' => 'required|file|mimetypes:audio/mpeg,audio/ogg,audio/midi,audio/wav|max:10240'
