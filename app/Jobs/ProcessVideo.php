@@ -35,7 +35,7 @@ class ProcessVideo implements ShouldQueue
      */
     public function handle()
     {
-        if(!Redis::exists("video_processing:{$video['filename']}")) {
+        if(!Redis::exists("video_processing:{$this->filename}")) {
             $ffmpeg = FFMpeg::create();
             $format = new WebM('libvorbis', 'libvpx-vp9');
             $format->setKiloBitrate(1750);
