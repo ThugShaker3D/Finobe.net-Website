@@ -12,7 +12,7 @@
                         <div class="card">
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <h4 class="mb-3"><strong>{{ data.message.subject }}</strong></h4>
+                                        <h4 class="mb-3"><strong>{{ data.message.subject|raw }}</strong></h4>
                                         <p class="mb-1"><strong>From:</strong> <a href="/user/{{ data.message.uid }}">{{ data.message.author }}</a></p>
                                         <p class="mb-2"><strong>Date:</strong> {{ data.message.date }}</p>
                                         <hr>
