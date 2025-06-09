@@ -2986,7 +2986,7 @@ class frontEnd extends Controller
                     ->save('/var/www/cdn.finobe.net/videos/thumbs/' . $thumbnail);
                 */
 
-                Redis::set("video_processing:{$this->filename}", true);
+                Redis::set("video_processing:{$filename}", true);
                 ProcessVideo::dispatch($file, $filename, $thumbnail);
 
                 if(empty(exec("pgrep -f 'php artisan queue:work'"))) {
