@@ -2989,7 +2989,7 @@ class frontEnd extends Controller
                 Redis::set("video_processing:{$filename}", true);
                 ProcessVideo::dispatch($file, $filename, $thumbnail);
 
-                if(empty(trim(exec("pgrep -f 'php artisan queue:work'")))) {
+                if(empty(trim(exec("ps aux | grep 'php artisan queue:work' | grep -v grep")))) {
                     exec('cd /var/www/Finobe && php artisan queue:work --timeout=21600 --sleep=3 --tries=3 > /dev/null 2>&1 &');
                 }
                 
