@@ -47,7 +47,7 @@ class ModerationMiddleware
                     'error' => false,
                     'announcements' => []
                 ],
-                'lucky_number' => '69/420'
+                'lucky_number' => rand(0, Cache::remember('user_count', 3600, fn() => User::count())) . '/' . Cache::remember('user_count', 3600, fn() => User::count())
             ]
         ];
 
