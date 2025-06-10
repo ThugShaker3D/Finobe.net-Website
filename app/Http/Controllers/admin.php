@@ -814,7 +814,7 @@ class admin extends Controller
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'amount' => 'required|integer|min:0',
+                'amount' => 'required|numeric|min:0',
                 'toggler' => 'nullable'
             ]);
 
