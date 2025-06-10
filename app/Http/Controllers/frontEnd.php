@@ -3019,7 +3019,7 @@ class frontEnd extends Controller
                 return redirect('/videos');
             } elseif($data['media-type'] == 'audio') {
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:audio/mpeg,audio/ogg,audio/midi,audio/wav|max:10240'
+                    'file' => 'required|file|mimetypes:audio/mpeg,audio/ogg,audio/midi,audio/wav,audio/x-wav|max:10240'
                 ]);
 
                 if($validator->fails()) {
