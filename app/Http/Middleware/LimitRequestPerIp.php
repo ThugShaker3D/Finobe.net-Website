@@ -17,7 +17,8 @@ class LimitRequestPerIp
     public function handle(Request $request, Closure $next): Response
     {
         $excludedPaths = [
-            'video/thumb/*'
+            'video/thumb/*',
+            'asset/?id=*'
         ];
 
         foreach ($excludedPaths as $path) {
