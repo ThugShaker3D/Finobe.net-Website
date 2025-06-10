@@ -16,6 +16,16 @@ class LimitRequestPerIp
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $excludedPaths = [
+            'video/thumb/*'
+        ];
+
+        foreach ($excludedPaths as $path) {
+            if ($request->is($path)) {
+                return $next($request);
+            }
+        }
+
         $ip = $request->ip();
         $lockKey = "request_lock:$ip";
         $maxWaitTime = 10;
