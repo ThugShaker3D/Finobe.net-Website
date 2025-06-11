@@ -16,9 +16,9 @@ class rbxAPIs extends Controller
 
     public function quietGet($bucketName) {
         switch ($bucketName) {
-            case "FinobePCApplicationSettings":
+            case "PCApplicationSettings":
                 return file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
-            case "FinobeCloudSettings":
+            case "CloudSettings":
                 if (RobloxUtilities::IsFinobeCloudAuthorized()) {
                     return file_get_contents(storage_path("rbx/fflags/WindowsComputeCloud_2016.json"));
                 }
