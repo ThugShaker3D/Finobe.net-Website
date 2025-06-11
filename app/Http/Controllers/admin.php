@@ -770,10 +770,12 @@ class admin extends Controller
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
             } elseif($data['type'] == 'mesh') {
+                /*
                 if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
                     Session::put('error', 'Unsupported mesh format');
                     return redirect('/admin/createxml');
                 }
+                */
 
                 $id = Asset::createAsset(
                     $data['title'],
