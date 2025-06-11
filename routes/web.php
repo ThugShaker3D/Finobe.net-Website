@@ -154,7 +154,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
 
     Route::domain('clientsettingscdn.finobe.net')->group(function() {
         //Route::get('/Setting/QuietGet/{bucketName}', [rbxAPIs::class, 'quietGet']);
-        Route::get('v1/settings/application', [rbxAPIs::class, 'quietget'])
+        Route::get('v1/settings/application', [rbxAPIs::class, 'quietget']);
     });
 
     Route::domain('applicationcompatibility.finobe.net')->group(function() {
