@@ -14,7 +14,8 @@ class rbxAPIs extends Controller
         $this->response = [];
     }
 
-    public function quietGet($bucketName) {
+    public function quietGet(Request $request) {
+        $bucketName = $request->query('bucket');
         switch ($bucketName) {
             case "PCApplicationSettings":
                 return file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
@@ -82,6 +83,19 @@ class rbxAPIs extends Controller
         ];
 
         return response()->json($this->response, 403);
+    }
+    public function getCompatibility(Request $request)
+    {
+        $bucket = $request->query('bucket');
+        
+        switch($bucket) {
+            case 'Hashes':
+                return $this->getAllowedMD5Hashes();
+            case 'Versions':
+                return $this->getAllowedSecurityVersions();
+            default:
+                return response()->json(['error' => 'Invalid bucket parameter'], 400);
+        }
     }
 
     public function validatePlaceJoin() {
