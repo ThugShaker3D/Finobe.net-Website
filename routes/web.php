@@ -152,13 +152,13 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         });
     });
 
-    Route::domain('clientsettings.finobe.net')->group(function() {
-        Route::get('/Setting/QuietGet/{bucketName}', [rbxAPIs::class, 'quietGet']);
+    Route::domain('clientsettingscdn.finobe.net')->group(function() {
+        //Route::get('/Setting/QuietGet/{bucketName}', [rbxAPIs::class, 'quietGet']);
+        Route::get('v1/settings/application', [rbxAPIs::class, 'quietget'])
     });
 
-    Route::domain('versioncompatibility.finobe.net')->group(function() {
-        Route::get('/GetAllowedSecurityVersions', [rbxAPIs::class, 'getAllowedSecurityVersions']);
-        Route::get('/GetAllowedMD5Hashes', [rbxAPIs::class, 'getAllowedMD5Hashes']);
+    Route::domain('applicationcompatibility.finobe.net')->group(function() {
+        Route::get('v1/compatibility', [rbxAPIs::class, 'getCompatibility']);
     });
 
     Route::domain('api.finobe.net')->group(function() {
