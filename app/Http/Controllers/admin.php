@@ -748,10 +748,12 @@ class admin extends Controller
             }
             
             if(in_array($data['type'], ['hat', 'gear'])) {
+                /*
                 if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
                     Session::put('error', 'Unsupported mesh format');
                     return redirect('/admin/createxml');
                 }
+                */
 
                 $id = Asset::createHatOrGear(
                     $data['title'],
