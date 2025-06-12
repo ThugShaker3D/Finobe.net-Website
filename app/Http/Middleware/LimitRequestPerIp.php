@@ -18,8 +18,7 @@ class LimitRequestPerIp
     {
         $excludedPaths = [
             'video/thumb/*',
-            'asset/?id=*',
-            'asset?id=*'
+            'asset*'
         ];
 
         foreach ($excludedPaths as $path) {
