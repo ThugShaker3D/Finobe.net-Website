@@ -748,12 +748,10 @@ class admin extends Controller
             }
             
             if(in_array($data['type'], ['hat', 'gear'])) {
-                /*
-                if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
+                if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version')) {
                     Session::put('error', 'Unsupported mesh format');
                     return redirect('/admin/createxml');
                 }
-                */
 
                 $id = Asset::createHatOrGear(
                     $data['title'],
@@ -772,12 +770,10 @@ class admin extends Controller
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
             } elseif($data['type'] == 'mesh') {
-                /*
-                if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version 1')) {
+                if($request->hasFile('mesh') && !str_starts_with(file_get_contents($request->file('mesh')->getPathname()), 'version')) {
                     Session::put('error', 'Unsupported mesh format');
                     return redirect('/admin/createxml');
                 }
-                */
 
                 $id = Asset::createAsset(
                     $data['title'],
