@@ -550,7 +550,7 @@ class api extends Controller
             $itemcount = 0;
             $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
 
-            if($visibility != 'n') {
+            if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not been approved or is under review';
 
@@ -602,7 +602,7 @@ class api extends Controller
             $itemcount = 0;
             $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
 
-            if($visibility != 'n') {
+            if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not been approved or is under review';
 
@@ -654,7 +654,7 @@ class api extends Controller
             $itemcount = 0;
             $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
 
-            if($visibility != 'n') {
+            if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not been approved or is under review';
 
@@ -706,7 +706,7 @@ class api extends Controller
             $itemcount = 0;
             $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
 
-            if($visibility != 'n') {
+            if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not been approved or is under review';
 
@@ -758,7 +758,7 @@ class api extends Controller
             $itemcount = 0;
             $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
 
-            if($visibility != 'n') {
+            if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not been approved or is under review';
 
@@ -810,7 +810,7 @@ class api extends Controller
             $itemcount = 0;
             $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
 
-            if($visibility != 'n') {
+            if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'Item has not been approved or is under review';
 
