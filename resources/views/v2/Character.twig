@@ -712,7 +712,7 @@
 											<div class="card">
 												<div class="card-body">
 													<div class="d-flex justify-content-center">
-														<img src="{{ item.thumbnail }}" style="width: 50%; height: auto;">
+														<img src="{{ (item.visibility == 'd') ? '/s/img/spinnerv2.gif' : item.thumbnail }}" style="width: 50%; height: auto;">
 													</div>
 													<p class="mt-2 mb-0"><a href="/item/{{ item.assetid }}">{{ item.title|raw }}</a></p>
 													<p class="mt-0 mb-0">by {% if not item.uuid %}{{ "test" }}{% else %}<a href="/user/{{ item.uuid }}">{{ item.author }}</a>{% endif %}</p>

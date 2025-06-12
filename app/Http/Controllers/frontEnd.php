@@ -1882,8 +1882,6 @@ class frontEnd extends Controller
             ->where('id', $id)
             ->first();
         
-        $this->request['data']['embeds']['title'] = htmlspecialchars($item['title']) . $this->request['data']['embeds']['title'];
-        
         if($item['asset_type'] == 9) {
             return redirect('/place/' . $id);
         }
@@ -1916,6 +1914,7 @@ class frontEnd extends Controller
             $item['description'] = "[Not Approved]";
         }
 
+        $this->request['data']['embeds']['title'] = htmlspecialchars($item['title']) . $this->request['data']['embeds']['title'];
         $this->request['data']['item'] = $item;
 
         return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
@@ -1953,6 +1952,12 @@ class frontEnd extends Controller
 
             $item['additional'] = json_decode($item['additional'], true);
             $result['asset_type'] = $item['asset_type'];
+            $result['visibility'] = $item['visibility'];
+
+            if($item['visibility'] == 'd') {
+                $item['title'] = '[Not Approved]';
+            }
+
             $result['title'] = htmlspecialchars($item['title']);
             $result['uuid'] = $item['author'];
             $result['author'] = User::select('username')->where('id', $item['author'])->value('username');

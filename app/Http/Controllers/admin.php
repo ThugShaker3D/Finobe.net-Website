@@ -1110,7 +1110,7 @@ class admin extends Controller
             ])->body();
             $mesh = mb_convert_encoding($mesh, 'UTF-8', 'UTF-8');
 
-            if(!str_starts_with($mesh, 'version 1')) {
+            if(!str_starts_with($mesh, 'version')) {
                 Session::put('error', 'Unsupported mesh format');
                 return redirect('/admin/rbxcreatexml');
             }
