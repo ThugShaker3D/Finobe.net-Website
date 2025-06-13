@@ -149,6 +149,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::match(['post', 'get'], '/prune-posts', [admin::class, 'prune_posts']);
             Route::match(['post', 'get'], '/rbxcreatexml', [admin::class, 'rbxcreatexml']);
             Route::match(['post', 'get'], '/announcements', [admin::class, 'announcements']);
+            Route::match(['post', 'get'], '/changeversions', [admin::class, 'changeversions']);
         });
     });
 
