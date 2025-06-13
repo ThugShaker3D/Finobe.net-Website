@@ -32,8 +32,10 @@
                                             </div>
                                             <div class="offset-md-1">
                                                 <p class="mb-0">{{ user.username }}</p>
-                                                {% if user.IsOnline %}
+                                                {% if user.IsOnline and not user.InGame %}
                                                 <p class="mb-0 text-success">Online</p>
+                                                {% elseif user.InGame %}
+                                                <p class="mb-0 text-success">{{ user.game.title|raw }}</p>
                                                 {% else %}
                                                 <p class="mb-0">{{ user.lastlogin }}</p>
                                                 {% endif %}

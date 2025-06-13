@@ -322,7 +322,7 @@ class frontEnd extends Controller
             }
 
             if($found) {
-                $user['inGame'] = true;
+                $user['InGame'] = true;
                 $user['game'] = [
                     'title' => strip_tags(htmlspecialchars($this->db->table('assets')->where('id', $placeid)->value('title')))
                 ];
@@ -728,14 +728,44 @@ class frontEnd extends Controller
                 ->toArray();
         }
 
+        $servers = $this->db->table('servers')
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+
         foreach($results as $result) {
-            $users[] = [
+            $user = [
                 'id' => $result['id'],
                 'username' => $result['username'],
                 'pfp' => $result['pfp'],
                 'lastlogin' => date('m/d/Y h:i A', strtotime($result['lastlogin'])),
-                'IsOnline' => Carbon::parse($result['lastlogin'])->gt(Carbon::now()->subMinutes(2))
+                'IsOnline' => Carbon::parse($result['lastlogin'])->gt(Carbon::now()->subMinutes(2)),
+                'InGame' => false
             ];
+
+            foreach($servers as $server) {
+                $placeid = 0;
+                $found = false;
+                $server['players'] = json_decode($server['players'], true);
+    
+                foreach($server['players'] as $player) {
+                    if($player == $result['id']) {
+                        $found = true;
+                        $placeid = $server['placeid'];
+                        break;
+                    }
+                }
+    
+                if($found) {
+                    $user['InGame'] = true;
+                    $user['game'] = [
+                        'title' => strip_tags(htmlspecialchars($this->db->table('assets')->where('id', $placeid)->value('title')))
+                    ];
+                }
+            }
+
+            $users[] = $user;
         }
 
         $this->request['data']['pagination'] = [
