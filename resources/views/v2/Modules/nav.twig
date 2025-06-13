@@ -127,7 +127,7 @@
                 
                       var countdownText = hours + 'h ' + minutes + 'm ' + seconds + 's remaining';
                       
-                      $('[x-placement="bottom"]').find('.tooltip-inner').text("{{ data.user.Dius }} - " + countdownText);
+                      $('#test[x-placement="bottom"]').find('.tooltip-inner').text("{{ data.user.Dius }} - " + countdownText);
 					  $('[data-original-title="Diu"]').attr('data-original-title', '{{ data.user.Dius }} - ' + countdownText);
 					  $('#test[data-toggle="tooltip"]').attr('data-original-title', '{{ data.user.Dius }} - ' + countdownText);
                     }
