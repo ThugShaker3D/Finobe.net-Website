@@ -734,7 +734,7 @@ class frontEnd extends Controller
                 return (array) $item;
             })->toArray();
 
-        foreach($results as $result) {
+        foreach($results as $key => $result) {
             $user = [
                 'id' => $result['id'],
                 'username' => $result['username'],
@@ -766,6 +766,13 @@ class frontEnd extends Controller
             }
 
             $users[] = $user;
+        }
+
+        foreach($users as $key => $user) {
+            if($user['InGame']) {
+                unset($users[$key]);
+                array_unshift($users, $user);
+            }
         }
 
         $this->request['data']['pagination'] = [
