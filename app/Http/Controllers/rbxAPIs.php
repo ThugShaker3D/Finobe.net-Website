@@ -490,7 +490,7 @@ class rbxAPIs extends Controller
 
         $authToken = User::where('token', $data['suggest']);
 
-        $_SESSION["siteusername"] = $authToken->username;
+        Auth::loginUsingId($authToken->id);
 
         return $_COOKIE['finobe-session'];
     }
