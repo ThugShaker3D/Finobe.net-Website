@@ -4,6 +4,7 @@ use App\Http\Controllers\api;
 use App\Http\Controllers\admin;
 use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
+use App\Http\Controllers\dataController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
