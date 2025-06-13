@@ -19,6 +19,7 @@
     "DFFlagAnimationFormatAssetId": "True",
     "DFFlagApiDictionaryCompression": "True",
     "DFFlagAppendTrackerIdToTeleportUrl": "True",
+    "UrlReconstructToAssetGame": "False",
     "DFFlagBadTypeOnConnectErrorEnabled": "True",
     "DFFlagBlockUsersInLuaChat": "True",
     "DFFlagBodyMoverParentingFix": "True",
