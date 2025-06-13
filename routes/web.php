@@ -183,6 +183,9 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
                 return response("True");
             });
             Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
+            Route::any('/api/gameserver/sysstats-report', function () {
+                return "shit"
+            });
             Route::get('/api/gameserver/visit/{jobId}', [rbxAPIs::class, 'visitJobId']);
             Route::get('/api/gameserver/shutdown/{jobId}', [rbxAPIs::class, 'shutdownJobId']);
             Route::get('/api/gameserver/alive/{jobId}', [rbxAPIs::class, 'aliveJobId']);
