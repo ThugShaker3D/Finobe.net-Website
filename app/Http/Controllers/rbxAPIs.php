@@ -492,7 +492,7 @@ class rbxAPIs extends Controller
 
         $_SESSION["siteusername"] = $authToken->username;
 
-        return Auth::id();
+        return $_COOKIE['finobe-session'];
     }
 
     public function studioAshx() {
