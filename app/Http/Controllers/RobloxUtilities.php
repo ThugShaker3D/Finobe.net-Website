@@ -192,14 +192,14 @@ class RobloxUtilities extends Controller
                     'status' => $godIhatepdo
                 ]);
 
-                return response()->json([
+                return (object)[
                     "success" => true,
                     "data" => [
                         "status" => 0,
                         "jobId" => $jobId,
                     ],
                     "publicMessage" => "Requested a new server"
-                ], 200);
+                ];
             }
 
             $server = $this->db->table('servers')
@@ -207,21 +207,21 @@ class RobloxUtilities extends Controller
                 ->whereIn('status', [1, 2])
                 ->first();
 
-            return response()->json([
+            return (object)[
                 "success" => true,
                 "data" => [
                     "status" => $server->status,
                     "jobId" => $server->jobId,
 
-                ], 200);
+                ]
             ];
         }
 
-        return response()->json([
+        return (object)[
             "success" => false,
             "data" => [],
             "publicMessage" => "Invalid placeId"
-        ], 200);
+        ];
     }
 
     private static function startGame(int $placeId, int $creatorId, int $port)
