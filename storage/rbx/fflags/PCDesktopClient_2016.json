@@ -129,6 +129,7 @@
     "DFFlagOrder66": "False",
     "DFFlagPartsStreamingEnabled": "True",
     "DFFlagPathfindingEnabled": "True",
+    "UrlReconstructToAssetGame": "False",
     "DFFlagPhysicsAggressiveSimRadiusReduction": "True",
     "DFFlagPhysicsAllowSimRadiusToDecreaseToOne": "True",
     "DFFlagPhysicsFastSmoothTerrainUpdate": "True",
