@@ -152,14 +152,16 @@ class RobloxUtilities extends Controller
     */
     public static function RequestGame(int $placeId, object $user): object
     {
-        if (!$this->db->table('assets')->where('id', $placeId)->exists()) {
+        $instance = new self();
+
+        if (!$instance->db->table('assets')->where('id', $placeId)->exists()) {
             return (object)[
                 "success" => false,
                 "data" => [],
                 "publicMessage" => "Invalid placeId"
             ];
         }
-        $asset = $this->db->table('assets')
+        $asset = $instance->db->table('assets')
             ->where('id', $placeId)
             ->first();
         
@@ -174,14 +176,14 @@ class RobloxUtilities extends Controller
         }
 
         if ($asset->asset_type == 9) { //placeId asset_type
-            if (!$this->db->table('servers')->where('placeid', $placeId)->whereIn('status', [1, 2])->exists()) {
+            if (!$instance->db->table('servers')->where('placeid', $placeId)->whereIn('status', [1, 2])->exists()) {
                 $port = rand(90000, 130000);
                 $ip = "45.131.65.123";
                 $aaaaaaaaaaa = "[]";
                 $godIhatepdo = 1;
                 $jobId = self::startGame($placeId, $asset->author, $port);
 
-                $this->db->table('servers')->insert([
+                $instance->db->table('servers')->insert([
                     'ip' => $ip,
                     'port' => $port,
                     'placeid' => $placeId,
@@ -190,14 +192,14 @@ class RobloxUtilities extends Controller
                     'status' => $godIhatepdo
                 ]);
 
-                return (object)[
+                return response()->json([
                     "success" => true,
                     "data" => [
                         "status" => 0,
                         "jobId" => $jobId,
                     ],
                     "publicMessage" => "Requested a new server"
-                ];
+                ], 200);
             }
 
             $server = $this->db->table('servers')
@@ -205,21 +207,21 @@ class RobloxUtilities extends Controller
                 ->whereIn('status', [1, 2])
                 ->first();
 
-            return (object)[
+            return response()->json([
                 "success" => true,
                 "data" => [
                     "status" => $server->status,
                     "jobId" => $server->jobId,
 
-                ]
+                ], 200);
             ];
         }
 
-        return (object)[
+        return response()->json([
             "success" => false,
             "data" => [],
             "publicMessage" => "Invalid placeId"
-        ];
+        ], 200);
     }
 
     private static function startGame(int $placeId, int $creatorId, int $port)
