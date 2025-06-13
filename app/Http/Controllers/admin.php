@@ -1165,6 +1165,10 @@ class admin extends Controller
         $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
