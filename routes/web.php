@@ -176,6 +176,10 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::get('/Game/Gameserver.lua', [rbxAPIs::class, 'gameServerLua']);
             Route::any('/asset/GetScriptState.ashx', [rbxAPIs::class, 'getScriptStateAshx']);
             Route::get('/asset/', [rbxAPIs::class, 'asset']);
+            //this is small function, doesnt deserve an function in rbxAPIs :P
+            Route::any('/Game/ChatFilter.ashx', function () {
+                return response("True");
+            });
             Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
             Route::get('/api/gameserver/visit/{jobId}', [rbxAPIs::class, 'visitJobId']);
             Route::get('/api/gameserver/shutdown/{jobId}', [rbxAPIs::class, 'shutdownJobId']);
