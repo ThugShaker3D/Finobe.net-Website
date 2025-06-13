@@ -535,11 +535,6 @@ class rbxAPIs extends Controller
 
             return response()->json($this->response, 403);
         }
-        $db = new databaseController(conf::get()['project']['database']['db']);
-
-        $userQuery = $db->prepare("SELECT * FROM `users` WHERE `username` = :username LIMIT 1");
-        $userQuery->bindParam(":username", $_SESSION['siteusername'], PDO::PARAM_STR);
-        $userQuery->execute();
 
         $user = (object) User::user()->toArray();
 
