@@ -116,8 +116,10 @@
                 
                       if (distance <= 0) {
                         clearInterval(interval);
-                        $('[x-placement="bottom"]').first().find('.tooltip-inner').text('{{ data.user.Dius }} - 0h 0m 0s remaning');
-						$('[title="Diu"]').attr('data-original-title', '{{ data.user.Dius }} - 0h 0m 0s remaning');
+						if($('[x-placement="bottom"]').find('.tooltip-inner').text().includes('s remaining')) {
+                        	$('[x-placement="bottom"]').find('.tooltip-inner').text('{{ data.user.Dius }} - 0h 0m 0s remaining');
+						}
+						$('[title="Diu"]').attr('data-original-title', '{{ data.user.Dius }} - 0h 0m 0s remaining');
                         return;
                       }
                       
@@ -127,7 +129,9 @@
                 
                       var countdownText = hours + 'h ' + minutes + 'm ' + seconds + 's remaining';
                       
-                      $('[x-placement="bottom"]').first().find('.tooltip-inner').text("{{ data.user.Dius }} - " + countdownText);
+					  if($('[x-placement="bottom"]').find('.tooltip-inner').text().includes('s remaining')) {
+                      	$('[x-placement="bottom"]').find('.tooltip-inner').text("{{ data.user.Dius }} - " + countdownText);
+					  }
 					  $('[data-original-title="Diu"]').attr('data-original-title', '{{ data.user.Dius }} - ' + countdownText);
 					  $('#test[data-toggle="tooltip"]').attr('data-original-title', '{{ data.user.Dius }} - ' + countdownText);
                     }
