@@ -241,7 +241,7 @@ class admin extends Controller
                 'visibility' => 'n'
             ]);
         
-        if(!$this->db->table('purchases')->where('username', User::where('id', $asset['author'])->value('username'))->where('assetid', $data['id'])->where('author', $asset['author'])->exists())
+        if(!$this->db->table('purchases')->where('username', User::where('id', $asset['author'])->value('username'))->where('assetid', $data['id'])->where('author', $asset['author'])->exists()) {
             $this->db->table('purchases')->insert([
                 'username' => User::where('id', $asset['author'])->value('username'),
                 'assetid' => $data['id'],
