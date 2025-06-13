@@ -54,8 +54,8 @@ class rbxAPIs extends Controller
         if (RobloxUtilities::IsFinobeCloudAuthorized()) {
             $this->response = [
                 "data" => [
-                    "0.1.1pcapplication",
-                    "0.235.0pcplayer"
+                    json_decode(file_get_contents(storage_path('app/private/versions.json')), true)['application']
+                    //"0.235.0pcplayer" debug
                 ]
             ];
 
@@ -74,7 +74,7 @@ class rbxAPIs extends Controller
         if (RobloxUtilities::IsFinobeCloudAuthorized()) {
             $this->response = [
                 "data" => [
-                    "d6a2ea2ef0fda828e76ccea5e964e4f5"
+                    json_decode(file_get_contents(storage_path('app/private/versions.json')), true)['md5']
                 ]
             ];
 
