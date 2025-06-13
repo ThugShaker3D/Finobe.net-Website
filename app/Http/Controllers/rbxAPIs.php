@@ -50,7 +50,7 @@ class rbxAPIs extends Controller
         if (RobloxUtilities::IsFinobeCloudAuthorized()) {
             $this->response = [
                 "data" => [
-                    "0.1.0finobeapp",
+                    "0.1.1pcapplication",
                     "0.235.0pcplayer"
                 ]
             ];
@@ -70,7 +70,7 @@ class rbxAPIs extends Controller
         if (RobloxUtilities::IsFinobeCloudAuthorized()) {
             $this->response = [
                 "data" => [
-                    "b4428d9b4e9fa8031bdab3533d60fc58"
+                    "57fd82dfdbddc5e28ca973d90e1cc159"
                 ]
             ];
 
