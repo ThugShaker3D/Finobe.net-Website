@@ -69,6 +69,7 @@ if url~=nil then
 	-- pcall(function() game:GetService("Players"):SetChatFilterUrl(url .. "/Game/ChatFilter.ashx") end)
 
 	game:GetService("BadgeService"):SetPlaceId(placeId)
+    game:GetService("Players"):setSysStatsUrl(url.. "/api/gameserver/sysstats-report?placeId=".. placeId)
 
 	game:GetService("BadgeService"):SetIsBadgeLegalUrl("")
 	game:GetService("InsertService"):SetBaseSetsUrl(url .. "/Game/Tools/InsertAsset.ashx?nsets=10&type=base")
