@@ -570,7 +570,7 @@ class rbxAPIs extends Controller
     public function joinAshx(Request $request) {
         $data = $request->all();
 
-        if (!User::check()) {
+        if (!Auth::check()) {
             $this->response = [
                 "code" => 403,
                 "message" => "You're not authorized to access this page."
@@ -597,7 +597,7 @@ class rbxAPIs extends Controller
             }
             */
 
-            $userInformation = User::user();
+            $userInformation = Auth::user();
 
             if (!isset($data["jobId"])) {
                 $this->response = [
