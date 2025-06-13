@@ -318,7 +318,7 @@ class Asset extends Controller
                 return true;
             }
 
-            if ($assetinfo->asset_type != 9 || (($assetinfo == 9 && $additional->uncopylocked) || $additional->onSale)) {
+            if ($assetinfo->asset_type != 9 || (($assetinfo->asset_type == 9 && $additional->uncopylocked) || $additional->onSale)) {
                 return true;
             } else {
                 if ($assetinfo->author == ($user->id ?? 0)) {
