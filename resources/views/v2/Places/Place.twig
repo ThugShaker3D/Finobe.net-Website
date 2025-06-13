@@ -105,7 +105,7 @@
                                                         info.innerHTML = '<i class="far align-middle fa-circle-notch mr-1 fa-spin-2"></i> Waiting for server...';
                                                         setTimeout(function () {
                                                             info.innerHTML = '<i class="far align-middle fa-circle-notch mr-1 fa-spin-2"></i> Starting the client...';
-                                                             window.location.href = `finobe-launcher://1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ data.place.id }}+k:l`
+                                                             window.location.href = `finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ data.place.id }}+k:l`
                                                             setTimeout(function() {
                                                                 clientDownload.style.display = "";
                                                                 clientDownload.classList.add('fadeInto-setup');
