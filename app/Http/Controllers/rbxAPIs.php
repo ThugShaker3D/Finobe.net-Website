@@ -536,7 +536,7 @@ class rbxAPIs extends Controller
             return response()->json($this->response, 403);
         }
 
-        $user = (object) User::user()->toArray();
+        $user = (object) Auth::user()->toArray();
 
         $requestType = $data["request"] ?? "RequestGame";
         $placeId = $data["placeId"] ?? 0;
