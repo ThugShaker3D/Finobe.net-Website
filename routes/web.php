@@ -185,7 +185,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             });
             Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
             Route::any('/api/gameserver/sysstats-report', function (Request $request) {
-                $a = new dataController()
+                $a = new dataController();
                 $a->send_discord_message($request->query('Message'));
                 return "shit"
             });
