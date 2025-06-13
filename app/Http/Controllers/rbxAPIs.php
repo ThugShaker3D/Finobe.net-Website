@@ -343,7 +343,7 @@ class rbxAPIs extends Controller
     public function aliveJobId($jobId) {
         if (RobloxUtilities::IsFinobeCloudAuthorized())
         {
-            if(count(json_decode($this->db->table('servers')->select('players')->where('jobId', $jobId)->value('players')))) {
+            if(count(json_decode($this->db->table('servers')->select('players')->where('jobId', $jobId)->value('players'))) > 0) {
                 $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
                 $arbiter->RenewLease($jobId, 90);
             }
