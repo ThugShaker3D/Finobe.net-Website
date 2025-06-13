@@ -207,17 +207,32 @@ class admin extends Controller
         
         $asset['additional'] = json_decode($asset['additional'], true);
 
-        if($asset['asset_type'] == 3) {
-            if(!rename(public_path('dynamic/reviewing/' . $asset['file']), '/var/www/cdn.finobe.net/audios/' . $asset['file'])) {
-                Session::put('error', error_get_last()['message']);
-                return redirect('/admin/assets');
+        if($asset['visibility'] == 'r') {
+            if($asset['asset_type'] == 3) {
+                if(!rename(public_path('dynamic/reviewing/' . $asset['file']), '/var/www/cdn.finobe.net/audios/' . $asset['file'])) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+            } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
+                $this->db->table('assets')
+                    ->where('id', $asset['additional']['media']['textureAssetId'])
+                    ->update([
+                        'visibility' => 'n'
+                    ]);
             }
-        } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
-            $this->db->table('assets')
-                ->where('id', $asset['additional']['media']['textureAssetId'])
-                ->update([
-                    'visibility' => 'n'
-                ]);
+        } elseif($asset['visibility'] == 'd') {
+            if($asset['asset_type'] == 3) {
+                if(!rename(public_path('dynamic/denied/' . $asset['file']), '/var/www/cdn.finobe.net/audios/' . $asset['file'])) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+            } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
+                $this->db->table('assets')
+                    ->where('id', $asset['additional']['media']['textureAssetId'])
+                    ->update([
+                        'visibility' => 'n'
+                    ]);
+            }
         }
 
         $this->db->table('assets')
@@ -226,12 +241,14 @@ class admin extends Controller
                 'visibility' => 'n'
             ]);
         
-        $this->db->table('purchases')->insert([
-            'username' => User::where('id', $asset['author'])->value('username'),
-            'assetid' => $data['id'],
-            'author' => $asset['author'],
-            'amount' => 0
-        ]);
+        if(!$this->db->table('purchases')->where('username', User::where('id', $asset['author'])->value('username'))->where('assetid', $data['id'])->where('author', $asset['author'])->exists())
+            $this->db->table('purchases')->insert([
+                'username' => User::where('id', $asset['author'])->value('username'),
+                'assetid' => $data['id'],
+                'author' => $asset['author'],
+                'amount' => 0
+            ]);
+        }
         
         Session::put('success', 'Item accepted.');
         return redirect('/admin/assets');
@@ -255,22 +272,29 @@ class admin extends Controller
         
         $asset['additional'] = json_decode($asset['additional'], true);
 
-        if($asset['asset_type'] == 3) {
-            if(!rename(public_path('dynamic/reviewing/' . $asset['file']), public_path('dynamic/denied/' . $asset['file']))) {
-                Session::put('error', error_get_last()['message']);
-                return redirect('/admin/assets');
+        if($asset['visibility'] == 'r') {
+            if($asset['asset_type'] == 3) {
+                if(!rename(public_path('dynamic/reviewing/' . $asset['file']), public_path('dynamic/denied/' . $asset['file']))) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+            } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
+                if(!rename('/var/www/cdn.finobe.net/assets/' . $asset['file'], public_path('dynamic/denied/' . $asset['file']))) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+
+                $this->db->table('assets')
+                    ->where('id', $asset['additional']['media']['textureAssetId'])
+                    ->update([
+                        'visibility' => 'd'
+                    ]);
             }
-        } elseif($asset['asset_type'] == 2 || $asset['asset_type'] == 11 || $asset['asset_type'] == 12 || $asset['asset_type'] == 18) {
+        } elseif($asset['visibility'] == 'n') {
             if(!rename('/var/www/cdn.finobe.net/assets/' . $asset['file'], public_path('dynamic/denied/' . $asset['file']))) {
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
             }
-
-            $this->db->table('assets')
-                ->where('id', $asset['additional']['media']['textureAssetId'])
-                ->update([
-                    'visibility' => 'd'
-                ]);
         }
 
         $this->db->table('assets')
@@ -1159,43 +1183,5 @@ class admin extends Controller
         }
 
         return view($this->request['data']['user']['version'] . '/Admin/RBXCreateXML', $this->request);
-    }
-
-    public function changeversions(Request $request) {
-        $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
-        $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
-        if($request->isMethod('post')) {
-            $validator = Validator::make($data, [
-                'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
-                'md5' => 'required|regex:/^[a-f0-9]{32}$/i'
-            ]);
-
-            if($validator->fails()) {
-                Session::put('error', $validator->errors->first());
-                return redirect('/admin/changeversions');
-            }
-
-            $json = [
-                'application' => $data['application'],
-                'md5' => $data['md5']
-            ];
-
-            file_put_contents(storage_path('app/private/versions.json'), json_encode($json));
-
-            Session::put('success', 'Successfully changed');
-            return redirect('/admin/changeversions');
-        }
-
-        $json = json_decode(file_get_contents(storage_path('app/private/versions.json')), true);
-
-        $this->request['data']['application'] = $json['application'];
-        $this->request['data']['md5'] = $json['md5'];
-
-        return view($this->request['data']['user']['version'] . '/Admin/Changeversions', $this->request);
     }
 }
