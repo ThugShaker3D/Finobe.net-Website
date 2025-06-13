@@ -2884,7 +2884,7 @@ class frontEnd extends Controller
                 Session::put('error', 'Admin status is required');
                 return redirect('/app/place/new');
             }
-
+            /*
             $id = $this->db->table('assets')->insertGetId([
                 'asset_type' => 9,
                 'title' => trim($data['title']),
@@ -2910,7 +2910,28 @@ class frontEnd extends Controller
                     'hidden' => false
                 ])
             ]);
-
+            */
+            $defaultPlace = file_get_contents("/var/www/cdn.finobe.net/default.rbxl");
+            $id = Asset::createAsset(trim($data['title']), 9, $this->request['data']['user']['id'], $defaultPlace, trim($data['description'] ?? ''), "n", [
+                    'visits' => 0,
+                    'version' => '2012',
+                    'maxplayers' => 15,
+                    'category' => 'original',
+                    'featured' => false,
+                    'gears' => [
+                        'combat' => true,
+                        'social' => true,
+                        'building' => true,
+                        'musical' => true
+                    ],
+                    'uncopylocked' => false,
+                    'allowplaying' => true,
+                    'chat_type' => 'classic',
+                    'media' => [
+                        'imageAssetId' => 1
+                    ],
+                    'hidden' => false
+            ]);
             return redirect('/place/' . $id);
         }
 
