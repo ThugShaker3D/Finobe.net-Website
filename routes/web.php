@@ -170,7 +170,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     Route::any('/universes/{placeId}/game-start-info', function () {
         return response()->json(
             [
-                "r15Morphing" => true
+                "r15Morphing" => false
             ]
         );
     });
