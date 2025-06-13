@@ -111,7 +111,7 @@
                                                 {% endif %}
                                                 {% if data.profile.InGame %}
                                                     <p>
-                                                        <a class="btn btn-success mr-2 nowrap d-flex align-items-center" data-animation="false" data-toggle="tooltip" data-placement="bottom" title="{{ data.profile.game.title|raw }}" data-original-title="{{ data.profile.game.title|raw }}" style="height: 100%;"><i class="far fa-play"></i></a>
+                                                        <a href="finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ data.profile.game.id }}+k:l" class="btn btn-success mr-2 nowrap d-flex align-items-center" data-animation="false" data-toggle="tooltip" data-placement="bottom" title="{{ data.profile.game.title|raw }}" data-original-title="{{ data.profile.game.title|raw }}" style="height: 100%;"><i class="far fa-play"></i></a>
                                                     </p>
                                                 {% endif %}
                                             </div>
@@ -174,7 +174,7 @@
                                         <div class="card-body text-center">
                                             <a href="/place/{{ place.id }}"><p>{{ place.title }}</p></a>
                                             <a href="/place/{{ place.id }}"><img src="https://cdn.finobe.net/{{ place.thumbnail }}" class="mt-2 full-width" style="max-height: 125px; object-fit: contain;"></a>
-                                            <a href="/place/{{ place.id }}"><button class="btn btn-success btn-lg full-width mt-3" id="data-v-4350f98c" style="text-transform: capitalize;"><i class="far fa-play mr-1"></i> Play</button></a>
+                                            <a href="finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ place.id }}+k:l"><button class="btn btn-success btn-lg full-width mt-3" id="data-v-4350f98c" style="text-transform: capitalize;"><i class="far fa-play mr-1"></i> Play</button></a>
                                         </div>
                                     </div>
                                 {% endfor %}
