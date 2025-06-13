@@ -620,7 +620,7 @@ class rbxAPIs extends Controller
 
             $serverInformation = $this->db->table('servers')->where('jobId', $jobId)->first();
 
-            if (!$this->db->table('servers')->where('jobId', $serverInformation->placeid)->exists()) {
+            if (!$this->db->table('servers')->where('placeId', $serverInformation->placeid)->exists()) {
                 $this->response = [
                     "code" => 404,
                     "message" => "Invalid placeId"
@@ -629,7 +629,7 @@ class rbxAPIs extends Controller
                 return response()->json($this->response, 404);
             }
 
-            $placeInformation = $this->db->table('servers')->where('jobId', $serverInformation->placeid)->first();
+            $placeInformation = $this->db->table('assets')->where('id', $serverInformation->placeid)->first();
             $additionalInfo = json_decode($placeInformation->additional, false);
 
             if ($additionalInfo->allowplaying === false && $placeInformation->author !== $userInformation->id) {
