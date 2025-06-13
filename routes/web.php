@@ -161,6 +161,9 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
 
     Route::domain('applicationcompatibility.finobe.net')->group(function() {
         Route::get('v1/compatibility', [rbxAPIs::class, 'getCompatibility']);
+        Route::get('v1/client-version', function () {
+            return response('version-36fa2f83d9da480d')
+        });
     });
 
     Route::domain('api.finobe.net')->group(function() {
@@ -188,9 +191,6 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::get('/Asset/', [rbxAPIs::class, 'asset']);
             //this is small function, doesnt deserve an function in rbxAPIs :P
             Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
-            Route::any('/api/gameserver/sysstats-report', function (Request $request) {
-                return response("no way", 500);
-            });
             Route::get('/api/gameserver/visit/{jobId}', [rbxAPIs::class, 'visitJobId']);
             Route::get('/api/gameserver/shutdown/{jobId}', [rbxAPIs::class, 'shutdownJobId']);
             Route::get('/api/gameserver/alive/{jobId}', [rbxAPIs::class, 'aliveJobId']);
