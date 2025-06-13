@@ -109,6 +109,11 @@
                                                         </a>
                                                     </p>
                                                 {% endif %}
+                                                {% if data.profile.inGame %}
+                                                    <p>
+                                                        <a href="/user/4812/remove" class="btn btn-success mr-2 nowrap d-flex align-items-center" data-animation="false" data-toggle="tooltip" data-placement="bottom" title="{{ data.profile.game.title|raw }}" data-original-title="{{ data.profile.game.title|raw }}" style="height: 100%;"><i class="far fa-play mr-1"></i></a>
+                                                    </p>
+                                                {% endif %}
                                             </div>
                                             {% endif %}
                                         </div>
