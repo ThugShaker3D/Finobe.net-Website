@@ -71,7 +71,7 @@ class rbxAPIs extends Controller
         if (RobloxUtilities::IsFinobeCloudAuthorized()) {
             $this->response = [
                 "data" => [
-                    "57fd82dfdbddc5e28ca973d90e1cc159"
+                    "4a9f5eb327067fa82ed312029ecb7824"
                 ]
             ];
 
