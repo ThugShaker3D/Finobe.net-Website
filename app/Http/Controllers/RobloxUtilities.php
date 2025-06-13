@@ -202,7 +202,7 @@ class RobloxUtilities extends Controller
                 ];
             }
 
-            $server = $this->db->table('servers')
+            $server = $instance->db->table('servers')
                 ->where('placeid', $placeId)
                 ->whereIn('status', [1, 2])
                 ->first();
