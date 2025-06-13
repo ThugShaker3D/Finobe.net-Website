@@ -167,6 +167,13 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
         Route::any('/marketplace/productinfo', [rbxAPIs::class, 'productInfo']);
     });
+    Route::any('/universes/{placeId}/game-start-info', function () {
+        return response()->json(
+            [
+                "r15Morphing" => false
+            ]
+        );
+    });
 
     foreach(['assetgame', 'www'] as $subdomain) {
         Route::domain($subdomain . '.finobe.net')->group(function() {
@@ -180,9 +187,6 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::get('/Asset', [rbxAPIs::class, 'asset']);
             Route::get('/Asset/', [rbxAPIs::class, 'asset']);
             //this is small function, doesnt deserve an function in rbxAPIs :P
-            Route::any('/Game/ChatFilter.ashx', function () {
-                return response("True");
-            });
             Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
             Route::any('/api/gameserver/sysstats-report', function (Request $request) {
                 return response("no way", 500);
