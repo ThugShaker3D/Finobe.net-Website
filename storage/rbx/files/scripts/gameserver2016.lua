@@ -56,6 +56,7 @@ pcall(function() scriptContext:AddStarterScript(37801172) end)
 scriptContext.ScriptsDisabled = true
 
 game:SetPlaceID(assetId, false)
+game:SetUniverseId(assetId)
 game:SetCreatorID(creatorid, Enum.CreatorType.User)
 game:GetService("ChangeHistoryService"):SetEnabled(false)
 
