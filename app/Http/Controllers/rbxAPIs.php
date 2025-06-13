@@ -488,9 +488,9 @@ class rbxAPIs extends Controller
             return response()->json($this->response, 404);
         }
 
-        $authToken = User::where('token', $data['suggest']);
+        $authToken = User::where('token', $data['suggest'])->first();
 
-        Auth::loginUsingId($authToken->id);
+        Auth::login($authToken);
 
         return $_COOKIE['finobe-session'];
     }
