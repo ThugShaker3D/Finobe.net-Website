@@ -609,10 +609,6 @@ class rbxAPIs extends Controller
             }
             $jobId = $data["jobId"];
 
-            $serverInformationQuery = $db->prepare("SELECT * FROM `servers` WHERE `jobId` = :jobId LIMIT 1");
-            $serverInformationQuery->bindParam(":jobId", $jobId, PDO::PARAM_STR);
-            $serverInformationQuery->execute();
-
             if (!$this->db->table('servers')->where('jobId', $jobId)->exists()) {
                 $this->response = [
                     "code" => 404,
