@@ -1161,7 +1161,7 @@ class admin extends Controller
         return view($this->request['data']['user']['version'] . '/Admin/RBXCreateXML', $this->request);
     }
 
-    public function changeversion(Request $request) {
+    public function changeversions(Request $request) {
         $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
