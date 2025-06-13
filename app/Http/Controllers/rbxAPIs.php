@@ -21,6 +21,9 @@ class rbxAPIs extends Controller
     public function quietGet(Request $request) {
         $bucketName = $request->query('bucket');
         switch ($bucketName) {
+            //TODO: fetch them all from database
+            case "ClientAppSettings":
+                return file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
             case "PCApplicationSettings":
                 return file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
             case "CloudSettings":
