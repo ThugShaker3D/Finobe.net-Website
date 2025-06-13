@@ -165,7 +165,6 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
         Route::any('/marketplace/productinfo', [rbxAPIs::class, 'productInfo']);
     });
-
     Route::domain('www.finobe.net')->group(function() {
         Route::fallback(function() {
             return redirect(env('APP_URL'));
