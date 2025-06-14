@@ -564,7 +564,20 @@ class rbxAPIs extends Controller
 
 
                 }
+            case "RequestGameJob":
+                $jobId = $data["gameId"];
+                $RequestGameJob = RobloxUtilities::RequestGameJob($placeId, $jobId, $user);
 
+                if ($RequestGameJob->success == true)
+                {
+                    $data = (object)$requestGame->data;
+
+                    if ($data->status != 2)
+                    {
+                        return response(RobloxUtilities::ConstructPlaceLauncher($data->jobId, $data->status, "", "", "", ""), 200);
+                    }
+                    return response(RobloxUtilities::ConstructPlaceLauncher($data->jobId, $data->status, "https://assetgame.finobe.net/Game/Join.ashx?jobId={$data->jobId}", "https://www.finobe.net/Login/Negotiate.ashx", $user->token, ""), 200);
+                }
             default:
                 return response('', 200);
         }

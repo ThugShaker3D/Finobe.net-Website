@@ -308,6 +308,7 @@ class frontEnd extends Controller
         
         foreach($servers as $server) {
             $placeid = 0;
+            $jobId = '';
             $found = false;
             $server['players'] = json_decode($server['players'], true);
 
@@ -315,6 +316,7 @@ class frontEnd extends Controller
                 if($player == $user['id']) {
                     $found = true;
                     $placeid = $server['placeid'];
+                    $jobId = $server['jobId'];
                     break;
                 }
             }
@@ -323,7 +325,8 @@ class frontEnd extends Controller
                 $user['InGame'] = true;
                 $user['game'] = [
                     'id' => $placeid,
-                    'title' => strip_tags(htmlspecialchars($this->db->table('assets')->where('id', $placeid)->value('title')))
+                    'title' => strip_tags(htmlspecialchars($this->db->table('assets')->where('id', $placeid)->value('title'))),
+                    'jobId' => $jobId
                 ];
             }
         }
