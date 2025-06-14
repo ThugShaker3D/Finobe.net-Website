@@ -1184,4 +1184,42 @@ class admin extends Controller
 
         return view($this->request['data']['user']['version'] . '/Admin/RBXCreateXML', $this->request);
     }
+
+    public function changeversions(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
+                'md5' => 'required|regex:/^[a-f0-9]{32}$/i'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors->first());
+                return redirect('/admin/changeversions');
+            }
+
+            $json = [
+                'application' => $data['application'],
+                'md5' => $data['md5']
+            ];
+
+            file_put_contents(storage_path('app/private/versions.json'), json_encode($json));
+
+            Session::put('success', 'Successfully changed');
+            return redirect('/admin/changeversions');
+        }
+
+        $json = json_decode(file_get_contents(storage_path('app/private/versions.json')), true);
+
+        $this->request['data']['application'] = $json['application'];
+        $this->request['data']['md5'] = $json['md5'];
+
+        return view($this->request['data']['user']['version'] . '/Admin/Changeversions', $this->request);
+    }
 }
