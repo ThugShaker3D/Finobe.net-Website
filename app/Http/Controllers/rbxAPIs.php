@@ -570,7 +570,7 @@ class rbxAPIs extends Controller
 
                 if ($RequestGameJob->success == true)
                 {
-                    $data = (object)$requestGame->data;
+                    $data = (object)$RequestGameJob->data;
 
                     if ($data->status != 2)
                     {
