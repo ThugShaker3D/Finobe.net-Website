@@ -1095,7 +1095,23 @@ class admin extends Controller
                 $this->db->statement('TRUNCATE TABLE servers');
 
                 return redirect('/admin/servers');
+            } elseif($data['type'] == 3) {
+                $validator = Validator::make($data, [
+                    'jobId' => 'required|string'
+                ]);
+
+                if($validator->fails()) {
+                    return redirect('/admin/servers');
+                }
+
+                $this->db->table('servers')
+                    ->where('jobId', $data['jobId'])
+                    ->delete();
+
+                return redirect('/admin/servers');
             }
+
+            return redirect('/admin/servers');
         }
 
         $this->request['data']['servers'] = $this->db->table('servers')
