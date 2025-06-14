@@ -1062,7 +1062,7 @@ class admin extends Controller
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
-                'type' => 'required|integer|min:1|max:2'
+                'type' => 'required|integer|min:1|max:3'
             ]);
 
             if($validator->fails()) {
