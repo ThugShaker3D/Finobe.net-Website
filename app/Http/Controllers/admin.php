@@ -1196,7 +1196,8 @@ class admin extends Controller
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
-                'md5' => 'required|regex:/^[a-f0-9]{32}$/i'
+                'md5' => 'required|regex:/^[a-f0-9]{32}$/i',
+                'version' => 'required|regex:/^version-[a-f0-9]{16}$/'
             ]);
 
             if($validator->fails()) {
@@ -1206,7 +1207,8 @@ class admin extends Controller
 
             $json = [
                 'application' => $data['application'],
-                'md5' => $data['md5']
+                'md5' => $data['md5'],
+                'version' => $data['version']
             ];
 
             file_put_contents(storage_path('app/private/versions.json'), json_encode($json));
@@ -1219,6 +1221,7 @@ class admin extends Controller
 
         $this->request['data']['application'] = $json['application'];
         $this->request['data']['md5'] = $json['md5'];
+        $this->request['data']['version'] = $json['version'];
 
         return view($this->request['data']['user']['version'] . '/Admin/Changeversions', $this->request);
     }
