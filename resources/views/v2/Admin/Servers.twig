@@ -23,11 +23,11 @@ status
 <input type="submit">
 </form>
 <br><br>
-{% if data.servers is not empty %}
+{% if data.servers|length %}
 <table border="1">
     <thead>
         <tr>
-            {% for column in servers[0]|keys %}
+            {% for column in data.servers[0]|keys %}
                 <th>{{ column }}</th>
             {% endfor %}
         </tr>

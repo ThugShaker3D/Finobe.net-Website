@@ -1062,10 +1062,40 @@ class admin extends Controller
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
-                'type' => 'required|string'
+                'type' => 'required|integer|min:1|max:2'
             ]);
 
             if($validator->fails()) {
+                return redirect('/admin/servers');
+            }
+
+            if($data['type'] == 1) {
+                $validator = Validator::make($data, [
+                    'ip' => 'required|string',
+                    'port' => 'required|integer',
+                    'placeid' => 'required|integer',
+                    'players' => 'required|integer',
+                    'jobId' => 'required|string',
+                    'status' => 'required|integer'
+                ]);
+
+                if($validator->fails()) {
+                    return redirect('/admin/servers');
+                }
+
+                $this->db->table('servers')->insert([
+                    'ip' => $data['id'],
+                    'port' => $data['port'],
+                    'placeid' => $data['placeid'],
+                    'players' => $data['players'],
+                    'jobId' => $data['jobId'],
+                    'status' => $data['status']
+                ]);
+
+                return redirect('/admin/servers');
+            } elseif($data['type'] == 2) {
+                $this->db->statement('TRUNCATE TABLE servers');
+                
                 return redirect('/admin/servers');
             }
         }

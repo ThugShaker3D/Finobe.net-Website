@@ -143,6 +143,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::get('/decider', [admin::class, 'decider']);
             Route::match(['post', 'get'], '/warn', [admin::class, 'warn']);
             Route::match(['post', 'get'], '/bans', [admin::class, 'bans']);
+            Route::match(['post', 'get'], '/servers', [admin::class, 'servers']);
             Route::match(['post', 'get'], '/elections', [admin::class, 'elections']);
             Route::match(['post', 'get'], '/give_dius', [admin::class, 'give_dius']);
             Route::match(['post', 'get'], '/createxml', [admin::class, 'createxml']);
