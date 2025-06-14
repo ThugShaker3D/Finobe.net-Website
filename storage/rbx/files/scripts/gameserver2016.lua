@@ -134,6 +134,8 @@ game:GetService("RunService"):Run()
 
 game:HttpGet(url .. "/api/gameserver/register/" .. game.JobId)
 
+game.OnClose = function() game:HttpGet(url .. "/api/gameserver/shutdown/" .. game.JobId) end
+
 while wait(30) do
     game:HttpGet(url .. "/api/gameserver/alive/" .. game.JobId)
 	if(game:GetService('Players').NumPlayers == 0) then
