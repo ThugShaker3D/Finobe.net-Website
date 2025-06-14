@@ -248,4 +248,53 @@ class RobloxUtilities extends Controller
 
         return $jobId;
     }
+
+    /* 
+        RequestGameJob
+         - Joins an already exist server with jobId
+    */
+    public static function RequestGameJob(int $placeId, string $jobId, object $user,)
+    {
+        $instance = new self();
+
+        if (!$instance->db->table('assets')->where('id', $placeId)->exists()) {
+            return (object)[
+                "success" => false,
+                "data" => [],
+                "publicMessage" => "Invalid placeId"
+            ];
+        }
+        $asset = $instance->db->table('assets')
+            ->where('id', $placeId)
+            ->first();
+        
+        $additional = json_decode($asset->additional);
+        if ($additional->allowplaying === false && $asset->author !== $user->id)
+        {
+            return (object)[
+                "success" => false,
+                "data" => [],
+                "publicMessage" => "You don't have permission to join this game"
+            ];
+        }
+        if ($asset->asset_type == 9) { //placeId asset_type
+            if ($instance->db->table('servers')->where('placeid', $placeId)->where('jobId', $jobId)->whereIn('status', 2)->exists()) {
+                return (object)[
+                    "success" => true,
+                    "data" => [
+                        "status" => 2,
+                        "jobId" => $jobId,
+                    ],
+                    "publicMessage" => "Joining a server"
+                ];
+            }
+        } else {
+            return (object)[
+                 "success" => false,
+                "data" => [],
+                "publicMessage" => "Job doesnt exists"
+            ];
+        }
+
+    }
 }
