@@ -20,6 +20,7 @@
     "DFFlagApiDictionaryCompression": "True",
     "DFFlagAppendTrackerIdToTeleportUrl": "True",
     "UrlReconstructToAssetGame": "False",
+    "FFlagUseDynamicTypesetterUTF8": "True",
     "DFFlagBadTypeOnConnectErrorEnabled": "True",
     "DFFlagBlockUsersInLuaChat": "True",
     "DFFlagBodyMoverParentingFix": "True",
