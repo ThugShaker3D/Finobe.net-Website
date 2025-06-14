@@ -41,6 +41,7 @@
     "DFFlagConsoleCodeExecutionEnabled": "True",
     "DFFlagContentProviderHttpCaching": "True",
     "DFFlagCorrectFloorNormal": "True",
+    "FFlagUseDynamicTypesetterUTF8": "True",
     "DFFlagCorrectlyReportSpeedOnRunStart": "True",
     "DFFlagCrashOnNetworkPacketError": "False",
     "DFFlagCreateHumanoidRootNode": "True",
