@@ -1074,7 +1074,6 @@ class admin extends Controller
                     'ip' => 'required|string',
                     'port' => 'required|integer',
                     'placeid' => 'required|integer',
-                    'players' => 'required|integer',
                     'jobId' => 'required|string',
                     'status' => 'required|integer'
                 ]);
@@ -1086,8 +1085,7 @@ class admin extends Controller
                 $this->db->table('servers')->insert([
                     'ip' => $data['id'],
                     'port' => $data['port'],
-                    'placeid' => $data['placeid'],
-                    'players' => $data['players'],
+                    'placeid' => $data['placeid']
                     'jobId' => $data['jobId'],
                     'status' => $data['status']
                 ]);
@@ -1095,7 +1093,7 @@ class admin extends Controller
                 return redirect('/admin/servers');
             } elseif($data['type'] == 2) {
                 $this->db->statement('TRUNCATE TABLE servers');
-                
+
                 return redirect('/admin/servers');
             }
         }
