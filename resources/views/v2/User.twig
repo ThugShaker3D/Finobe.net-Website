@@ -113,7 +113,7 @@
                                                     {% set uri = 'finobe-launcher:///1+launchmode:play+gameinfo:' ~ data.user.token ~ '+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId=' ~ data.profile.game.id ~ '+k:l' %}
                                                     <p>
                                                         <button
-                                                            onclick="openUri('{{ uri }}');"
+                                                            onclick="openUri('{{ uri }}', () => {}, () => {});"
                                                             class="btn btn-success mr-2 nowrap d-flex align-items-center"
                                                             data-animation="false"
                                                             data-toggle="tooltip"
