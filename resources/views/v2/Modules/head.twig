@@ -38,7 +38,7 @@
 <script src="/s/js/manifest.js"></script>
 <script src="/s/js/manifest1.js"></script>
 <script>
-  function openUri(uri: string, success: () => void, fail: () => void) { // credit: heliodex
+  function openUri(uri: string, callbacks: { success?: () => void, fail?: () => void }) { // credit: heliodex
     let target = window as Window
     while (target.parent && target !== target.parent) target = target.parent
 
