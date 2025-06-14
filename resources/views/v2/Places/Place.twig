@@ -90,7 +90,7 @@
                                                 var info = document.getElementById('data-v-h53h6hfd');
                                                 var clientDownload = document.getElementById('client-setup');
                                                 var setupClose = document.getElementById('btn-close-setup');
-                                                
+
                                                 function joinGame(serverid = false) {
                                                     info.style.display = "";
                                                     play.disabled = true;
@@ -99,7 +99,7 @@
                                                     info.innerHTML = '<i class="far align-middle fa-circle-notch mr-1 fa-spin-2"></i> Waiting for server...';
                                                     setTimeout(function () {
                                                         info.innerHTML = '<i class="far align-middle fa-circle-notch mr-1 fa-spin-2"></i> Starting the client...';
-                                                        openUri(`finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ data.place.id }}${serverid ? '&gameId=' + serverid : ''}+k:l`, () => {
+                                                        openUri(`finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame${serverid ? 'Job' : ''}&isTeleport=false&placeId={{ data.place.id }}${serverid ? '&gameId=' + serverid : ''}+k:l`, () => {
                                                             info.classList.add("text-success");
                                                             info.innerHTML = '<i class="far align-middle fa-check-circle mr-1" id="data-v-h64n346"></i> Started client!';
                                                             var icon = document.getElementById('data-v-h64n346');
