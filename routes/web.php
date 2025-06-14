@@ -162,7 +162,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     Route::domain('applicationcompatibility.finobe.net')->group(function() {
         Route::get('v1/compatibility', [rbxAPIs::class, 'getCompatibility']);
         Route::get('v1/client-version', function () {
-            return response('version-36fa2f83d9da480d');
+            return response('version-69d48314c23a4510');
         });
     });
 
