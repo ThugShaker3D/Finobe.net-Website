@@ -9,7 +9,7 @@
 /public/svgs
 /public/webfonts
 /public/api
-/public/fonts
+#/public/fonts
 /public/dynamic
 /public/chiwawa.html
 /storage/*.key
