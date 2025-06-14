@@ -38,22 +38,31 @@
 <script src="/s/js/manifest.js"></script>
 <script src="/s/js/manifest1.js"></script>
 <script>
-  function openUri(uri, success, fail) { // credit: heliodex
-    let target = window as Window
-    while (target.parent && target !== target.parent) target = target.parent
+  function openUri(uri, success, fail) {
+    let hasBlurred = false;
+    let target = window;
 
-    const timeout = setTimeout(() => {
-      target.removeEventListener("blur", onBlur)
-      fail()
-    }, 8000)
-
-    function onBlur() {
-      clearTimeout(timeout)
-      success()
+    while (target.parent && target !== target.parent) {
+      target = target.parent;
     }
 
-    target.addEventListener("blur", onBlur, { once: true })
-    window.location.href = uri
+    function onBlur() {
+      hasBlurred = true;
+      clearTimeout(fallback);
+      target.removeEventListener('blur', onBlur);
+      success();
+    }
+
+    const fallback = setTimeout(() => {
+      if (!hasBlurred) {
+        target.removeEventListener('blur', onBlur);
+        fail();
+      }
+    }, 2000);
+
+    target.addEventListener('blur', onBlur, { once: true });
+
+    window.location.href = uri;
   }
 </script>
 <!-- begin masthead -->
