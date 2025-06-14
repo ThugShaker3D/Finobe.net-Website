@@ -86,6 +86,11 @@
                                             <button class="btn btn-success btn-lg full-width" id="data-v-4350f98c" style="text-transform: capitalize;"><i class="far fa-play mr-1"></i> Play</button>
                                             <p class="mt-3" id="data-v-h53h6hfd" style="display: none;"></p>
                                             <script>
+                                                var play = document.getElementById('data-v-4350f98c');
+                                                var info = document.getElementById('data-v-h53h6hfd');
+                                                var clientDownload = document.getElementById('client-setup');
+                                                var setupClose = document.getElementById('btn-close-setup');
+                                                
                                                 function joinGame(serverid = false) {
                                                     info.style.display = "";
                                                     play.disabled = true;
@@ -119,11 +124,6 @@
                                                 }
                                                 
                                                 document.addEventListener('DOMContentLoaded', function () {
-                                                    var play = document.getElementById('data-v-4350f98c');
-                                                    var info = document.getElementById('data-v-h53h6hfd');
-                                                    var clientDownload = document.getElementById('client-setup');
-                                                    var setupClose = document.getElementById('btn-close-setup');
-
                                                     setupClose.addEventListener('click', function() {
                                                         clientDownload.style.display = "none";
                                                         clientDownload.classList.remove('fadeInto-setup');
