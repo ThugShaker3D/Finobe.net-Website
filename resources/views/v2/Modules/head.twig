@@ -37,6 +37,25 @@
 <script src="/s/js/vendor.js"></script>
 <script src="/s/js/manifest.js"></script>
 <script src="/s/js/manifest1.js"></script>
+<script>
+  function openUri(uri, success, fail) { // credit: heliodex
+    let target = window as Window
+    while (target.parent && target !== target.parent) target = target.parent
+
+    const timeout = setTimeout(() => {
+      target.removeEventListener("blur", onBlur)
+      fail()
+    }, 8000)
+
+    function onBlur() {
+      clearTimeout(timeout)
+      success()
+    }
+
+    target.addEventListener("blur", onBlur, { once: true })
+    window.location.href = uri
+  }
+</script>
 <!-- begin masthead -->
 <style>
 {% if data.user.upsidedown == 1 %}
