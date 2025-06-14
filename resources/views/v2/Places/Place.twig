@@ -97,7 +97,9 @@
                                                         clientDownload.classList.remove('fadeInto-setup');
                                                     });
 
-                                                    play.addEventListener('click', function () {
+                                                    play.addEventListener('click', joinGame);
+
+                                                    function joinGame(serverid = false) {
                                                         info.style.display = "";
                                                         play.disabled = true;
                                                         info.classList.remove("text-success");
@@ -127,7 +129,7 @@
                                                             info.style.display = "none";
                                                             play.disabled = false;
                                                         }, 15000);
-                                                    });
+                                                    }
                                                 });
                                             </script>
                                         </div>
@@ -183,7 +185,7 @@
                                     <div class="row mt-1">
                                         <div class="col-md-2">
                                             <p class="mb-1">{{ server.players|length }} of {{ data.place.additional.maxplayers }} players</p>
-                                            <button class="btn btn-success full-width mr-1">play</button>
+                                            <button onclick=";joinGame('{{ server.jobId }}');" class="btn btn-success full-width mr-1">play</button>
                                         </div>
                                         <div class="col-md-10">
                                             {% for player in server.players %}
