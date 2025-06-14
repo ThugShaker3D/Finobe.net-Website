@@ -278,7 +278,7 @@ class RobloxUtilities extends Controller
             ];
         }
         if ($asset->asset_type == 9) { //placeId asset_type
-            if ($instance->db->table('servers')->where('placeid', $placeId)->where('jobId', $jobId)->whereIn('status', 2)->exists()) {
+            if ($instance->db->table('servers')->where('placeid', $placeId)->where('jobId', $jobId)->where('status', 2)->exists()) {
                 return (object)[
                     "success" => true,
                     "data" => [
