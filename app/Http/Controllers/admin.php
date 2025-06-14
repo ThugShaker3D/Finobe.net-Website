@@ -1085,7 +1085,7 @@ class admin extends Controller
                 $this->db->table('servers')->insert([
                     'ip' => $data['id'],
                     'port' => $data['port'],
-                    'placeid' => $data['placeid']
+                    'placeid' => $data['placeid'],
                     'jobId' => $data['jobId'],
                     'status' => $data['status']
                 ]);
