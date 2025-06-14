@@ -92,6 +92,7 @@
                                                 var setupClose = document.getElementById('btn-close-setup');
 
                                                 function joinGame(serverid = false) {
+                                                    console.log(serverid);
                                                     info.style.display = "";
                                                     play.disabled = true;
                                                     info.classList.remove("text-success");
@@ -129,7 +130,7 @@
                                                         clientDownload.classList.remove('fadeInto-setup');
                                                     });
 
-                                                    play.addEventListener('click', joinGame);
+                                                    play.addEventListener('click', () => joinGame());
                                                 });
                                             </script>
                                         </div>
