@@ -189,7 +189,7 @@
                                         </div>
                                         <div class="col-md-10">
                                             {% for player in server.players %}
-                                                <a href="/user/{{ player.userid }}"><img data-animation="true" data-toggle="tooltip" data-placement="top" title="{{ player.username }}" data-original-title="{{ player.username }}" src="{{ (player.avatar|length) ? https://cdn.finobe.net/{{ player.avatar }} : 'https://finobe.net/s/img/spinnerv2.gif' }}" height="64" weight="64"></a>
+                                                <a href="/user/{{ player.userid }}"><img data-animation="true" data-toggle="tooltip" data-placement="top" title="{{ player.username }}" data-original-title="{{ player.username }}" src="{{ (player.avatar|length) ? 'https://cdn.finobe.net/' ~ player.avatar : 'https://finobe.net/s/img/spinnerv2.gif' }}" height="64" weight="64"></a>
                                             {% endfor %}
                                         </div>
                                     </div>
