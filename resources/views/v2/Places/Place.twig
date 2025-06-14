@@ -95,7 +95,7 @@
                                                     setupClose.addEventListener('click', function() {
                                                         clientDownload.style.display = "none";
                                                         clientDownload.classList.remove('fadeInto-setup');
-                                                    })
+                                                    });
 
                                                     play.addEventListener('click', function () {
                                                         info.style.display = "";
@@ -105,24 +105,28 @@
                                                         info.innerHTML = '<i class="far align-middle fa-circle-notch mr-1 fa-spin-2"></i> Waiting for server...';
                                                         setTimeout(function () {
                                                             info.innerHTML = '<i class="far align-middle fa-circle-notch mr-1 fa-spin-2"></i> Starting the client...';
-                                                             window.location.href = `finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ data.place.id }}+k:l`
-                                                            setTimeout(function() {
+                                                            openUri(`finobe-launcher:///1+launchmode:play+gameinfo:{{ data.user.token }}+placelauncherurl:https://assetgame.finobe.net/Game/PlaceLauncher.ashx?request=RequestGame&isTeleport=false&placeId={{ data.place.id }}+k:l`, () => {
+                                                                info.classList.add("text-success");
+                                                                info.innerHTML = '<i class="far align-middle fa-check-circle mr-1" id="data-v-h64n346"></i> Started client!';
+                                                                var icon = document.getElementById('data-v-h64n346');
+                                                                icon.classList.remove("fa-spin-2s");
+                                                                icon.classList.remove("fa-circle-notch");
+                                                                icon.classList.add("fa-circle-check");
+                                                            }, () => {
+                                                                info.classList.add("text-success");
+                                                                info.innerHTML = '<i class="far align-middle fa-check-circle mr-1" id="data-v-h64n346"></i> Started client!';
+                                                                var icon = document.getElementById('data-v-h64n346');
+                                                                icon.classList.remove("fa-spin-2s");
+                                                                icon.classList.remove("fa-circle-notch");
+                                                                icon.classList.add("fa-circle-check");
                                                                 clientDownload.style.display = "";
                                                                 clientDownload.classList.add('fadeInto-setup');
-                                                            }, 1000);
+                                                            });
                                                         }, 250);
-                                                        setTimeout(function () {
-                                                            info.classList.add("text-success");
-                                                            info.innerHTML = '<i class="far align-middle fa-check-circle mr-1" id="data-v-h64n346"></i> Started client!';
-                                                            var icon = document.getElementById('data-v-h64n346');
-                                                            icon.classList.remove("fa-spin-2s");
-                                                            icon.classList.remove("fa-circle-notch");
-                                                            icon.classList.add("fa-circle-check");
-                                                        }, 5000);
                                                         setTimeout(function () {
                                                             info.style.display = "none";
                                                             play.disabled = false;
-                                                        }, 10000);
+                                                        }, 15000);
                                                     });
                                                 });
                                             </script>
