@@ -291,7 +291,7 @@ class admin extends Controller
                     ]);
             }
         } elseif($asset['visibility'] == 'n') {
-            if(!rename('/var/www/cdn.finobe.net/assets/' . $asset['file'], public_path('dynamic/denied/' . $asset['file']))) {
+            if(!rename('/var/www/cdn.finobe.net/' . ($asset['asset_type'] == 3 ? 'audios' : 'assets') . '/' . $asset['file'], public_path('dynamic/denied/' . $asset['file']))) {
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
             }
