@@ -544,6 +544,15 @@ class rbxAPIs extends Controller
 
         $user = (object) Auth::user()->toArray();
 
+        if(!in_array($user->id, [29, 88, 4365, 565, 619, 2394, 1054, 4922, 5317, 395, 4189, 2836, 4861, 4862, 580, 450, 4363, 2722, 1386, 3144, 4203, 5322, 4875, 1211, 246, 3269, 4828, 5373 4979, 5374, 5368, 4363, 4812])) {
+            $this->response = [
+                "code" => 403,
+                "message" => "You're not authorized to access this page."
+            ];
+
+            return response()->json($this->response, 403);
+        }
+
         $requestType = $data["request"] ?? "RequestGame";
         $placeId = $data["placeId"] ?? 0;
         $isTeleport = $data["isTeleport"] ?? false;
