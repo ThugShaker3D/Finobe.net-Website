@@ -63,7 +63,24 @@ class frontEnd extends Controller
 					'error' => Session::get('error', false),
 					'announcements' => []
 				],
-                'lucky_number' => rand(0, Cache::remember('user_count', 3600, fn() => User::count())) . '/' . Cache::remember('user_count', 3600, fn() => User::count())
+                'lucky_number' => rand(0, Cache::remember('user_count', 3600, fn() => User::count())) . '/' . Cache::remember('user_count', 3600, fn() => User::count()),
+                'string_replacements' => [
+                    'phrasesToReplace' => [
+                        'fuck',
+                        'fucking',
+                        'roblox',
+                        'rob lox',
+                        'robux',
+                        'ass',
+                        'asshole',
+                        'shit'
+                    ],
+                    'replacements' => [
+                        'OBAMA BALL',
+                        'sonic 06',
+                        'blockland.us'
+                    ]
+                ]
             ]
         ];
 
@@ -822,6 +839,8 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+        $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
+        $replacements = $this->request['data']['string_replacements']['replacements'];
 
         $posts = $this->db->table('forum_threads')
             ->orderBy('pinned', 'DESC')
@@ -846,23 +865,6 @@ class frontEnd extends Controller
                 ],
                 'data' =>[]
             ]
-        ];
-
-        $phrasesToReplace = [
-            'fuck',
-            'fucking',
-            'roblox',
-            'rob lox',
-            'robux',
-            'ass',
-            'asshole',
-            'shit'
-        ];
-
-        $replacements = [
-            'OBAMA BALL',
-            'sonic 06',
-            'blockland.us'
         ];
 
         foreach($posts as $post) {
@@ -909,6 +911,8 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+        $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
+        $replacements = $this->request['data']['string_replacements']['replacements'];
 
         $posts = $this->db->table('forum_threads')
             ->where('category', $section)
@@ -934,23 +938,6 @@ class frontEnd extends Controller
                 ],
                 'data' =>[]
             ]
-        ];
-
-        $phrasesToReplace = [
-            'fuck',
-            'fucking',
-            'roblox',
-            'rob lox',
-            'robux',
-            'ass',
-            'asshole',
-            'shit'
-        ];
-
-        $replacements = [
-            'OBAMA BALL',
-            'sonic 06',
-            'blockland.us'
         ];
 
         foreach($posts as $post) {
@@ -1003,6 +990,8 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+        $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
+        $replacements = $this->request['data']['string_replacements']['replacements'];
 
         $posts = $this->db->table('forum_threads')
             ->whereRaw('LOWER(title) LIKE ?', [$search])
@@ -1028,23 +1017,6 @@ class frontEnd extends Controller
                 ],
                 'data' =>[]
             ]
-        ];
-
-        $phrasesToReplace = [
-            'fuck',
-            'fucking',
-            'roblox',
-            'rob lox',
-            'robux',
-            'ass',
-            'asshole',
-            'shit'
-        ];
-
-        $replacements = [
-            'OBAMA BALL',
-            'sonic 06',
-            'blockland.us'
         ];
 
         foreach($posts as $post) {
@@ -1170,23 +1142,8 @@ class frontEnd extends Controller
         $post['pfp'] = $user['pfp'];
         $post['posts'] = $this->db->table('forum_threads')->where('author', $post['author'])->count() + $this->db->table('forum_replies')->where('author', $post['author'])->count();
         $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
-
-        $phrasesToReplace = [
-            'fuck',
-            'fucking',
-            'roblox',
-            'rob lox',
-            'robux',
-            'ass',
-            'asshole',
-            'shit'
-        ];
-
-        $replacements = [
-            'OBAMA BALL',
-            'sonic 06',
-            'blockland.us'
-        ];
+        $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
+        $replacements = $this->request['data']['string_replacements']['replacements'];
 
         if(!isset($data['edit'])) {
             $environment = new Environment([
@@ -1856,6 +1813,8 @@ class frontEnd extends Controller
         $offset = ($currentPage - 1) * $results_per_page;
         $start_page = max(1, min($currentPage - floor($pages_to_show / 2), $number_of_pages - $pages_to_show + 1));
         $end_page = min($number_of_pages, $start_page + $pages_to_show - 1);
+        $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
+        $replacements = $this->request['data']['string_replacements']['replacements'];
 
         if(isset($data['q'])) {
             $results = $this->db->table('assets')
@@ -1884,7 +1843,9 @@ class frontEnd extends Controller
 
         foreach($results as $result) {
             $result['additional'] = json_decode($result['additional'], true);
-            $result['title'] = htmlspecialchars($result['title']);
+            $result['title'] = htmlspecialchars(preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+                return $replacements[array_rand($replacements)];
+            }, $result['title']));
 
             if($result['asset_type'] == 3) {
                 $result['duration'] = $this->dataService->timestamp($result['additional']['duration']);
@@ -1937,6 +1898,8 @@ class frontEnd extends Controller
 
     public function item(Request $request, $id) {
         $data = $request->all();
+        $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
+        $replacements = $this->request['data']['string_replacements']['replacements'];
 
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
@@ -1959,7 +1922,9 @@ class frontEnd extends Controller
         }
 
         $item['additional'] = json_decode($item['additional'], true);
-        $item['title'] = htmlspecialchars($item['title']);
+        $item['title'] = htmlspecialchars(preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', function ($matches) use ($replacements) {
+            return $replacements[array_rand($replacements)];
+        }, $item['title']));
         
         if(User::where('id', $item['author'])->exists()) {
             $item['uuid'] = $item['author'];
@@ -1982,7 +1947,7 @@ class frontEnd extends Controller
             $item['description'] = "[Not Approved]";
         }
 
-        $this->request['data']['embeds']['title'] = htmlspecialchars($item['title']) . $this->request['data']['embeds']['title'];
+        $this->request['data']['embeds']['title'] = $item['title'] . $this->request['data']['embeds']['title'];
         $this->request['data']['item'] = $item;
 
         return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
