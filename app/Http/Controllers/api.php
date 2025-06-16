@@ -936,6 +936,13 @@ class api extends Controller
     public function places(Request $request) {
         $data = $request->all();
 
+        if(!Auth::check()) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'Bad request';
+
+            return response()->json($this->response, 400);
+        }
+
         if(!isset($data['version'])) {
             $data['version'] = 'all';
         }
@@ -1121,7 +1128,7 @@ class api extends Controller
             $html = '
                 <div data-v-5ad0ed22="" title="' . htmlspecialchars($result['title']) . '" class="game-card-div">
                     <a data-v-5ad0ed22="" href="/place/' . $result['id'] . '" class="game-card-link">
-                        <span data-v-5ad0ed22="" class="game-card d-flex flex-column">
+                        <span data-v-5ad0ed22="" class="game-card d-flex flex-column" ' . (Auth::user()->toArray()['theme'] == 1 ? 'style="background-color: #35383c;' : '') . '">
                             ' . ($result['additional']['version'] == "2016" ? '<span data-v-5ad0ed22="" class="badge badge-danger position-absolute">2016</span>' : '') . '
                             <span data-v-5ad0ed22="" class="thumbnail">
                                 <div data-v-5ad0ed22="" class="vue-load-image"><img data-v-5ad0ed22="" src="https://cdn.finobe.net/' . $result['thumbnail'] . '" class="card-img-top"></div>
