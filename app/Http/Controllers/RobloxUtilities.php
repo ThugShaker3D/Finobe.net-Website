@@ -202,10 +202,38 @@ class RobloxUtilities extends Controller
                 ];
             }
 
+
+
             $server = $instance->db->table('servers')
                 ->where('placeid', $placeId)
                 ->whereIn('status', [1, 2])
                 ->first();
+
+            if (count(json_decode($server->players)) >= $additional->maxplayers) {
+                $port = rand(90000, 130000);
+                $ip = "45.131.65.123";
+                $aaaaaaaaaaa = "[]";
+                $godIhatepdo = 1;
+                $jobId = self::startGame($placeId, $asset->author, $port);
+
+                $instance->db->table('servers')->insert([
+                    'ip' => $ip,
+                    'port' => $port,
+                    'placeid' => $placeId,
+                    'players' => $aaaaaaaaaaa,
+                    'jobId' => $jobId,
+                    'status' => $godIhatepdo
+                ]);
+
+                return (object)[
+                    "success" => true,
+                    "data" => [
+                        "status" => 0,
+                        "jobId" => $jobId,
+                    ],
+                    "publicMessage" => "Requested a new server"
+                ];
+            }
 
             return (object)[
                 "success" => true,
