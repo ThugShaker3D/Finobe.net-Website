@@ -4037,7 +4037,7 @@ class frontEnd extends Controller
 
     public function auth_form(Request $request) {
         $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
-        $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
+        $this->request['data']['invitekeys'] = (bool) env('FINOBE_INVITE_KEYS');
         $data = $request->all();
 
         if($this->request['data']['siteusername']) {
@@ -4049,7 +4049,7 @@ class frontEnd extends Controller
 
     public function auth_register(Request $request) {
         $this->request['data']['embeds']['title'] = 'Register' . $this->request['data']['embeds']['title'];
-        $this->request['data']['inviteKeys'] = (bool) env('FINOBE_INVITE_KEYS');
+        $this->request['data']['invitekeys'] = (bool) env('FINOBE_INVITE_KEYS');
         $data = $request->all();
 
         if($this->request['data']['siteusername']) {
@@ -4060,13 +4060,14 @@ class frontEnd extends Controller
             $forbiddenPhrases = [
                 'raped', 'dick', 'aesthetiful', 'instance', 'fuck', 'shit', 'fag', 'f@g', 'd1ck', 'pussy',
                 'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t', 'r@ped', 'tities', 't1t1es',
-                'nigg', 'n!gger', 'nigga', 'n1gga', 'n1gger'
+                'nigg', 'n!gger', 'nigga', 'n1gga', 'n1gger', 'pedo', 'fag', 'faggot'
             ];
 
             $validator = Validator::make($data, [
                 'username' => 'required|string|regex:/^(?!_)(?!.*_$)(?!.*_.*_)[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
                 'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
                 'email' => 'required|email|confirmed|unique:finobe.users,email',
+                'invite_key' => ($this->request['data']['invitekeys'] ? 'required' : 'nullable') . '|string',
                 'g-recaptcha-response' => 'required'
             ]);
 
@@ -4075,7 +4076,7 @@ class frontEnd extends Controller
                 return redirect('/auth/form');
             }
 
-            if(!(bool)env('FINOBE_CREATE_ACCOUNT')) {
+            if(!$this->request['data']['invitekeys']) {
                 Session::put('error', 'Account creation is currently disabled');
                 return redirect('/auth/form');
             }
