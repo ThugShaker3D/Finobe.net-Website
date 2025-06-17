@@ -286,12 +286,12 @@ class rbxAPIs extends Controller
                 abort($response[2], $response[1] . ': ' . $response[2]);
             }
 
-            if (str_contains($data, '%PNG')) {
-                return response($data, 200)->header('Content-Type', 'image/png');
+            if (str_contains($response, '%PNG')) {
+                return response($response, 200)->header('Content-Type', 'image/png');
             } else {
                 $data = str_ireplace(['roblox.com/asset', 'Accessory'], ['finobe.net/asset', 'Hat'], $data);
 
-                return response($data, 200)->header('Content-Type', 'application/octet-stream');
+                return response($response, 200)->header('Content-Type', 'application/octet-stream');
             }
         }
     }
