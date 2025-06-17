@@ -275,11 +275,16 @@ class rbxAPIs extends Controller
                   ]);
             
                 if (!$response->ok()) {
-                    throw new \Exception('Asset fetch failed: ' . $response->status());
+                    return 'false,Asset fetch failed,' . $response->status();
                 }
             
                 return $response->body();
             });
+
+            if(str_starts_with($response, 'false')) {
+                $response = explode(',', $response);
+                abort($response[2], $response[1] . ': ' $response[2]);
+            }
 
             if (str_contains($data, '%PNG')) {
                 return response($data, 200)->header('Content-Type', 'image/png');
