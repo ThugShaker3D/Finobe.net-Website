@@ -4059,7 +4059,8 @@ class frontEnd extends Controller
         if($request->isMethod('post')) {
             $forbiddenPhrases = [
                 'raped', 'dick', 'aesthetiful', 'instance', 'fuck', 'shit', 'fag', 'f@g', 'd1ck', 'pussy',
-                'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t', 'r@ped', 'tities', 't1t1es'
+                'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t', 'r@ped', 'tities', 't1t1es',
+                'nigg', 'n!gger', 'nigga', 'n1gga', 'n1gger'
             ];
 
             $validator = Validator::make($data, [
@@ -4097,7 +4098,7 @@ class frontEnd extends Controller
                 return redirect('/auth/form');
             }
 
-            if($this->request['data']['inviteKeys'] && isset($data['invite_key']) && !$this->db->table('inviteKeys')->where('IID', $data['invite_key'])->where('used', 'n')->exists()) {
+            if($this->request['data']['invitekeys'] && isset($data['invite_key']) && !$this->db->table('invitekeys')->where('IID', $data['invite_key'])->where('used', 'n')->exists()) {
                 Session::put('error', 'Invalid invite key.');
                 return redirect('/auth/form');
             }
@@ -4115,8 +4116,8 @@ class frontEnd extends Controller
 
             $this->dataService->send_discord_message('<@541523977475194880>, ' . $data['username'] . ' has sign up');
 
-            if($this->request['data']['inviteKeys'] && isset($data['invite_key'])) {
-                $this->db->table('inviteKeys')
+            if($this->request['data']['invitekeys'] && isset($data['invite_key'])) {
+                $this->db->table('invitekeys')
                     ->where('IID', $data['invite_key'])
                     ->update([
                         'used' => 'y',
