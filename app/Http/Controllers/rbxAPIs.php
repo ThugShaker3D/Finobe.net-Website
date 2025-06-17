@@ -283,7 +283,7 @@ class rbxAPIs extends Controller
 
             if(str_starts_with($response, 'false')) {
                 $response = explode(',', $response);
-                abort($response[2], $response[1] . ': ' $response[2]);
+                abort($response[2], $response[1] . ': ' . $response[2]);
             }
 
             if (str_contains($data, '%PNG')) {
