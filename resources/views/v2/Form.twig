@@ -49,7 +49,7 @@
                                             class="col-md-3 col-form-label text-md-right">Invite Key</label>
                                         <div class="col-md-9"><input type="text" id="invite_key" name="invite_key" value=""
                                                 required="required" autofocus="autofocus" class="form-control">
-                                            <small id="inviteKeyHelp" class="form-text text-muted">Finobe is currently
+                                            <small id="inviteKeyHelp" class="form-text text-muted">{{ (data.user.branding == "finobe") ? "Finobe" : "Aesthetiful" }} is currently
                                                 invite only.</small>
                                         </div>
                                     </div>
