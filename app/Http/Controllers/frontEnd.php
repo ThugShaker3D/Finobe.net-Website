@@ -172,6 +172,7 @@ class frontEnd extends Controller
                     ]);
                 */
                 
+                $user = Auth::user();
                 $user->Dius = $this->request['data']['user']['Dius'] + 25;
                 $user->lastdiu = now()->addDay();
                 $user->save();
