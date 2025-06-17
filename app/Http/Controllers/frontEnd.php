@@ -108,7 +108,6 @@ class frontEnd extends Controller
             }
 
             $this->request['data']['user'] = $this->request['data']['user']->toArray();
-
             $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
             
@@ -162,11 +161,6 @@ class frontEnd extends Controller
                     $this->request['data']['notifications']['info']['incomingFriends']++;
                 }
             }
-
-            $user = User::find($this->request['data']['user']['id']);
-            $user->ip = hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip');
-            $user->lastlogin = now();
-            $user->save();
             
             if(strtotime($this->request['data']['user']['lastdiu']) <= time() && $this->request['data']['user']['diubanned'] == 'n') {
                 /*

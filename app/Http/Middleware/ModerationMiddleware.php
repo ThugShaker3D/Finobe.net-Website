@@ -80,6 +80,11 @@ class ModerationMiddleware
                     'perm' => 'y'
                 ]);
             }
+
+            $user = Auth::user();
+            $user->ip = hash_hmac('sha256', request()->header('CF-Connecting-IP'), 'ip');
+            $user->lastlogin = now();
+            $user->save();
         }
 
         if(!($request->isMethod('post') && ($this->request['data']['page'] == '/' || $this->request['data']['page'] == '/logout'))) {
