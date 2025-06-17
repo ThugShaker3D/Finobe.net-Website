@@ -186,7 +186,11 @@
                                     <div class="row mt-1">
                                         <div class="col-md-2">
                                             <p class="mb-1">{{ server.players|length }} of {{ data.place.additional.maxplayers }} players</p>
-                                            <button onclick=";joinGame('{{ server.jobId }}');" class="btn btn-success full-width mr-1">play</button>
+                                            {% if server.players|length < data.place.additional.maxplayers %}
+                                                <button onclick=";joinGame('{{ server.jobId }}');" class="btn btn-success full-width mr-1">play</button>
+                                            {% else %}
+                                                <p>Server is full.</p>
+                                            {% endif %}
                                         </div>
                                         <div class="col-md-10">
                                             {% for player in server.players %}
