@@ -180,7 +180,7 @@ class rbxAPIs extends Controller
 
     public function asset(Request $request) {
         $data = $request->all();
-        $assetId = (int)$data['id'] ?? 0;
+        $assetId = (int)($data['ID'] ?? $data['Id'] ?? $data['iD'] ?? $data['id'] ?? 0);
 
         if (file_exists(storage_path("rbx/files/2012CoreGui/{$assetId}.lua")))
         {
