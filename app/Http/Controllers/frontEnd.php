@@ -2499,7 +2499,7 @@ class frontEnd extends Controller
 
         if($request->isMethod('post')) {
             if(!(bool)env('FINOBE_INVITE_KEYS')) {
-                Session::put('error', 'Invite keys aren\'t enabled on the website');
+                Session::put('error', 'Invite keys are disabled');
                 return redirect('/invites');
             }
 
@@ -2513,7 +2513,7 @@ class frontEnd extends Controller
                 return redirect('/invites');
             }
 
-            if($this->db->table('invitekeys')->where('author', $this->request['data']['user']['username'])->where('used', 'n')->count() >= 5) {
+            if($this->db->table('invitekeys')->where('author', $this->request['data']['user']['username'])->where('used', 'n')->count() >= 2) {
                 Session::put('error', 'You have too many unused keys');
                 return redirect('/invites');
             }
