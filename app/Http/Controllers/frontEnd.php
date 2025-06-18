@@ -2796,7 +2796,7 @@ class frontEnd extends Controller
                 'content-type' => 'application/json',
             ])->post('https://us-api.smtp2go.com/v3/email/send', [
                 "sender" => "Finobe <noreply@aesthetiful.com>",
-                "to" => $data['email'] . " <" . $user->username . ">",
+                "to" => $user->username . " <" . $data['email'] . ">",
                 "subject" => "Finobe Password Reset",
                 "html_body" => $html
             ]);
