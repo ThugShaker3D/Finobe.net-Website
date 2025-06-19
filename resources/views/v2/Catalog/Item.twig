@@ -72,6 +72,7 @@
       <div class="container">
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
+                        {{ data.item.author }} {{ data.user.id }}
                         {% if (data.item.visibility == "r" and data.item.author == data.user.id) or data.item.visibility == "d" %}
                             <div class="alert alert-warning rounded text-center" style="color:white;margin:20px 0 20px 0;background-color:rgb(245, 69, 69);">
 								{{ (data.item.visibility != 'd') ? "This item is under review." : "This item was not approved" }}
