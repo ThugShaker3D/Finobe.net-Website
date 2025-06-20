@@ -525,42 +525,34 @@
                     </center>
                     <div class="mt-2">
                         <ul class="pagination shadow-sm">
-    <li class="page-item">
-      <a class="page-link" id="previous-page" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.current_page - 1 }}{{ (data.search) ? "&q=" ~ data.search : "" }}" rel="previous" aria-label="Previous <<" {{ (data.items.pages.info.current_page <= 1) ? "style='pointer-events: none;'" : "" }}>«</a>
-    </li>
-    {% if data.items.pages.info.start_page > 1 %}
-      <li class="page-item">
-        <a class="page-link" href="/catalog/{{ data.section }}?page=1{{ (data.search) ? "&q=" ~ data.search : "" }}">1</a>
-      </li>
-      {% if data.items.pages.info.start_page > 2 %}
-        <li class="page-item">
-          <a class="page-link" href="/catalog/{{ data.section }}?page=2{{ (data.search) ? "&q=" ~ data.search : "" }}">2</a>
-        </li>
-      {% endif %}
-      <li class="page-item"><span class="page-link">...</span></li>
-    {% endif %}
-    {% for page in data.items.pages.data %}
-      <li class="page-item">
-        <a class="page-link{{ (page.page == data.items.pages.info.current_page) ? " selected" : "" }}" href="/catalog/{{ data.section }}?page={{ page.page }}{{ (data.search) ? "&q=" ~ data.search : "" }}">
-          {{ page.page }}
-        </a>
-      </li>
-    {% endfor %}
-    {% if data.items.pages.info.end_page < data.items.pages.info.number_of_pages %}
-      {% if data.items.pages.info.end_page + 1 < data.items.pages.info.number_of_pages %}
-        <li class="page-item"><span class="page-link">...</span></li>
-      {% endif %}
-      <li class="page-item">
-        <a class="page-link" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.number_of_pages - 1 }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ data.items.pages.info.number_of_pages - 1 }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.number_of_pages }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ data.items.pages.info.number_of_pages }}</a>
-      </li>
-    {% endif %}
-    <li class="page-item">
-      <a class="page-link" id="next-page" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.next_page }}{{ (data.search) ? "&q=" ~ data.search : "" }}" rel="next" aria-label="Next >>" {{ (data.items.pages.info.current_page >= data.items.pages.info.number_of_pages) ? "style='pointer-events: none;'" : "" }}>»</a>
-    </li>
-  </ul>
+                            <li class="page-item{{ (data.replies.pages.info.previous_page == data.replies.pages.info.start_page) ? " disabled" : "" }}"><a class="page-link" id="previous-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.previous_page }}" onclick="" rel="previous" aria-label="Previous <<">«</a></li>
+                            {% if data.replies.pages.info.start_page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="/forum/post?id={{ data.post.id }}&page=1">1</a>
+                                </li>
+                                {% if data.replies.pages.info.start_page > 2 %}
+                                    <li class="page-item">
+                                    <a class="page-link" href="/forum/post?id={{ data.post.id }}&page=2">2</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item"><span class="page-link">...</span></li>
+                            {% endif %}
+                            {% for page in data.replies.pages.data %}
+                                <li class="page-item"><a class="page-link{{ (page.page == data.replies.pages.info.current_page) ? " selected" : "" }}" href="/forum/post?id={{ data.post.id }}&page={{ page.page }}">{{ page.page }}</a></li>
+                            {% endfor %}
+                            {% if data.replies.pages.info.end_page < data.replies.pages.info.number_of_pages %}
+                                {% if data.replies.pages.info.end_page + 1 < data.replies.pages.info.number_of_pages %}
+                                    <li class="page-item"><span class="page-link">...</span></li>
+                                {% endif %}
+                                <li class="page-item">
+                                    <a class="page-link" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.number_of_pages - 1 }}">{{ data.replies.pages.info.number_of_pages - 1 }}</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.number_of_pages }}">{{ data.replies.pages.info.number_of_pages }}</a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item{{ (data.replies.pages.info.next_page == data.replies.pages.info.end_page) ? " disabled" : "" }}"><a class="page-link" id="next-page" href="/forum/post?id={{ data.post.id }}&page={{ data.replies.pages.info.next_page + 1 }}" onclick="" rel="next" aria-label="Next >>">»</a></li>
+                        </ul>
                     </div>
                 </div>
                 {% else %}
