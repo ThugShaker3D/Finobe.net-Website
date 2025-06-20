@@ -1362,7 +1362,7 @@ class frontEnd extends Controller
             $this->request['data']['replies']['data'][] = $reply;
         }
 
-        for ($page = $start_page; $page <= $end_page; $page++) {
+        for ($page = $start_page; $page < $end_page; $page++) {
             $this->request['data']['replies']['pages']['data'][] = ['page' => $page];
         }
 
