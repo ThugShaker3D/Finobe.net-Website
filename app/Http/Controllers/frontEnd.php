@@ -599,7 +599,7 @@ class frontEnd extends Controller
             ]
         ];
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
         }
 
@@ -804,7 +804,7 @@ class frontEnd extends Controller
             ]
         ];
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['pagination']['pages']['data'][] = ['page' => $page];
         }
 
@@ -877,7 +877,7 @@ class frontEnd extends Controller
             $this->request['data']['threads']['data'][] = $post;
         }
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['threads']['pages']['data'][] = ['page' => $page];
         }
 
@@ -950,7 +950,7 @@ class frontEnd extends Controller
             $this->request['data']['threads']['data'][] = $post;
         }
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['threads']['pages']['data'][] = ['page' => $page];
         }
 
@@ -1029,7 +1029,7 @@ class frontEnd extends Controller
             $this->request['data']['threads']['data'][] = $post;
         }
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['threads']['pages']['data'][] = ['page' => $page];
         }
 
@@ -1362,7 +1362,7 @@ class frontEnd extends Controller
             $this->request['data']['replies']['data'][] = $reply;
         }
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['replies']['pages']['data'][] = ['page' => $page];
         }
 
@@ -1874,7 +1874,7 @@ class frontEnd extends Controller
             ]
         ];
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['items']['pages']['data'][] = ['page' => $page];
         }
 
@@ -3831,7 +3831,7 @@ class frontEnd extends Controller
             ]
         ];
 
-        for ($page = $start_page; $page < $end_page; $page++) {
+        for ($page = $start_page; $page <= $end_page; $page++) {
             $this->request['data']['videos']['pages']['data'][] = ['page' => $page];
         }
 
