@@ -36,8 +36,8 @@
                             {% if data.pagination.pages.info.end_page + 1 < data.pagination.pages.info.number_of_pages - 1 %}
                                 <li class="page-item"><span class="page-link">...</span></li>
                             {% endif %}
-                            {% for page in [data.replies.pages.info.number_of_pages - 1, data.replies.pages.info.number_of_pages] %}
-                                {% if page > data.replies.pages.info.end_page %}
+                            {% for page in [data.pagination.pages.info.number_of_pages - 1, data.pagination.pages.info.number_of_pages] %}
+                                {% if page > data.pagination.pages.info.end_page %}
                                     <li class="page-item">
                                         <a class="page-link" href="/user/{{ data.profile.id }}/friends?page={{ page }}">{{ page }}</a>
                                     </li>
