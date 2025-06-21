@@ -65,7 +65,9 @@
           <a class="page-link" href="/users?page=2">2</a>
         </li>
       {% endif %}
-      <li class="page-item"><span class="page-link">...</span></li>
+      {% if data.pagination.pages.info.start_page - 1 > 2 %}
+        <li class="page-item"><span class="page-link">...</span></li>
+      {% endif %}
     {% endif %}
     {% for page in data.pagination.pages.data %}
       <li class="page-item">
@@ -75,15 +77,16 @@
       </li>
     {% endfor %}
     {% if data.pagination.pages.info.end_page < data.pagination.pages.info.number_of_pages %}
-      {% if data.pagination.pages.info.end_page + 1 < data.pagination.pages.info.number_of_pages %}
+      {% if data.pagination.pages.info.end_page + 1 < data.pagination.pages.info.number_of_pages - 1 %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
-      <li class="page-item">
-        <a class="page-link" href="/users?page={{ data.pagination.pages.info.number_of_pages - 1 }}">{{ data.pagination.pages.info.number_of_pages - 1 }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="/users?page={{ data.pagination.pages.info.number_of_pages }}">{{ data.pagination.pages.info.number_of_pages }}</a>
-      </li>
+      {% for page in [data.replies.pages.info.number_of_pages - 1, data.replies.pages.info.number_of_pages] %}
+        {% if page > data.replies.pages.info.end_page %}
+          <li class="page-item">
+            <a class="page-link" href="/users?page={{ page }}">{{ page }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
     {% endif %}
     <li class="page-item">
       <a class="page-link" id="next-page" href="/users?page={{ data.pagination.pages.info.next_page }}" rel="next" aria-label="Next >>" {{ (data.pagination.pages.info.current_page >= data.pagination.pages.info.number_of_pages) ? "style='pointer-events: none;'" : "" }}>»</a>

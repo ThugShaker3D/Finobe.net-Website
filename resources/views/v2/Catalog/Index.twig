@@ -124,7 +124,9 @@
           <a class="page-link" href="/catalog/{{ data.section }}?page=2{{ (data.search) ? "&q=" ~ data.search : "" }}">2</a>
         </li>
       {% endif %}
-      <li class="page-item"><span class="page-link">...</span></li>
+      {% if data.items.pages.info.start_page - 1 > 2 %}
+        <li class="page-item"><span class="page-link">...</span></li>
+      {% endif %}
     {% endif %}
     {% for page in data.items.pages.data %}
       <li class="page-item">
@@ -134,15 +136,16 @@
       </li>
     {% endfor %}
     {% if data.items.pages.info.end_page < data.items.pages.info.number_of_pages %}
-      {% if data.items.pages.info.end_page + 1 < data.items.pages.info.number_of_pages %}
+      {% if data.items.pages.info.end_page + 1 < data.items.pages.info.number_of_pages - 1 %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
-      <li class="page-item">
-        <a class="page-link" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.number_of_pages - 1 }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ data.items.pages.info.number_of_pages - 1 }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.number_of_pages }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ data.items.pages.info.number_of_pages }}</a>
-      </li>
+      {% for page in [data.replies.pages.info.number_of_pages - 1, data.replies.pages.info.number_of_pages] %}
+        {% if page > data.replies.pages.info.end_page %}
+          <li class="page-item">
+            <a class="page-link" href="/catalog/{{ data.section }}?page={{ page }}{{ (data.search) ? "&q=" ~ data.search : "" }}">{{ page }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
     {% endif %}
     <li class="page-item">
       <a class="page-link" id="next-page" href="/catalog/{{ data.section }}?page={{ data.items.pages.info.next_page }}{{ (data.search) ? "&q=" ~ data.search : "" }}" rel="next" aria-label="Next >>" {{ (data.items.pages.info.current_page >= data.items.pages.info.number_of_pages) ? "style='pointer-events: none;'" : "" }}>»</a>
