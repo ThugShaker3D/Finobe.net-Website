@@ -133,7 +133,7 @@
         </a>
       </li>
     {% endfor %}
-    {% if data.items.pages.info.end_page < data.items.pages.info.number_of_pages %}
+    {% if data.items.pages.info.end_page <= data.items.pages.info.number_of_pages %}
       {% if data.items.pages.info.end_page + 1 < data.items.pages.info.number_of_pages %}
         <li class="page-item"><span class="page-link">...</span></li>
       {% endif %}
