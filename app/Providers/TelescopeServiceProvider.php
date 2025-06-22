@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Model\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
@@ -42,7 +43,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             if ($entry->isRequest()) {
                 $request = $entry->content['request'] ?? null;
                 $ip = $request['headers']['HTTP_CF_CONNECTING_IP'] ?? request()->ip();
-                return ['ip' => $ip, 'path' => $request['uri'] ?? request()->getRequestUri()];
+                return ['ip' => $ip, 'path' => Str::limit($request['uri'] ?? request()->getRequestUri(), 255, '')];
             }
             return [];
         });
