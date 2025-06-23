@@ -5,6 +5,7 @@ namespace App\Jobs;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\WebM;
+use FFMpeg\Format\Video\X264;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -44,12 +45,11 @@ class ProcessVideo implements ShouldQueue
                 'log_level' => 'debug',
             ]);
 
-            $format = new WebM('libvorbis', 'libvpx-vp9');
+            //$format = new WebM('libvorbis', 'libvpx-vp9');
+            $format = new X264('aac', 'libx264');
             $format->setKiloBitrate(1750);
             $format->setAdditionalParameters([
-                '-crf', '34',
-                '-cpu-used', '4',
-                '-threads', '4',
+                '-crf', '24'
             ]);
 
             $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
