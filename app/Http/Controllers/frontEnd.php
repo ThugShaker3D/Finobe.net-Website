@@ -3026,7 +3026,7 @@ class frontEnd extends Controller
 
                 $filename = uniqid();
                 $thumbnail = $filename . '.jpg';
-                $filename .= '.mp4';
+                $filename .= '.webm';
 
                 $file = $request->file('file')->store('videos');
 
