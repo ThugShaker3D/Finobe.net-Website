@@ -3016,7 +3016,7 @@ class frontEnd extends Controller
                 }
 
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:video/mp4,video/x-msvideo,video/x-ms-wmv,video/quicktime,video/webm,video/x-msvideo|max:102400'
+                    'file' => 'required|file|mimetypes:video/mp4,video/x-msvideo,video/x-ms-wmv,video/x-ms-asf,video/quicktime,video/webm|max:102400'
                 ]);
 
                 if($validator->fails()) {
