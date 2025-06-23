@@ -47,9 +47,9 @@ class ProcessVideo implements ShouldQueue
 
             //$format = new WebM('libvorbis', 'libvpx-vp9');
             $format = new X264('aac', 'libx264');
-            $format->setKiloBitrate(1750);
+            //$format->setKiloBitrate(1750);
             $format->setAdditionalParameters([
-                '-crf', '24',
+                //'-crf', '24',
                 '-y'
             ]);
 
