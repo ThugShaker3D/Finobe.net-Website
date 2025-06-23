@@ -36,20 +36,18 @@ class ProcessVideo implements ShouldQueue
     public function handle()
     {
         try {
-            $ffmpeg = FFMpeg::create([
+            $ffmpeg = FFMpeg::create(/*[
                 'ffmpeg.binaries'  => '/usr/bin/ffmpeg',
                 'ffprobe.binaries' => '/usr/bin/ffprobe',
                 'timeout' => 3600,
                 'ffmpeg.threads' => 4,
                 'log_level' => 'debug',
-            ]);
+            ]*/);
 
-            $format = new WebM('libopus', 'libvpx-vp9');
+            $format = new WebM('libvorbis', 'libvpx-vp9');
             $format->setKiloBitrate(1750);
             $format->setAdditionalParameters([
-                '-crf', '34',
-                '-cpu-used', '4',
-                '-threads', '4'
+                '-crf', '34'
             ]);
 
             $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
