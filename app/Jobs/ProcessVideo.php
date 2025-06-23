@@ -47,7 +47,9 @@ class ProcessVideo implements ShouldQueue
             $format = new WebM('libopus', 'libvpx-vp9');
             $format->setKiloBitrate(1750);
             $format->setAdditionalParameters([
-                '-crf', '34'
+                '-crf', '34',
+                '-cpu-used', '4',
+                '-threads', '4'
             ]);
 
             $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
