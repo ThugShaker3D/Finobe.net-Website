@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -3892,7 +3893,60 @@ class frontEnd extends Controller
             return view($this->request['data']['user']['version'] . '/404', $this->request, 404);
         }
 
-        return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('filename')->where('id', $id)->value('filename'));
+        //return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('filename')->where('id', $id)->value('filename'));
+        $video = (array) $this->db->table('videos')
+            ->where('id', $id)
+            ->first();
+        
+        if(!file_exists('/var/www/cdn.finobe.net/videos/data/' . $video['filename'])) {
+            abort(404, 'Video not found');
+        }
+
+        $filePath = '/var/www/cdn.finobe.net/videos/data/' . $video['filename'];
+        $size = filesize($filePath);
+        $start = 0;
+        $end = $size - 1;
+
+        $headers = [
+            'Content-Type' => mime_content_type($filePath),
+            'Accept-Ranges' => 'bytes',
+        ];
+
+        if($request->headers->has('Range')) {
+            preg_match('/bytes=(\d+)-(\d*)/', $request->header('Range'), $matches);
+
+            $start = intval($matches[1]);
+            $end = isset($matches[2]) && is_numeric($matches[2]) ? intval($matches[2]) : $end;
+
+            $length = $end - $start + 1;
+
+            $headers['Content-Range'] = "bytes $start-$end/$size";
+            $headers['Content-Length'] = $length;
+
+            return response()->stream(function () use ($filePath, $start, $length) {
+                $handle = fopen($filePath, 'rb');
+                fseek($handle, $start);
+
+                $buffer = 1024 * 8;
+                $bytesSent = 0;
+
+                while(!feof($handle) && $bytesSent < $length) {
+                    $readLength = min($buffer, $length - $bytesSent);
+                    echo fread($handle, $readLength);
+                    $bytesSent += $readLength;
+                    ob_flush();
+                    flush();
+                }
+
+                fclose($handle);
+            }, 206, $headers);
+        }
+
+        $headers['Content-Length'] = $size;
+
+        return response()->stream(function () use ($filePath) {
+            readfile($filePath);
+        }, 200, $headers);
     }
 
     public function do_stuff_automatically(Request $request) { // this function is just for me to migrate stuff if im changing the format of the db or something
