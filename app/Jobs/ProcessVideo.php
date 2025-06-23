@@ -50,6 +50,7 @@ class ProcessVideo implements ShouldQueue
             $format->setKiloBitrate(1750);
             $format->setAdditionalParameters([
                 '-crf', '24'
+                '-y'
             ]);
 
             $thumbnail = $ffmpeg->open(storage_path('app/private/' . $this->file));
