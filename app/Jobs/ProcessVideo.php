@@ -44,7 +44,7 @@ class ProcessVideo implements ShouldQueue
                 'log_level' => 'debug',
             ]);
 
-            $format = new WebM('libvorbis', 'libvpx-vp9');
+            $format = new WebM('libopus', 'libvpx-vp9');
             $format->setKiloBitrate(1750);
             $format->setAdditionalParameters([
                 '-crf', '34'
@@ -58,7 +58,6 @@ class ProcessVideo implements ShouldQueue
             $video->save($format, '/var/www/cdn.finobe.net/videos/data/' . $this->filename);
         } catch (\Exception $e) {
             \Log::error("FFMpeg job failed: " . $e->getMessage());
-            \Log::error($e->getTraceAsString());
         } finally {
             Redis::del("video_processing:{$this->filename}");
         }
