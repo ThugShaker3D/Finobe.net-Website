@@ -3097,8 +3097,11 @@ class frontEnd extends Controller
                     $duration = $audio->getFormat()->get('duration');
                     $format = new Mp3();
                     $format->setAudioKiloBitrate(96);
-                    $audio->save($format, public_path('/dynamic/temp/' . $filename . '1.mp3'));
-                    rename(public_path('/dynamic/temp/' . $filename . '1.mp3'), public_path('/dynamic/reviewing/' . $filename)); //ffmpeg is fucking me in the ass without the .mp3 extention
+                    $format->setAdditionalParameters([
+                        '-fluidSynth', 'soundfont.sf2'
+                    ]);
+                    $audio->save($format, public_path('/dynamic/temp/' . $filename . '.mp3'));
+                    rename(public_path('/dynamic/temp/' . $filename . '.mp3'), public_path('/dynamic/reviewing/' . $filename)); //ffmpeg is fucking me in the ass without the .mp3 extention
                 } catch(ProcessFailedException $e) {
                     Session::put('error', $e->getProcess()->getErrorOutput());
                     return redirect('/catalog/new');
@@ -3138,7 +3141,7 @@ class frontEnd extends Controller
                 return redirect('/item/' . $id);
             } elseif($data['media-type'] == 'shirt') {
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                    'file' => 'required|file|mimetypes:image/png,image/jpeg|max:10240'
                 ]);
 
                 if($validator->fails()) {
@@ -3193,7 +3196,7 @@ class frontEnd extends Controller
                 return redirect('/item/' . $id);
             } elseif($data['media-type'] == 'pants') {
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                    'file' => 'required|file|mimetypes:image/png,image/jpeg|max:10240'
                 ]);
 
                 if($validator->fails()) {
@@ -3253,7 +3256,7 @@ class frontEnd extends Controller
                 }
 
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                    'file' => 'required|file|mimetypes:image/png,image/jpeg|max:10240'
                 ]);
 
                 if($validator->fails()) {
@@ -3303,7 +3306,7 @@ class frontEnd extends Controller
                 return redirect('/item/' . $id);
             } elseif($data['media-type'] == 't-shirts') {
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:image/png|max:10240'
+                    'file' => 'required|file|mimetypes:image/png,image/jpeg|max:10240'
                 ]);
 
                 if($validator->fails()) {
