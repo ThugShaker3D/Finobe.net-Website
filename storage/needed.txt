@@ -1,0 +1,17 @@
+this is a list of packages needed for migration
+
+php8.3-fpm
+php8.3-redis
+php8.3-soap
+php8.3-xml
+php8.3-readline
+php8.3-common
+php8.3-gd
+php8.3-zip
+php8.3-mbstring
+nginx
+mysql-server
+redis-server
+composer
+timidity
+supervisor

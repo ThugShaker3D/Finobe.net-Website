@@ -3074,7 +3074,7 @@ class frontEnd extends Controller
                 return redirect('/videos');
             } elseif($data['media-type'] == 'audio') {
                 $validator = Validator::make($data, [
-                    'file' => 'required|file|mimetypes:audio/mpeg,audio/ogg,audio/midi,audio/wav,audio/x-wav|max:10240'
+                    'file' => 'required|file|mimetypes:audio/mpeg,audio/ogg,audio/midi,audio/x-midi,audio/wav,audio/x-wav|max:10240'
                 ]);
 
                 if($validator->fails()) {
@@ -3092,16 +3092,20 @@ class frontEnd extends Controller
                 try {
                     $file = $request->file('file');
                     $file->move(public_path('dynamic/temp/'), $filename);
-                    $ffmpeg = FFmpeg::create();
-                    $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
-                    $duration = $audio->getFormat()->get('duration');
-                    $format = new Mp3();
-                    $format->setAudioKiloBitrate(96);
-                    $format->setAdditionalParameters([
-                        '-fluidSynth', 'soundfont.sf2'
-                    ]);
-                    $audio->save($format, public_path('/dynamic/temp/' . $filename . '.mp3'));
-                    rename(public_path('/dynamic/temp/' . $filename . '.mp3'), public_path('/dynamic/reviewing/' . $filename)); //ffmpeg is fucking me in the ass without the .mp3 extention
+                    if (in_array($file->getMimeType(), ['audio/midi', 'audio/x-midi'])) {
+                        $input = public_path('dynamic/temp/' . $filename);
+                        $output = public_path('dynamic/temp/' . $filename . '.mp3');
+                        exec("timidity $input -Ow -o - | ffmpeg -i - -codec:a libmp3lame -b:a 96k $output");
+                    } else {
+                        $ffmpeg = FFmpeg::create();
+                        $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
+                        $duration = $audio->getFormat()->get('duration');
+                        $format = new Mp3();
+                        $format->setAudioKiloBitrate(96);
+                        $audio->save($format, public_path('dynamic/temp/' . $filename . '.mp3'));
+                    }
+                    
+                    rename(public_path('dynamic/temp/' . $filename . '.mp3'), public_path('dynamic/reviewing/' . $filename)); //ffmpeg is fucking me in the ass without the .mp3 extention
                 } catch(ProcessFailedException $e) {
                     Session::put('error', $e->getProcess()->getErrorOutput());
                     return redirect('/catalog/new');
