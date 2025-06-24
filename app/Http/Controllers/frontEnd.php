@@ -3088,6 +3088,7 @@ class frontEnd extends Controller
                 }
 
                 $filename = uniqid();
+                $ffmpeg = FFmpeg::create();
 
                 try {
                     $file = $request->file('file');
@@ -3096,9 +3097,10 @@ class frontEnd extends Controller
                         $input = public_path('dynamic/temp/' . $filename);
                         $output = public_path('dynamic/temp/' . $filename . '.mp3');
                         exec("timidity $input -Ow -o - | ffmpeg -i - -codec:a libmp3lame -b:a 96k $output");
+                        $audio = $ffmpeg->open($output);
+                        $duration = $audio->getFormat()->get('duration');
                     } else {
                         $file->move(public_path('dynamic/temp/'), $filename);
-                        $ffmpeg = FFmpeg::create();
                         $audio = $ffmpeg->open(public_path('dynamic/temp/' . $filename));
                         $duration = $audio->getFormat()->get('duration');
                         $format = new Mp3();
