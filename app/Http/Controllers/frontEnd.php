@@ -3806,7 +3806,7 @@ class frontEnd extends Controller
         $videos = $this->db->table('videos')->count();
         
         $pages_to_show = 10;
-        $results_per_page = 12;
+        $results_per_page = 20;
         $number_of_pages = ceil($videos / $results_per_page);
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
