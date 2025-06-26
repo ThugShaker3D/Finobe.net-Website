@@ -138,7 +138,7 @@
                                     </script>
                                     {% endif %}
             <h4 class="mt-4 font-weight-light">Description</h4>
-            <div> {{ (not data.video.description|length) ? "No description" : data.video.description }} </div>
+            <div> {{ (not data.video.description|length) ? "No description" : data.video.description|raw }} </div>
             <h4 class="mt-4 font-weight-light">Comments</h4>
             <div id="disqus_thread"></div>
             <script>
