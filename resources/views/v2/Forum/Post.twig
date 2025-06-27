@@ -33,7 +33,7 @@
                 {% if not data.editing %}
                 {% if data.siteusername %}
                     {% if data.post.locked == 'y' %}
-                        <button class="btn btn-primary btn-lg-5 col-md-1 mb-2 disabled" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>topic locked</button>
+                        <button class="btn btn-primary btn-lg-5 col-md-1 mb-2 disabled" style="text-transform: capitalize;" disabled><i class="far fa-fw fa-plus"></i>topic locked</button>
                     {% else %}
                         <a href="/forum/new/reply?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2{{ (data.post.locked == "y") ? " disabled" : "" }}" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>reply</button></a>
                     {% endif %}
