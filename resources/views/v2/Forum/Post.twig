@@ -32,7 +32,11 @@
                 {% endif %}
                 {% if not data.editing %}
                 {% if data.siteusername %}
-                    <a href="/forum/new/reply?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2{{ (data.post.locked == "y") ? " disabled" : "" }}" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>{{ (data.post.locked == "y") ? "topic locked" : "reply" }}</button></a>
+                    {% if data.post.locked == 'y' %}
+                        <button class="btn btn-primary btn-lg-5 col-md-1 mb-2 disabled" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>topic locked</button>
+                    {% else %}
+                        <a href="/forum/new/reply?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2{{ (data.post.locked == "y") ? " disabled" : "" }}" style="text-transform: capitalize;"><i class="far fa-fw fa-plus"></i>reply</button></a>
+                    {% endif %}
                     {% if data.post.author != data.data.user.username %}
                         <a href="/forum/subscribe?id={{ data.post.id }}"><button class="btn btn-primary btn-lg-5 col-md-1 mb-2" style="text-transform: capitalize;">{{ (data.post.subscription) ? "Unsubscribe" : "subscribe" }}</button></a>
                     {% endif %}
