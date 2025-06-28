@@ -194,7 +194,7 @@ class rbxAPIs extends Controller
             {
                 $assetinfo = Asset::getAssetData($assetId);
 
-                if(!in_array($assetinfo->visibility, ['n', 'r'])) {
+                if(!in_array($assetinfo->visibility, ['n'])) {
                     return response('', 200);
                 }
 
