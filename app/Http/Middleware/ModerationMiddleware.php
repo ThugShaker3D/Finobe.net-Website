@@ -109,7 +109,7 @@ class ModerationMiddleware
                     return response()->json(['code' => 403, 'message' => 'Access denied'], 403);
                 }
 
-                return response()->view($this->request['data']['user']['version'] . '/403', $this->request);
+                return response()->view('v2/403', $this->request);
             }
 
             if(Auth::check()) {
@@ -126,7 +126,7 @@ class ModerationMiddleware
                         ->where('reactivated', 'n')
                         ->first();
                     
-                    return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
+                    return response()->view('v2/Moderation', $this->request);
                 }
 
                 if($this->db->table('bans')->where('username', $this->request['data']['user']['username'])->where('reactivated', 'n')->exists()) {
@@ -168,7 +168,7 @@ class ModerationMiddleware
                     $this->request['data']['expiration'] = $format;
                     $this->request['data']['expiration_formatted'] = date('Y-m-d', strtotime($this->request['data']['ban_info']['expire']));
                     
-                    return response()->view($this->request['data']['user']['version'] . '/Moderation', $this->request);
+                    return response()->view('v2/Moderation', $this->request);
                 }
 
                 if($this->request['data']['page'] != '/logout' && !$request->isMethod('post') && $this->request['data']['dir'] != '/email/') {
@@ -193,7 +193,7 @@ class ModerationMiddleware
                             Session::forget('error');
                         }
 
-                        return response()->view($this->request['data']['user']['version'] . '/Verify', $this->request);
+                        return response()->view('v2/Verify', $this->request);
                     }
                 }
             }
