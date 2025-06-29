@@ -198,6 +198,17 @@ class rbxAPIs extends Controller
                     return response('', 200);
                 }
 
+                $requester = request()->header('requester');
+                $userAgent = request()->header('User-Agent');
+
+                $isBypassClient = strtolower($requester) == 'server' && in_array($userAgent, ['Roblox/WinHttp', 'Finobe/WinHttp']);
+
+                if($assetinfo->visibility == 'r') {
+                    if(!Auth::check() || Auth::user()->toArray()['status'] != 'admin') {
+                        return response('', 200);
+                    }
+                }
+
                 if($assetinfo->asset_type != 3) {
                     return response(file_get_contents(Asset::getCdnLink($assetId)), 200)
                         ->header('Content-Type', 'application/octet-stream');
