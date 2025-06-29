@@ -201,9 +201,7 @@ class rbxAPIs extends Controller
                 $requester = request()->header('requester');
                 $userAgent = request()->header('User-Agent');
 
-                $isBypassClient = strtolower($requester) == 'server' && in_array($userAgent, ['Roblox/WinHttp', 'Finobe/WinHttp']);
-
-                if($assetinfo->visibility == 'r') {
+                if($assetinfo->visibility == 'r' && !(strtolower($requester) == 'server' && in_array($userAgent, ['Roblox/WinHttp', 'Finobe/WinHttp']))) {
                     if(!Auth::check() || Auth::user()->toArray()['status'] != 'admin') {
                         return response('', 200);
                     }
