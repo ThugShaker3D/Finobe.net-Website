@@ -77,8 +77,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         Gate::define('viewTelescope', function () {
             $user = Auth::user();
             return in_array($user->username, [
-                'Aesthetiful',
-                'notaku'
+                'Aesthetiful'
             ]);
         });
     }
