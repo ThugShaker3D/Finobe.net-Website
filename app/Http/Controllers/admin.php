@@ -1060,6 +1060,10 @@ class admin extends Controller
     public function servers(Request $request) {
         $data = $request->all();
 
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            return redirect('/');
+        }
+
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'type' => 'required|integer|min:1|max:3'
