@@ -3892,7 +3892,7 @@ class frontEnd extends Controller
 
     public function video_thumb(Request $request, $id) {
         if(!$this->db->table('videos')->where('id', $id)->exists()) {
-            return view($this->request['data']['user']['version'] . '/404', $this->request, 404);
+            return response()->view($this->request['data']['user']['version'] . '/404', $this->request, 404);
         }
 
         return redirect('https://cdn.finobe.net/videos/thumbs/' . $this->db->table('videos')->select('thumbnail')->where('id', $id)->value('thumbnail'));
@@ -3900,7 +3900,7 @@ class frontEnd extends Controller
 
     public function video_data(Request $request, $id) {
         if(!$this->db->table('videos')->where('id', $id)->exists()) {
-            return view($this->request['data']['user']['version'] . '/404', $this->request, 404);
+            return response()->view($this->request['data']['user']['version'] . '/404', $this->request, 404);
         }
 
         //return redirect('https://cdn.finobe.net/videos/data/' . $this->db->table('videos')->select('filename')->where('id', $id)->value('filename'));
