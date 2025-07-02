@@ -37,7 +37,6 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
         Route::get('/video/thumb/{id}', [frontEnd::class, 'video_thumb']);
         Route::get('/password/reset', [frontEnd::class, 'password_reset']);
-        Route::get('/secret', [frontEnd::class, 'do_stuff_automatically']);
         Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
         Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
         Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'email_verify']);
