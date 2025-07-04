@@ -3175,16 +3175,21 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory(
-                    $data['title'],
-                    ['tmp_name' => $request->file('file')->getPathname()],
-                    $user->id,
-                    $data['description'] ?? '',
-                    intval($data['price']),
-                    true,
-                    false,
-                    'shirt'
-                );
+                try {
+                    $id = Asset::createAccessory(
+                        $data['title'],
+                        ['tmp_name' => $request->file('file')->getPathname()],
+                        $user->id,
+                        $data['description'] ?? '',
+                        intval($data['price']),
+                        true,
+                        false,
+                        'shirt'
+                    );
+                } catch(\Exception $e) {
+                    Session::put('error', $e->getMessage());
+                    return redirect('/catalog/new');
+                }
 
                 $user->Dius -= 5;
                 $user->save();
@@ -3230,16 +3235,21 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory(
-                    $data['title'],
-                    ['tmp_name' => $request->file('file')->getPathname()],
-                    $user->id,
-                    $data['description'] ?? '',
-                    intval($data['price']),
-                    true,
-                    false,
-                    'pants'
-                );
+                try {
+                    $id = Asset::createAccessory(
+                        $data['title'],
+                        ['tmp_name' => $request->file('file')->getPathname()],
+                        $user->id,
+                        $data['description'] ?? '',
+                        intval($data['price']),
+                        true,
+                        false,
+                        'pants'
+                    );
+                } catch(\Exception $e) {
+                    Session::put('error', $e->getMessage());
+                    return redirect('/catalog/new');
+                }
 
                 $user->Dius -= 5;
                 $user->save();
@@ -3285,16 +3295,21 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory(
-                    $data['title'],
-                    ['tmp_name' => $request->file('file')->getPathname()],
-                    $user->id,
-                    $data['description'] ?? '',
-                    intval($data['price']),
-                    true,
-                    false,
-                    'face'
-                );
+                try {
+                    $id = Asset::createAccessory(
+                        $data['title'],
+                        ['tmp_name' => $request->file('file')->getPathname()],
+                        $user->id,
+                        $data['description'] ?? '',
+                        intval($data['price']),
+                        true,
+                        false,
+                        'face'
+                    );
+                } catch(\Exception $e) {
+                    Session::put('error', $e->getMessage());
+                    return redirect('/catalog/new');
+                }
 
                 $user->Dius -= 5;
                 $user->save();
@@ -3333,16 +3348,21 @@ class frontEnd extends Controller
 
                 $user = User::find($this->request['data']['user']['id']);
 
-                $id = Asset::createAccessory(
-                    $data['title'],
-                    ['tmp_name' => $request->file('file')->getPathname()],
-                    $user->id,
-                    $data['description'] ?? '',
-                    intval($data['price']),
-                    true,
-                    false,
-                    'tshirt'
-                );
+                try {
+                    $id = Asset::createAccessory(
+                        $data['title'],
+                        ['tmp_name' => $request->file('file')->getPathname()],
+                        $user->id,
+                        $data['description'] ?? '',
+                        intval($data['price']),
+                        true,
+                        false,
+                        'tshirt'
+                    );
+                } catch(\Exception $e) {
+                    Session::put('error', $e->getMessage());
+                    return redirect('/catalog/new');
+                }
 
                 $user->Dius -= 5;
                 $user->save();

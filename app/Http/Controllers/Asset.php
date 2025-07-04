@@ -81,8 +81,12 @@ class Asset extends Controller
             );
 
             $jobEx = $arbiter->OpenJobEx($constructedJob);
-
             $filename = uniqid() . ".png";
+
+            if(empty(base64_decode($jobEx))) {
+                throw new \Exception('There was an error while rendering. Please try again later.');
+            }
+
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
             $instance = new self();
@@ -361,8 +365,12 @@ class Asset extends Controller
             );
 
             $jobEx = $arbiter->OpenJobEx($constructedJob);
-
             $filename = uniqid() . ".png";
+
+            if(empty(base64_decode($jobEx))) {
+                throw new \Exception('There was an error while rendering. Please try again later.');
+            }
+
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
             $instance = new self();
@@ -412,8 +420,12 @@ class Asset extends Controller
             );
 
             $jobEx = $arbiter->OpenJobEx($constructedJob);
-
             $filename = uniqid() . ".png";
+
+            if(empty(base64_decode($jobEx))) {
+                throw new \Exception('There was an error while rendering. Please try again later.');
+            }
+
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
             $instance = new self();
@@ -463,8 +475,12 @@ class Asset extends Controller
             );
 
             $jobEx = $arbiter->OpenJobEx($constructedJob);
-
             $filename = uniqid() . ".png";
+
+            if(empty(base64_decode($jobEx))) {
+                throw new \Exception('There was an error while rendering. Please try again later.');
+            }
+
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
             $instance = new self();
@@ -509,8 +525,12 @@ class Asset extends Controller
             );
 
             $jobEx = $arbiter->OpenJobEx($constructedJob);
-
             $filename = uniqid() . ".png";
+
+            if(empty(base64_decode($jobEx))) {
+                throw new \Exception('There was an error while rendering. Please try again later.');
+            }
+
             file_put_contents("/var/www/cdn.finobe.net/thumbnails/{$filename}", base64_decode($jobEx));
 
             $instance = new self();

@@ -777,19 +777,24 @@ class admin extends Controller
                     return redirect('/admin/createxml');
                 }
 
-                $id = Asset::createHatOrGear(
-                    $data['title'],
-                    ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
-                    ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
-                    ['tmp_name' => $request->file('xml')->getPathname()],
-                    $this->request['data']['user']['id'],
-                    $data['description'] ?? '',
-                    intval($data['price']),
-                    isset($data['onsale']),
-                    false,
-                    [],
-                    ($data['type'] == 'hat' ? 8 : 19)
-                );
+                try {
+                    $id = Asset::createHatOrGear(
+                        $data['title'],
+                        ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
+                        ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
+                        ['tmp_name' => $request->file('xml')->getPathname()],
+                        $this->request['data']['user']['id'],
+                        $data['description'] ?? '',
+                        intval($data['price']),
+                        isset($data['onsale']),
+                        false,
+                        [],
+                        ($data['type'] == 'hat' ? 8 : 19)
+                    );
+                } catch(\Exception $e) {
+                    Session::put('error', $e->getMessage());
+                    return redirect('/admin/createxml');
+                }
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -1212,19 +1217,24 @@ class admin extends Controller
             file_put_contents(public_path('dynamic/temp/' . $filename . '.mesh'), $mesh);
             file_put_contents(public_path('dynamic/temp/' . $filename . '.png'), $texture);
 
-            $id = Asset::createHatOrGear(
-                $data['title'],
-                ['tmp_name' => public_path('dynamic/temp/' . $filename . '.png')],
-                ['tmp_name' => public_path('dynamic/temp/' . $filename . '.mesh')],
-                ['tmp_name' => public_path('dynamic/temp/' . $filename . '.xml')],
-                $this->request['data']['user']['id'],
-                $data['description'] ?? '',
-                intval($data['price']),
-                isset($data['onsale']),
-                false,
-                [],
-                $assettype
-            );
+            try {
+                $id = Asset::createHatOrGear(
+                    $data['title'],
+                    ['tmp_name' => public_path('dynamic/temp/' . $filename . '.png')],
+                    ['tmp_name' => public_path('dynamic/temp/' . $filename . '.mesh')],
+                    ['tmp_name' => public_path('dynamic/temp/' . $filename . '.xml')],
+                    $this->request['data']['user']['id'],
+                    $data['description'] ?? '',
+                    intval($data['price']),
+                    isset($data['onsale']),
+                    false,
+                    [],
+                    $assettype
+                );
+            } catch(\Exception $e) {
+                Session::put('error', $e->getMessage());
+                return redirect('/admin/createxml');
+            }
 
             Session::put('success', 'Success');
             return redirect('/item/' . $id);
