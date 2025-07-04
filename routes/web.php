@@ -79,10 +79,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::prefix('catalog')->group(function() {
             Route::match(['post', 'get', 'options'], '/new', [frontEnd::class, 'catalog_new']);
             Route::get('/{section}', [frontEnd::class, 'catalog_index']);
-
-            Route::get('/', function() {
-                return redirect('/catalog/hats');
-            });
+            Route::get('/', fn() => redirect('/catalog/hats'));
         });
 
         Route::prefix('user')->group(function() {
