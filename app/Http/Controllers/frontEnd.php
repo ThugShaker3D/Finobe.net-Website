@@ -74,7 +74,8 @@ class frontEnd extends Controller
                         'robux',
                         'ass',
                         'asshole',
-                        'shit'
+                        'shit',
+                        'r*blox'
                     ],
                     'replacements' => [
                         'OBAMA BALL',
