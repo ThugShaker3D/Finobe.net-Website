@@ -79,6 +79,7 @@ class api extends Controller
             ->where('purchases.assetid', '!=', 0)
             ->where('purchases.type', 1)
             ->where('assets.asset_type', $assetTypes[$data['type']])
+            ->where('assets.visibility', 'n')
             ->orderBy('purchases.date', 'desc')
             ->select('assets.id', 'assets.title', 'assets.author', 'assets.asset_type', 'assets.additional')
             ->offset($offset)
