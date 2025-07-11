@@ -140,10 +140,7 @@ Artisan::command('something', function () {
     $avatars = User::pluck('pfp')->toArray();
 
     foreach($avatars as $key => $avatar) {
-        sleep(0.1);
-
         if(!str_contains($avatar, '/')) {
-            $this->info('Removing: ' . $avatar);
             unset($avatars[$key]);
             continue;
         }
@@ -152,8 +149,10 @@ Artisan::command('something', function () {
     }
 
     foreach($files as $file) {
+        wait(0.2);
         if(!in_array($file->getFilename(), $avatars)) {
-            $this->info($file->getFilename());
+            $this->info('Deleting: ' . $file->getFilename());
+            File::delete($file->getRealPath());
         }
     }
 
