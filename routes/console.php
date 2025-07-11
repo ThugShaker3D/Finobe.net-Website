@@ -140,14 +140,13 @@ Artisan::command('something', function () {
     $avatars = User::pluck('pfp')->toArray();
 
     foreach($avatars as $key => $avatar) {
-        continue;
         if(!str_contains($avatar, '/')) {
             $this->info('Removing: ' . $avatar);
             unset($avatars[$key]);
             continue;
         }
 
-        $avatars[$key] = explode('/', $avatar)[1];
+        $avatars[$key] = str_replace('avatar/', '', $avatar);
     }
 
     foreach($files as $file) {
