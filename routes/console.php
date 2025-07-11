@@ -137,7 +137,7 @@ Artisan::command('something', function () {
     */
 
     $files = File::files('/var/www/cdn.finobe.net/avatar');
-    $avatars = User::pluck('pfp')->values()->toArray();
+    $avatars = User::pluck('pfp')->toArray();
 
     foreach($avatars as $key => $avatar) {
         continue;
