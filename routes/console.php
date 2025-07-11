@@ -154,6 +154,8 @@ Artisan::command('something', function () {
             $this->info($file->getFilename());
         }
     }
+
+    $this->info(json_encode($avatars));
     
     $this->info('Ran successfully');
 });
