@@ -871,7 +871,7 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
-        $arbiter = new RobloxArbiterUtilities(DataController::arbiter_pool(), 64989);
+        $arbiter = new RobloxArbiterUtilities('104.223.8.156', 64989);
         $constructedJob = $arbiter->ConstructJob(
             RobloxUtilities::GenerateGUID(),
             '
