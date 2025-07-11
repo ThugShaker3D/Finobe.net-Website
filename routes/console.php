@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 
 Artisan::command('inspire', function () {
@@ -10,6 +11,8 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Artisan::command('something', function () {
+    $db = DB::connection('finobe');
+
     /* purchases type rewrite
     $purchases = $this->db->table('purchases')
         ->get()
@@ -132,6 +135,24 @@ Artisan::command('something', function () {
         }
     }
     */
+
+    $files = File::files('/var/www/cdn.finobe.net/avatar');
+    $avatars = User::select('pfp')->all()->toArray();
+
+    foreach($avatars as $key => $avatar) {
+        if(!str_contains($avatar, '/')) {
+            unset($avatars[$key]);
+            continue;
+        }
+
+        $avatars[$key] = explode('/', $avatar)[1];
+    }
+
+    foreach($files as $file) {
+        if(!in_array($file->getFilename(), $avatars)) {
+            $this->info($file->getFilename());
+        }
+    }
     
     $this->info('Ran successfully');
 });
