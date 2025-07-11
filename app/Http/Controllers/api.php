@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
@@ -924,6 +925,7 @@ class api extends Controller
         }
 
         file_put_contents("/var/www/cdn.finobe.net/avatar/" . $filename, base64_decode($jobEx));
+        File::delete('/var/www/cdn.finobe.net/' . $user->pfp);
 
         $user->render_cooldown = now();
         $user->pfp = "avatar/{$filename}";
