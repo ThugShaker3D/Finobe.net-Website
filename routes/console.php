@@ -155,8 +155,6 @@ Artisan::command('something', function () {
             File::delete($file->getRealPath());
         }
     }
-
-    $this->info(json_encode($avatars));
     
     $this->info('Ran successfully');
 });
