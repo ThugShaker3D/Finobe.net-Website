@@ -178,7 +178,7 @@ class RobloxUtilities extends Controller
         if ($asset->asset_type == 9) { //placeId asset_type
             if (!$instance->db->table('servers')->where('placeid', $placeId)->whereIn('status', [1, 2])->exists()) {
                 $port = rand(90000, 130000);
-                $ip = "45.131.65.123";
+                $ip = "104.223.8.155";
                 $aaaaaaaaaaa = "[]";
                 $godIhatepdo = 1;
                 $jobId = self::startGame($placeId, $asset->author, $port);
@@ -211,7 +211,7 @@ class RobloxUtilities extends Controller
 
             if (count(json_decode($server->players)) >= $additional->maxplayers) {
                 $port = rand(90000, 130000);
-                $ip = "45.131.65.123";
+                $ip = "104.223.8.155";
                 $aaaaaaaaaaa = "[]";
                 $godIhatepdo = 1;
                 $jobId = self::startGame($placeId, $asset->author, $port);
@@ -254,7 +254,7 @@ class RobloxUtilities extends Controller
 
     private static function startGame(int $placeId, int $creatorId, int $port)
     {
-        $arbiter = new RobloxArbiterUtilities("45.131.65.123", 64989);
+        $arbiter = new RobloxArbiterUtilities("104.223.8.155", 64989);
         $jobId = self::GenerateGUID();
         $gamescript = file_get_contents(storage_path("rbx/files/scripts/gameserver2016.lua"));
         $constructJob = $arbiter->constructJob(
