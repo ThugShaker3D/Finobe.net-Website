@@ -500,10 +500,7 @@
 										if(data.code != 200) {
 											alert(data.message);
 										} else {
-											avatarimg.src = "https://cdn.finobe.net/avatar/default.png";
-											setTimeout(() => {
-												avatarimg.src = data.image;
-											}, 500);
+											avatarimg.src = data.image;
 										}
 										
 										render.innerHTML = "Done";
