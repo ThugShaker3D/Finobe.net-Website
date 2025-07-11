@@ -137,7 +137,7 @@ Artisan::command('something', function () {
     */
 
     $files = File::files('/var/www/cdn.finobe.net/avatar');
-    $avatars = User::select('pfp')->toArray();
+    $avatars = User::pluck('pfp')->toArray();
 
     foreach($avatars as $key => $avatar) {
         if(!str_contains($avatar, '/')) {
