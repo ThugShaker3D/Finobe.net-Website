@@ -140,6 +140,8 @@ Artisan::command('something', function () {
     $avatars = User::pluck('pfp')->toArray();
 
     foreach($avatars as $key => $avatar) {
+        wait(0.1);
+        
         if(!str_contains($avatar, '/')) {
             $this->info('Removing: ' . $avatar);
             unset($avatars[$key]);
