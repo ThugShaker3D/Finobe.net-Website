@@ -136,7 +136,7 @@ class dataController extends Controller
         $arbiters = [
             '45.131.65.123',
             '74.208.123.25',
-            '104.223.8.155'
+            '104.223.8.156'
         ];
 
         return $arbiters[random_int(0, count($arbiters) - 1)];
