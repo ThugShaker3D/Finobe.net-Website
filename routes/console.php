@@ -141,6 +141,7 @@ Artisan::command('something', function () {
 
     foreach($avatars as $key => $avatar) {
         if(!str_contains($avatar, '/')) {
+            $this->info('Removing: ' . $avatar);
             unset($avatars[$key]);
             continue;
         }
