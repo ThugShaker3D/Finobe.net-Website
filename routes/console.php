@@ -149,7 +149,7 @@ Artisan::command('something', function () {
     }
 
     foreach($files as $file) {
-        wait(0.2);
+        sleep(0.2);
         if(!in_array($file->getFilename(), $avatars)) {
             $this->info('Deleting: ' . $file->getFilename());
             File::delete($file->getRealPath());
