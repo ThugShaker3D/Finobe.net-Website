@@ -46,6 +46,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
         Route::match(['post', 'get'], '/election', [frontEnd::class, 'election']);
         Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_new']);
+        Route::match(['post', 'get'], '/item/{id}/settings', [frontend::class, 'item_settings']);
         Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);
 
         Route::prefix('legal')->group(function() {
