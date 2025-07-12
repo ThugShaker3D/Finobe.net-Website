@@ -1996,6 +1996,7 @@ class frontEnd extends Controller
             }
 
             $item['additional']['onSale'] = isset($data['onsale']);
+            $item['additional']['price'] = intval($data['price']);
 
             $this->db->table('assets')
                 ->where('id', $id)
