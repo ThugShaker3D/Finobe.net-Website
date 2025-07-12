@@ -699,7 +699,7 @@ input[type='number'][data-v-e236382e]:hover::-webkit-outer-spin-button {
                                     <strong>Name</strong>
                                 </label>
                                 <div class="full-width">
-                                    <input type="text" name="title" value="{{ data.item.title|raw }}" placeholder="Place title"
+                                    <input type="text" name="title" value="{{ data.item.title|raw }}" placeholder="Item title"
                                         class="form-control"><br>
                                 </div>
                                 <label for="description" class="col-form-label text-md-right">
@@ -709,7 +709,14 @@ input[type='number'][data-v-e236382e]:hover::-webkit-outer-spin-button {
                                     <textarea type="text" name="description" value="" placeholder="description"
                                         class="form-control">{{ data.item.description|raw }}</textarea>
                                 </div>
-                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="onsale" name="onsale" class="custom-control-input"{{ (data.item.additional.onsale == "y") ? " checked" : "" }}> <label for="onsale" class="custom-control-label pl-1">onSale</label></div>
+                                <div class="custom-control custom-checkbox mt-3"><input type="checkbox" id="onsale" name="onsale" class="custom-control-input"{{ (data.item.additional.onsale) ? " checked" : "" }}> <label for="onsale" class="custom-control-label pl-1">onSale</label></div>
+                                <label for="price" class="col-form-label text-md-right">
+                                    <strong>Price</strong>
+                                </label>
+                                <div class="full-width">
+                                    <input type="text" name="price" value="{{ data.item.additional.price }}" placeholder="Price"
+                                        class="form-control"><br>
+                                </div>
                                 <button type="submit" class="btn btn-primary mt-3">update</button>
                             </div>
                         </form>

@@ -32,7 +32,7 @@
     {
         "visits": 0, // integer number of amount of visits
         "version": "2016", // string name of client version
-        "maxplayers": 15, // integer number of amount of players allowed in 1 server (1-100 allowed)
+        "maxplayers": 15, // integer number of amount of players allowed in 1 server (5-100 allowed)
         "category": "original", // string name of either original or copy
         "featured": false, // boolean if featured
         "gears": { // Contains gear permissions
