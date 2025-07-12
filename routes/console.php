@@ -158,7 +158,7 @@ Artisan::command('something', function () {
     }
     */
 
-    $assets = $this->db->table('assets')
+    $assets = $db->table('assets')
         ->where('asset_type', 3)
         ->get()
         ->map(function ($item) {
@@ -170,7 +170,7 @@ Artisan::command('something', function () {
         $asset['additional']['onSale'] = true;
         $asset['additional'] = json_encode($asset['additional']);
 
-        $this->db->table('assets')
+        $db->table('assets')
             ->where('id', $asset['id'])
             ->update([
                 'additional' => $asset['additional']
