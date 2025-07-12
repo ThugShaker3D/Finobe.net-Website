@@ -1982,6 +1982,33 @@ class frontEnd extends Controller
         $item['additional'] = json_decode($item['additional'], true);
         $item['description'] = strip_tags(htmlspecialchars($item['description']));
 
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'title'            => 'required|string|min:3|max:255',
+                'description'      => 'nullable|string|max:8192',
+                'onsale'           => 'nullable|in:on,1,true,0,false,off',
+                'price'            => 'required|integer|min:0'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/item/' . $id . '/settings');
+            }
+
+            $item['additional']['onSale'] = isset($data['onsale']);
+
+            $this->db->table('assets')
+                ->where('id', $id)
+                ->update([
+                    'title' => $data['title'],
+                    'description' => $data['description'] ?? '',
+                    'additional' => json_encode($item['additional'])
+                ]);
+
+            Session::put('successv2', 'Item settings saved.');
+            return redirect('/item/' . $id . '/settings');
+        }
+
         $this->request['data']['embeds']['title'] = $item['title'] . $this->request['data']['embeds']['title'];
         $this->request['data']['item'] = $item;
 
