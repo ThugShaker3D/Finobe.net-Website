@@ -1,3 +1,7 @@
+// This json file documents the additional key value format used in finobe.net proprietary software
+// and practices and or methods used to store data values should not be used as a standard method of
+// data storage
+
 // purchase types
 
 {
@@ -6,4 +10,114 @@
     "3": "Purchased Place Slot",
     "4": "Dius Awarded",
     "5": "Asset Upload Fee"
+}
+
+// Assets
+
+{
+    // audio type:3
+    {
+        "duration": 0, // float number of audio duration
+        "price": 0, // integer number of price
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "imageAssetId": 2 // asset ID of texture thumbnail
+        },
+        "oldUser": "" // string name of legacy discord attributions identifier
+    }
+
+    // texture type:1
+    {}
+
+    // place type:9
+    {
+        "visits": 0, // integer number of amount of visits
+        "version": "2016", // string name of client version
+        "maxplayers": 15, // integer number of amount of players allowed in 1 server (1-100 allowed)
+        "category": "original", // string name of either original or copy
+        "featured": false, // boolean if featured
+        "gears": { // Contains gear permissions
+            "combat": false, // boolean to permit combat gears
+            "social": false, // boolean to permit social gears
+            "building": false, // boolean to permit building gears
+            "musical": false // boolean to permit musical gears
+        },
+        "uncopylocked": false, // boolean to permit distribution of place source file
+        "allowplaying": true, // boolean to permit publication
+        "chat_type": "classic", // string name to change chat type (classic, bubble, etc)
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "imageAssetId": 1 // asset ID of texture thumbnail
+        },
+        "hidden": false // boolean to hide place
+    }
+
+    // hat type:8
+    {
+        "price": 0, // integer number of price
+        "onSale": true, // boolean to permit the sale of item
+        "isLimited": false, // boolean to permit limited status
+        "historicPrice": [], // array stored historical price data
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "thumbnail": "" // url to thumbnail location
+        }
+    }
+
+    // t-shirt type:2
+    {
+        "price": 0, // integer number of price
+        "onSale": true, // boolean to permit the sale of item
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "thumbnail": "", // url to thumbnail location
+            "textureAssetId": 0 // asset ID to texture asset
+        }
+    }
+
+    // shirt type:11
+    {
+        "price": 0, // integer number of price
+        "onSale": true, // boolean to permit the sale of item
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "thumbnail": "", // url to thumbnail location
+            "textureAssetId": 0 // asset ID to texture asset
+        }
+    }
+
+    // pants type:12
+    {
+        "price": 0, // integer number of price
+        "onSale": true, // boolean to permit the sale of item
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "thumbnail": "", // url to thumbnail location
+            "textureAssetId": 0 // asset ID to texture asset
+        }
+    }
+
+    // gears type:19
+    {
+        "price": 0, // integer number of price
+        "onSale": true, // boolean to permit the sale of item
+        "isLimited": false, // boolean to permit limited status
+        "historicPrice": [], // array stored historical price data
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "thumbnail": "" // url to thumbnail location
+        }
+    }
+
+    // faces type:18
+    {
+        "price": 0, // integer number of price
+        "onSale": true, // boolean to permit the sale of item
+        "media": { // Contains any media attachment related (e.g. thumbnail)
+            "thumbnail": "", // url to thumbnail location
+            "textureAssetId": 0 // asset ID to texture asset
+        }
+    }
+
+    // heads
+    {}
+
+    // packages
+    {}
+
+    // models
+    {}
 }

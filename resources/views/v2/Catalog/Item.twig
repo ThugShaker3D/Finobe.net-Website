@@ -114,10 +114,16 @@
                                                         </div>
                                                     </div>
                                                     {% if data.item.visibility != "d" and data.item.visibility != "r" %}
-                                                        {% if not data.item.isOwned %}
-                                                        <button id="btn-purchase" class="btn btn-success btn-lg col-md-12 mb-1">purchase</button>
+                                                        {% if not data.item.onSale %}
+                                                        <div class="row justify-content-center mt-2">
+                                                            <div class="col-auto text-muted">
+                                                                <p><b>This item is off-sale.</b></p>
+                                                            </div>
+                                                        </div>
                                                         {% endif %}
-                                                        {% if data.item.isOwned and data.siteusername %}
+                                                        {% if not data.item.isOwned %}
+                                                            <button id="btn-purchase" class="btn btn-success btn-lg col-md-12 mb-1">purchase</button>
+                                                        {% else %}
                                                         <div class="row justify-content-center mt-2">
                                                             <div class="col-auto text-muted">
                                                                 <p>Item Owned.</p>

@@ -1950,6 +1950,39 @@ class frontEnd extends Controller
         return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
     }
 
+    public function item_settings(Request $request, $id) {
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!$this->db->table('assets')->where('id', $id)->exists()) {
+            return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
+        }
+
+        $item = (array) $this->db->table('assets')
+            ->where('id', $id)
+            ->first();
+
+        if(!in_array($item['asset_type'], [2, 3, 8, 11, 12, 18, 19])) {
+            return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
+        }
+
+        if($item['visibility'] != 'n') {
+            Session::put('error', 'This item is currently unavailable to changes');
+            return redirect('/item/' . $id);
+        }
+
+        $item['additional'] = json_decode($item['additional'], true);
+        $item['description'] = strip_tags(htmlspecialchars($item['description']));
+
+        $this->request['data']['embeds']['title'] = $item['title'] . $this->request['data']['embeds']['title'];
+        $this->request['data']['item'] = $item;
+
+        return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
+    }
+
     public function character(Request $request) {
         $this->request['data']['embeds']['title'] = 'Character' . $this->request['data']['embeds']['title'];
 
