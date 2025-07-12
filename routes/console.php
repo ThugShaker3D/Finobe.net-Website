@@ -136,6 +136,7 @@ Artisan::command('something', function () {
     }
     */
 
+    /* delete unused avatar pfp
     $files = File::files('/var/www/cdn.finobe.net/avatar');
     $avatars = User::pluck('pfp')->toArray();
 
@@ -154,6 +155,26 @@ Artisan::command('something', function () {
             $this->info('Deleting: ' . $file->getFilename());
             File::delete($file->getRealPath());
         }
+    }
+    */
+
+    $assets = $this->db->table('assets')
+        ->where('asset_type', 3)
+        ->get()
+        ->map(function ($item) {
+            return (array) $item;
+        })->toArray();
+    
+    foreach($assets as $asset) {
+        $asset['additional'] = json_decode($asset['additional'], true);
+        $asset['additional']['onSale'] = true;
+        $asset['additional'] = json_encode($asset['additional']);
+
+        $this->db->table('assets')
+            ->where('id', $asset['id'])
+            ->update([
+                'additional' => $asset['additional']
+            ]);
     }
     
     $this->info('Ran successfully');
