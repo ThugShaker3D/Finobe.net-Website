@@ -95,9 +95,9 @@
                                             <p class="mt-3 mb-0"><strong>Description:</strong></p>
                                             <p>{{ (data.item.description|length) ? data.item.description|raw : 'No description' }}</p>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-5">
                                             {% if data.user.id == data.item.uuid %}
-                                                <button class="btn btn-secondary float-left" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
+                                                <button class="btn btn-secondary float-left mr-1" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
                                             {% endif %}
                                             <div class="card">
                                                 <div class="card-body mt-2">
