@@ -96,7 +96,7 @@
                                             <p>{{ (data.item.description|length) ? data.item.description|raw : 'No description' }}</p>
                                         </div>
                                         <div class="col-md-4">
-                                            {% if data.user.id == data.item.author %}
+                                            {% if data.user.id == data.item.uuid %}
                                                 <button class="btn btn-secondary float-left" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
                                             {% endif %}
                                             <div class="card">
