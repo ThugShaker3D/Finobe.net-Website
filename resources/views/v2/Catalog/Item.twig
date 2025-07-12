@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="card-body mt-2">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-7">
                                             <h4>{{ data.item.title | raw }}</h4>
                                             <p style="margin-bottom:0px;">by {% if data.item.uuid matches '/^[0-9]+$/'%}<a href="/user/{{ data.item.uuid }}">{{ data.item.author }}</a>{% else %}{{ data.item.author }}{% endif %}</p>
                                             <img src="{% if data.item.asset_type == 3 %}/s/img/{{ ((data.item.visibility == "r" and data.item.author == data.user.username) or data.item.visibility == "d") ? "spinnerv2.gif" : data.item.thumbnail }}{% else %}{% if data.item.visibility == 'd' or data.item.visibility == 'r' %}/s/img/spinnerv2.gif{% else %}{{ data.item.additional.media.thumbnail }}{% endif %}{% endif %}" class="mt-2" style="max-width:200px; display: block;">
@@ -97,7 +97,7 @@
                                         </div>
                                         <div class="col-md-5">
                                             {% if data.user.id == data.item.uuid %}
-                                                <button class="btn btn-secondary float-left mr-1" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
+                                                <button class="btn btn-secondary float-left mr-2" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
                                             {% endif %}
                                             <div class="card">
                                                 <div class="card-body mt-2">
