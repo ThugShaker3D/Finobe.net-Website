@@ -1995,6 +1995,26 @@ class frontEnd extends Controller
                 return redirect('/item/' . $id . '/settings');
             }
 
+            if(in_array($item['asset_type'], [11, 12])) {
+                $validator = Validator::make($data, [
+                    'price' => 'required|integer|min:5'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/item/' . $id . '/settings');
+                }
+            } elseif(in_array($item['asset_type'], [2])) {
+                $validator = Validator::make($data, [
+                    'price' => 'required|integer|min:2'
+                ]);
+
+                if($validator->fails()) {
+                    Session::put('error', $validator->errors()->first());
+                    return redirect('/item/' . $id . '/settings');
+                }
+            }
+
             $item['additional']['onSale'] = isset($data['onsale']);
             $item['additional']['price'] = intval($data['price']);
 
