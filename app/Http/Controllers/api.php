@@ -406,6 +406,13 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
+        if(!$item['additional']['onSale']) {
+            $this->response['code'] = 400;
+            $this->response['message'] = 'This item not on sale';
+
+            return response()->json($this->response, 400);
+        }
+
         $this->db->table('purchases')->insert([
             'username' => $user['username'],
             'assetid' => $data['assetid'],

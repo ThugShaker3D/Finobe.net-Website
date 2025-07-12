@@ -22,7 +22,8 @@
         "media": { // Contains any media attachment related (e.g. thumbnail)
             "imageAssetId": 2 // asset ID of texture thumbnail
         },
-        "oldUser": "" // string name of legacy discord attributions identifier
+        "oldUser": "", // string name of legacy discord attributions identifier
+        "onSale": true // boolean to permit the sale of item
     }
 
     // texture type:1
