@@ -1964,6 +1964,11 @@ class frontEnd extends Controller
         $item = (array) $this->db->table('assets')
             ->where('id', $id)
             ->first();
+        
+        if($item['author'] != $this->request['data']['user']['id']) {
+            Session::put('error', 'You do not own this item');
+            return redirect('/item/' . $id);
+        }
 
         if(!in_array($item['asset_type'], [2, 3, 8, 11, 12, 18, 19])) {
             return response()->view($this->request['data']['user']['version'] . '/404', [], 404);
