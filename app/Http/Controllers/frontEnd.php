@@ -1985,7 +1985,7 @@ class frontEnd extends Controller
         $this->request['data']['embeds']['title'] = $item['title'] . $this->request['data']['embeds']['title'];
         $this->request['data']['item'] = $item;
 
-        return view($this->request['data']['user']['version'] . '/Catalog/Item', $this->request);
+        return view($this->request['data']['user']['version'] . '/Catalog/Item_settings', $this->request);
     }
 
     public function character(Request $request) {
