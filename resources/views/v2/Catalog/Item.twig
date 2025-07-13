@@ -99,10 +99,10 @@
                                             {% if data.user.username == data.item.author or data.user.status == 'admin' %}
                                                 <div class="float-left mr-2 d-flex flex-column">
                                                     {% if data.user.username == data.item.author %}
-                                                    <button class="btn btn-secondary" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
+                                                    <button class="btn btn-secondary mb-2" onclick="window.location.href='/item/{{ data.item.id }}/settings'"><i class="far fa-cog"></i></button>
                                                     {% endif %}
                                                     {% if data.user.status == 'admin' %}
-                                                    <button class="btn btn-danger mt-2" onclick="window.location.href='/api/deny?id=2068'"><i class="far fa-trash-alt"></i></button>
+                                                    <button class="btn btn-danger" onclick="window.location.href='/api/deny?id=2068'"><i class="far fa-trash-alt"></i></button>
                                                     {% endif %}
                                                 </div>
                                             {% endif %}
