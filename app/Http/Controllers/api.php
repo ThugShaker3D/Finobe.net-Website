@@ -932,7 +932,10 @@ class api extends Controller
         }
 
         file_put_contents("/var/www/cdn.finobe.net/avatar/" . $filename, base64_decode($jobEx));
-        File::delete('/var/www/cdn.finobe.net/' . $user->pfp);
+
+        if($user->pfp != 'avatar/682b8bd6cbc48.png') {
+            File::delete('/var/www/cdn.finobe.net/' . $user->pfp);
+        }
 
         $user->render_cooldown = now();
         $user->pfp = "avatar/{$filename}";
