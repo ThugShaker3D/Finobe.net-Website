@@ -160,11 +160,6 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
         Route::any('/marketplace/productinfo', [rbxAPIs::class, 'productInfo']);
     });
-    Route::any('/universes/{placeId}/game-start-info', function ($placeId) {
-        return response()->json([
-            "r15Morphing" => $placeId == 1911
-        ]);
-    });
 
     foreach(['assetgame', 'www'] as $subdomain) {
         Route::domain($subdomain . '.finobe.net')->group(function() {
