@@ -152,17 +152,9 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         });
     });
 
-    Route::domain('clientsettingscdn.finobe.net')->group(function() {
-        //Route::get('/Setting/QuietGet/{bucketName}', [rbxAPIs::class, 'quietGet']);
-        Route::get('v1/settings/application', [rbxAPIs::class, 'quietget']);
-    });
-
-    Route::domain('applicationcompatibility.finobe.net')->group(function() {
-        Route::get('v1/compatibility', [rbxAPIs::class, 'getCompatibility']);
-        Route::get('v1/client-version', function () {
-            return response(json_decode(file_get_contents(storage_path('app/private/versions.json')), true)['version']);
-        });
-    });
+    Route::domain('clientsettings.аinobe.net')
+                ->middleware('api')
+                ->group(base_path('routes\services\clientsettings.php'));
 
     Route::domain('api.finobe.net')->group(function() {
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
