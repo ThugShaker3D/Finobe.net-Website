@@ -153,8 +153,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     });
 
     Route::domain('clientsettings.аinobe.net')
-                ->middleware('api')
-                ->group(base_path('routes\services\clientsettings.php'));
+        ->group(base_path('routes\services\clientsettings.php'));
 
     Route::domain('api.finobe.net')->group(function() {
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
@@ -162,30 +161,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     });
 
     foreach(['assetgame', 'www'] as $subdomain) {
-        Route::domain($subdomain . '.finobe.net')->group(function() {
-            Route::fallback(function() {
-                return redirect(env('APP_URL'));
-            });
-
-            Route::get('/Game/Gameserver.lua', [rbxAPIs::class, 'gameServerLua']);
-            Route::any('/asset/GetScriptState.ashx', [rbxAPIs::class, 'getScriptStateAshx']);
-            Route::get('/asset/', [rbxAPIs::class, 'asset']);
-            Route::get('/Asset', [rbxAPIs::class, 'asset']);
-            Route::get('/Asset/', [rbxAPIs::class, 'asset']);
-            //this is small function, doesnt deserve an function in rbxAPIs :P
-            Route::get('/api/gameserver/register/{jobId}', [rbxAPIs::class, 'registerJobId']);
-            Route::get('/api/gameserver/visit/{jobId}', [rbxAPIs::class, 'visitJobId']);
-            Route::get('/api/gameserver/shutdown/{jobId}', [rbxAPIs::class, 'shutdownJobId']);
-            Route::get('/api/gameserver/alive/{jobId}', [rbxAPIs::class, 'aliveJobId']);
-            Route::post('/api/gameserver/update', [rbxAPIs::class, 'update']);
-            Route::get('/Asset/CharacterFetch.ashx', [rbxAPIs::class, 'characterFetch']);
-            Route::get('/asset/CharacterFetch.ashx', [rbxAPIs::class, 'characterFetch']);
-            Route::get('/Asset/BodyColors.ashx', [rbxAPIs::class, 'bodyColors']);
-            Route::get('/asset/BodyColors.ashx', [rbxAPIs::class, 'bodyColors']);
-            Route::get('/Login/Negotiate.ashx', [rbxAPIs::class, 'negotiateAshx']);
-            Route::get('//Game/Studio.ashx', [rbxAPIs::class, 'studioAshx']);
-            Route::any('/Game/PlaceLauncher.ashx', [rbxAPIs::class, 'placeLauncher']);
-            Route::get('/Game/Join.ashx', [rbxAPIs::class, 'joinAshx']);
-        });
+        Route::domain($subdomain . '.finobe.net')
+            ->group(base_path('routes\services\assetgame.php'));
     }
 });
