@@ -153,7 +153,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     });
 
     Route::domain('clientsettings.finobe.net')
-        ->group(base_path('routes\services\clientsettings.php'));
+        ->group(base_path('routes/services/clientsettings.php'));
 
     Route::domain('api.finobe.net')->group(function() {
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
@@ -161,7 +161,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     });
 
     foreach(['assetgame', 'www'] as $subdomain) {
-        Route::domain($subdomain . '.finobe.net')
-            ->group(base_path('routes\services\assetgame.php'));
+        //Route::domain($subdomain . '.finobe.net')
+        //    ->group(base_path('routes/services/assetgame.php'));
     }
 });
