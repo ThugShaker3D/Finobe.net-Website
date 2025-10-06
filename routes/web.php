@@ -6,6 +6,7 @@ use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\dataController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -87,7 +88,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::prefix('user')->group(function() {
             Route::get('/gettoken', [frontEnd::class, 'gettoken']);
             Route::get('/transaction-log', [frontEnd::class, 'transactions']);
-            Route::get('/{id}', [frontEnd::class, 'user']);
+            Route::get('/{id}', [ProfileController::class, 'index']);
             Route::get('/{id}/add', [frontEnd::class, 'user_add']);
             Route::get('/{id}/accept', [frontEnd::class, 'user_accept']);
             Route::get('/{id}/remove', [frontEnd::class, 'user_remove']);
