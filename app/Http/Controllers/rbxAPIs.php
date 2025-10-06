@@ -19,41 +19,6 @@ class rbxAPIs extends Controller
         $this->db = DB::connection('finobe');
     }
 
-    public function quietGet(Request $request) {
-        $bucketName = $request->query('bucket');
-        switch ($bucketName) {
-            //TODO: fetch them all from database
-            case "ClientAppSettings":
-                return file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
-            case "PCApplicationSettings":
-                return file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
-            case "CloudSettings":
-                if (RobloxUtilities::IsFinobeCloudAuthorized()) {
-                    return file_get_contents(storage_path("rbx/fflags/WindowsComputeCloud_2016.json"));
-                }
-                
-                return response()->json($this->response, 403);
-            default:
-                $this->response = [
-                    "FFlagDeprecateMeaninglessTerrainPropertiesAndMethods" => "True",
-                    "FFlagImmediateYieldResultsEnabled" => "True",
-                    "FFlagIsChangeHistoryRunAware" => "True",
-                    "FFlagNonScriptableAccessEnabled" => "False",
-                    "FFlagReparentingLockEnabled" => "False",
-                    "FFlagServerScriptProtection" => "True",
-                    "FFlagTaskSchedulerUseSharedPtr" => "True",
-                    "FFlagWaterEnabled" => "True",
-                    "FLogAsserts" => "0",
-                    "FLogContentPoviderRequests" => "8",
-                    "FLogRCCDataModelInit" => "7",
-                    "FLogReplicationDataLifetime" => "0",
-                    "FLogTaskSchedulerRun" => "0"
-                ];
-
-                return response()->json($this->response, 200);
-        }
-    }
-
     public function getAllowedSecurityVersions() {
         if (RobloxUtilities::IsFinobeCloudAuthorized()) {
             $this->response = [
@@ -417,76 +382,6 @@ class rbxAPIs extends Controller
         ];
 
         return response()->json($this->response, 200);
-    }
-
-    public function characterFetch(Request $request) {
-        $data = $request->all();
-
-        if (!isset($data["userId"]))
-        {
-            return response('', 200);
-        }
-        $userId = (int)$data["userId"];
-
-        if (!User::find($userId)) {
-            $this->response = [
-                "code" => 404,
-                "message" => "User does not exist."
-            ];
-
-            return response()->json($this->response, 404);
-        }
-
-        $avatar = json_decode(User::find($userId)->avatar, false);
-
-        $ids = array_merge(
-            $avatar[0]->equippedGearVersionIds ?? [],
-            $avatar[0]->backpackGearVersionIds ?? []
-        );
-        $assetUrls = $ids ? implode(";", array_map(
-            fn($id) => "http://www.finobe.net/asset/?id=$id",
-            $ids
-        )) : "";
-
-        return response("http://www.finobe.net/Asset/BodyColors.ashx?userId={$userId};{$assetUrls}", 200);
-    }
-
-    public function bodyColors(Request $request) {
-        $data = $request->all();
-
-        if (!isset($data["userId"]))
-        {
-            return response('', 200);
-        }
-        $userId = (int)$_GET["userId"];
-
-        if (!User::find($userId)) {
-            $this->response = [
-                "code" => 404,
-                "message" => "User does not exist."
-            ];
-
-            return response()->json($this->response, 404);
-        }
-
-        $colors = json_decode(User::find($userId)->avatar, false)[0]->bodyColors;
-
-        return '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.finobe.net/roblox.xsd" version="4">
-            <External>null</External>
-            <External>nil</External>
-            <Item class="BodyColors">
-                <Properties>
-                    <int name="HeadColor">'.$colors->headColorId.'</int>
-                    <int name="LeftArmColor">'.$colors->leftArmColorId.'</int>
-                    <int name="LeftLegColor">'.$colors->leftLegColorId.'</int>
-                    <string name="Name">Body Colors</string>
-                    <int name="RightArmColor">'.$colors->rightArmColorId.'</int>
-                    <int name="RightLegColor">'.$colors->rightLegColorId.'</int>
-                    <int name="TorsoColor">'.$colors->torsoColorId.'</int>
-                    <bool name="archivable">true</bool>
-                </Properties>
-            </Item>
-        </roblox>';
     }
 
     public function negotiateAshx(Request $request) {
