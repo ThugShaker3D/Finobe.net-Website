@@ -19,58 +19,6 @@ class rbxAPIs extends Controller
         $this->db = DB::connection('finobe');
     }
 
-    public function getAllowedSecurityVersions() {
-        if (RobloxUtilities::IsFinobeCloudAuthorized()) {
-            $this->response = [
-                "data" => [
-                    json_decode(file_get_contents(storage_path('app/private/versions.json')), true)['application']
-                    //"0.235.0pcplayer" debug
-                ]
-            ];
-
-            return response()->json($this->response, 200);
-        }
-        
-        $this->response = [
-            "code" => 403,
-            "message" => "Unauthorized"
-        ];
-
-        return response()->json($this->response, 403);
-    }
-
-    public function getAllowedMD5Hashes() {
-        if (RobloxUtilities::IsFinobeCloudAuthorized()) {
-            $this->response = [
-                "data" => [
-                    json_decode(file_get_contents(storage_path('app/private/versions.json')), true)['md5']
-                ]
-            ];
-
-            return response()->json($this->response, 200);
-        }
-        
-        $this->response = [
-            "code" => 403,
-            "message" => "Unauthorized"
-        ];
-
-        return response()->json($this->response, 403);
-    }
-    public function getCompatibility(Request $request)
-    {
-        $bucket = $request->query('bucket');
-        
-        switch($bucket) {
-            case 'Hashes':
-                return $this->getAllowedMD5Hashes();
-            case 'Versions':
-                return $this->getAllowedSecurityVersions();
-            default:
-                return response()->json(['error' => 'Invalid bucket parameter'], 400);
-        }
-    }
-
     public function validatePlaceJoin() {
         return response('true', 200);
     }

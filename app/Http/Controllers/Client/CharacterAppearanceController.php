@@ -70,9 +70,12 @@ class CharacterAppearanceController extends Controller
             $avatar[0]->equippedGearVersionIds ?? [],
             $avatar[0]->backpackGearVersionIds ?? []
         );
+
         $charApp .= $ids ? implode(";", array_map(
             fn($id) => route('asset-game.asset', ['id' => $id]),
             $ids
         )) : "";
+
+        return response($charApp, 200);
     }
 }

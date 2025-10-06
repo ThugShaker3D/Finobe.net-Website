@@ -29,6 +29,6 @@ class ClientSettingsController extends Controller
                 }
         }
 
-        return response($settings);
+        return response($settings)->header('Content-Type', 'application/json; charset=utf-8');
     }
 }
