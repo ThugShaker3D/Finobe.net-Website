@@ -67,8 +67,8 @@ class CharacterAppearanceController extends Controller
         $charApp = route('asset-game.body-colors', ['userId' => $user->id]).';';
 
         $ids = array_merge(
-            $avatar[0]->equippedGearVersionIds ?? [],
-            $avatar[0]->backpackGearVersionIds ?? []
+            $avatar->equippedGearVersionIds ?? [],
+            $avatar->backpackGearVersionIds ?? []
         );
 
         $charApp .= $ids ? implode(";", array_map(
