@@ -16,8 +16,8 @@ class ProfileController extends Controller
 {
     protected $request;
 
-    public function __construct(dataController $dataService, Request $request) {
-        $frontend = new frontEnd($dataService, $request);
+    public function __construct(Request $request) {
+        $frontend = new frontEnd($request);
         $this->request = $frontend->getData();
     }
 
@@ -42,9 +42,7 @@ class ProfileController extends Controller
         $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], fn($friend) => $friend['status'] == 'friends'));
 
         $servers = Server::get()
-            ->map(function ($item) {
-                return $item->toArray();
-            })->toArray();
+            ->map(fn($item) => $item->toArray())->toArray();
         
         foreach($servers as $server) {
             $placeid = 0;

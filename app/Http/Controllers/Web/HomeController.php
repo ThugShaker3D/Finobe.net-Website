@@ -19,8 +19,8 @@ class HomeController extends Controller
 {
     protected $request;
 
-    public function __construct(dataController $dataService, Request $request) {
-        $frontend = new frontEnd($dataService, $request);
+    public function __construct(Request $request) {
+        $frontend = new frontEnd($request);
         $this->request = $frontend->getData();
     }
 

@@ -36,12 +36,10 @@ use Parsedown;
 class frontEnd extends Controller
 {
     protected $db;
-    protected $dataService;
     protected $request;
 
-    public function __construct(dataController $dataService, Request $request) {
+    public function __construct(Request $request) {
         $this->db = DB::connection('finobe');
-        $this->dataService = $dataService;
         $this->request = [
             'data' => [
                 'embeds' => [
