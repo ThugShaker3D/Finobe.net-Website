@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 use App\Models\Ban;
 use App\Models\User;
 use App\Models\Asset;
