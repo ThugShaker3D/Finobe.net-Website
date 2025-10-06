@@ -78,7 +78,7 @@ class HomeController extends Controller
                     ->limit(6)
                     ->get()
                     ->map(function ($item) {
-                        return (array) $item;
+                        return $item->toArray();
                     })->toArray();
             });
             
@@ -90,7 +90,7 @@ class HomeController extends Controller
                     ->where('placeid', $game['id'])
                     ->get()
                     ->map(function ($item) {
-                        return (array) $item;
+                        return $item->toArray();
                     })->toArray();
                 
                 foreach($servers as $server) {
