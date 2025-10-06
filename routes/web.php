@@ -6,8 +6,11 @@ use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\dataController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\Users;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
+use App\Http\Controllers\Web\CurrencyController;
+use App\Http\Controllers\Web\UsersController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -30,7 +33,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             return redirect('/forum/home'); // for version 1 users
         });
 
-        Route::get('/users', [frontEnd::class, 'users']);
+        Route::get('/users', [UsersController::class, 'index']);
         Route::get('/videos', [frontEnd::class, 'videos']);
         Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [frontEnd::class, 'trades']);
@@ -88,7 +91,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
 
         Route::prefix('user')->group(function() {
             Route::get('/gettoken', [frontEnd::class, 'gettoken']);
-            Route::get('/transaction-log', [frontEnd::class, 'transactions']);
+            Route::get('/transaction-log', [CurrencyController::class, 'transactions']);
             Route::get('/{id}', [ProfileController::class, 'index']);
             Route::get('/{id}/add', [FriendsController::class, 'add']);
             Route::get('/{id}/accept', [FriendsController::class, 'accept']);

@@ -31,22 +31,35 @@ class CurrencyController extends Controller
             ->orderBy('date', 'DESC')
             ->limit(100)
             ->get()
-            ->map(fn($item) => $item->toArray())->toArray();
+            ->map(fn($item) => $item->toArray());
         
         foreach($results as $result) {
             $result['date'] = date('m/d/Y', strtotime($result['date']));
 
 
-            if($result['type'] == 1 || $result['type'] == 2) {
-                $result['assetname'] = strip_tags(htmlspecialchars(
-                    Asset::select('title')->where('id', $result['assetid'])->value('title')
-                ));
-            } elseif($result['type'] == 3) {
-                $result['assetname'] = 'Place Slot';
-            } elseif($result['type'] == 4) {
-                $result['assetname'] = 'Dius';
-            } elseif($result['type'] == 5) {
-                $result['assetname'] = 'Asset Upload Fee';
+            switch ($result['type']) {
+                case 1:
+                case 2:
+                    $result['assetname'] = strip_tags(htmlspecialchars(
+                        Asset::where('id', $result['assetid'])->value('title')
+                    ));
+                    break;
+            
+                case 3:
+                    $result['assetname'] = 'Place Slot';
+                    break;
+            
+                case 4:
+                    $result['assetname'] = 'Dius';
+                    break;
+            
+                case 5:
+                    $result['assetname'] = 'Asset Upload Fee';
+                    break;
+            
+                default:
+                    $result['assetname'] = 'Unknown';
+                    break;
             }
 
             $result['uuid'] = User::where('id', $result['author'])->exists() ? User::where('id', $result['author'])->value('id') : false;

@@ -41,8 +41,7 @@ class ProfileController extends Controller
         $user['friends'] = json_decode($user['friends'], true);
         $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], fn($friend) => $friend['status'] == 'friends'));
 
-        $servers = Server::get()
-            ->map(fn($item) => $item->toArray())->toArray();
+        $servers = Server::get()->map(fn($item) => $item->toArray());
         
         foreach($servers as $server) {
             $placeid = 0;
