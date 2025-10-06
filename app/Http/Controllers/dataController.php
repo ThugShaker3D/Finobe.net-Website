@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class dataController extends Controller
 {
-    public function time_elapsed_string($datetime) {
+    public static function time_elapsed_string($datetime) {
         $now = new \DateTime();
         $ago = new \DateTime($datetime);
         $diff = $now->diff($ago);
@@ -34,7 +34,7 @@ class dataController extends Controller
         }
     }
     
-    public function formatNumber($number) {
+    public static function formatNumber($number) {
         $suffix = '';
         $negative = $number < 0;
         $number = abs($number);
@@ -74,7 +74,7 @@ class dataController extends Controller
         return ($negative ? '-' : '') . $number . $suffix;
     }
 
-    public function timestamp(float $seconds) {
+    public static function timestamp(float $seconds) {
         $seconds = round($seconds);
         if ($seconds > 60 * 60 * 24) {
             // over a day
@@ -100,7 +100,7 @@ class dataController extends Controller
         }
     }
 
-    public function remove_emoji($text) {
+    public static function remove_emoji($text) {
         $clean_text = "";
         $regexEmoticons = '/[\x{1F600}-\x{1F64F}]/u';
         $clean_text = preg_replace($regexEmoticons, '', $text);
@@ -115,7 +115,7 @@ class dataController extends Controller
         return $clean_text;
     }
 
-    public function send_discord_message($message, $username = 'Aesthetiful Bot', $avatar = false) {
+    public static function send_discord_message($message, $username = 'Aesthetiful Bot', $avatar = false) {
 		$json_data = [
             "content" => $message,
             "username" => str_replace("@", "", $username),

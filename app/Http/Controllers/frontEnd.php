@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use App\Mail\DynamicContentEmail;
 use App\Models\User;
 use App\Jobs\ProcessVideo;
-use App\Http\Controllers\dataController;
+use App\Http\Controllers\dataController as DataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -110,7 +110,7 @@ class frontEnd extends Controller
             }
 
             $this->request['data']['user'] = $this->request['data']['user']->toArray();
-            $this->request['data']['user']['formattedDius'] = $this->dataService->formatNumber($this->request['data']['user']['Dius']);
+            $this->request['data']['user']['formattedDius'] = DataController::formatNumber($this->request['data']['user']['Dius']);
             $this->request['data']['embeds']['title'] .= ($this->request['data']['user']['branding'] == 'finobe') ? 'Finobe' : 'Aesthetiful';
             
             if($this->request['data']['user']['branding'] == 'finobe') {
@@ -676,7 +676,7 @@ class frontEnd extends Controller
 
             $result['uuid'] = User::where('id', $result['author'])->exists() ? User::where('id', $result['author'])->value('id') : false;
             $result['author'] = $result['uuid'] ? User::where('id', $result['author'])->value('username') : htmlspecialchars($result['author']);
-            $result['amount'] = $this->dataService->formatNumber($result['amount']);
+            $result['amount'] = DataController::formatNumber($result['amount']);
             $purchases[] = $result;
         }
 
@@ -876,7 +876,7 @@ class frontEnd extends Controller
                 return $replacements[array_rand($replacements)];
             }, $post['title']);
             $post['author'] = htmlspecialchars($post['author']);
-            $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
+            $post['ago'] = DataController::time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
             $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
             $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
@@ -949,7 +949,7 @@ class frontEnd extends Controller
                 return $replacements[array_rand($replacements)];
             }, $post['title']);
             $post['author'] = htmlspecialchars($post['author']);
-            $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
+            $post['ago'] = DataController::time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
             $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
             $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
@@ -1028,7 +1028,7 @@ class frontEnd extends Controller
                 return $replacements[array_rand($replacements)];
             }, $post['title']);
             $post['author'] = htmlspecialchars($post['author']);
-            $post['ago'] = $this->dataService->time_elapsed_string($post['date']);
+            $post['ago'] = DataController::time_elapsed_string($post['date']);
             $post['date'] = date('F d, Y g:i a', strtotime($post['date']));
             $post['rating'] = $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'l')->count();
             $post['rating'] = $post['rating'] - $this->db->table('forum_ratings')->where('type', '1')->where('toid', $post['id'])->where('rate_type', 'd')->count();
@@ -1849,7 +1849,7 @@ class frontEnd extends Controller
             }, $result['title']));
 
             if($result['asset_type'] == 3) {
-                $result['duration'] = $this->dataService->timestamp($result['additional']['duration']);
+                $result['duration'] = DataController::timestamp($result['additional']['duration']);
             }
 
             $user = User::find($result['author']);
@@ -3234,7 +3234,7 @@ class frontEnd extends Controller
                     'type' => 5
                 ]);
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
+                DataController::send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 return redirect('/item/' . $id);
             } elseif($data['media-type'] == 'shirt') {
@@ -3293,7 +3293,7 @@ class frontEnd extends Controller
                     'type' => 5
                 ]);
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
+                DataController::send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -3353,7 +3353,7 @@ class frontEnd extends Controller
                     'type' => 5
                 ]);
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
+                DataController::send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -3413,7 +3413,7 @@ class frontEnd extends Controller
                     'type' => 5
                 ]);
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
+                DataController::send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -3466,7 +3466,7 @@ class frontEnd extends Controller
                     'type' => 5
                 ]);
 
-                $this->dataService->send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
+                DataController::send_discord_message('<@541523977475194880>, ' . $this->request['data']['user']['username'] . ' uploaded an item, moderate it! [ https://finobe.net/admin/assets ]');
 
                 Session::put('success', 'Success');
                 return redirect('/item/' . $id);
@@ -4151,7 +4151,7 @@ class frontEnd extends Controller
                 'token' => bin2hex(random_bytes(30))
             ]);
 
-            $this->dataService->send_discord_message('<@541523977475194880>, ' . $data['username'] . ' has sign up');
+            DataController::send_discord_message('<@541523977475194880>, ' . $data['username'] . ' has sign up');
 
             if($this->request['data']['invitekeys'] && isset($data['invite_key'])) {
                 $this->db->table('invitekeys')
