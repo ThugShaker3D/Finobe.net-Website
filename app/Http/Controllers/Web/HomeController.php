@@ -97,7 +97,7 @@ class HomeController extends Controller
                     $players += count(json_decode($server['players']));
                 }
 
-                $thumbnail = Server::select('file')
+                $thumbnail = Asset::select('file')
                     ->where('id', $game['additional']['media']['imageAssetId'])
                     ->value('file');
                 
