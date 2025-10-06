@@ -2882,7 +2882,7 @@ class frontEnd extends Controller
                 'accept' => 'application/json',
                 'X-Smtp2go-Api-Key' => env('FINOBE_SMTP2GO_API_KEY'),
                 'content-type' => 'application/json',
-            ])->post('https://us-api.smtp2go.com/v3/email/send', [
+            ])->post('https://api.smtp2go.com/v3/email/send', [
                 "sender" => "Finobe <noreply@aesthetiful.com>",
                 "to" => $user->username . " <" . $data['email'] . ">",
                 "subject" => "Finobe Password Reset",
@@ -3748,6 +3748,7 @@ class frontEnd extends Controller
             Http::withHeaders([
                 'User-Agent' => 'finobe.net/Server 1.0'
             ])->get('https://api.eracast.cc/v1/update_aesthetifulplus_link', [
+                'eracast_fiur3ui3uigu3itjuirjifs',
                 'user' => $data['username'],
                 'userid' => $this->request['data']['user']['id']
             ]);

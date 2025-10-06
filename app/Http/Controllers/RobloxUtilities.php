@@ -318,11 +318,16 @@ class RobloxUtilities extends Controller
             }
         } else {
             return (object)[
-                 "success" => false,
+                "success" => false,
                 "data" => [],
                 "publicMessage" => "Job doesnt exists"
             ];
         }
 
+        return (object)[
+            "success" => false,
+            "data" => [],
+            "publicMessage" => "Unknown error"
+        ];
     }
 }
