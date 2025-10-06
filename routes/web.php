@@ -5,6 +5,7 @@ use App\Http\Controllers\admin;
 use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\dataController;
+use App\Http\Controllers\Web\HomeController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -42,7 +43,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'email_verify']);
         Route::post('/verify/email', [frontEnd::class, 'verify_email']);
         Route::post('/password/email', [frontEnd::class, 'password_email']);
-        Route::match(['post', 'get'], '/', [frontEnd::class, 'index']);
+        Route::match(['post', 'get'], '/', [HomeController::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
         Route::match(['post', 'get'], '/election', [frontEnd::class, 'election']);
         Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_new']);
