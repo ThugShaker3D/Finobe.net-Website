@@ -158,6 +158,9 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     Route::domain('assetgame.finobe.net')
         ->group(base_path('routes/services/assetgame.php'));
 
+    Route::domain('versioncompatibility.finobe.net')
+        ->group(base_path('routes/services/versioncompatibility.php'));
+
     Route::domain('api.finobe.net')->group(function() {
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
         Route::any('/marketplace/productinfo', [rbxAPIs::class, 'productInfo']);
