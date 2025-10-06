@@ -194,6 +194,10 @@ class frontEnd extends Controller
             })->toArray();
     }
 
+    public function getData() {
+        return $this->request;
+    }
+
     public function index(Request $request) {
         $this->request['data']['embeds']['title'] = 'Home' . $this->request['data']['embeds']['title'];
 
