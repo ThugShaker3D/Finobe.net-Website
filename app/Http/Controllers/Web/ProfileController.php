@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Http\Controllers\Web;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Ban;
+use App\Models\User;
+use App\Models\Asset;
+use App\Models\Server;
+use App\Http\Controllers\frontEnd;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\dataController;
+
+class ProfileController extends Controller
+{
+    protected $request;
+
+    public function __construct(dataController $dataService, Request $request) {
+        $frontend = new frontEnd($dataService, $request);
+        $this->request = $frontend->getData();
+    }
+
+    public function index(Request $request, $id) {
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if(!User::where('id', $id)->exists()) {
+            abort(404);
+        }
+
+        $user = User::find($id)->toArray();
+
+        $this->request['data']['embeds']['title'] = htmlspecialchars($user['username']) . $this->request['data']['embeds']['title'];
+
+        $user['places'] = [];
+        $user['created'] = date('m/d/Y h:i:s A', strtotime($user['created']));
+        $user['blurb'] = nl2br(str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($user['blurb'])))));
+        $user['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
+        $user['friends'] = json_decode($user['friends'], true);
+        $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], fn() => $friend['status'] == 'friends'));
+
+        $servers = Server::get()
+            ->map(function ($item) {
+                return $item->toArray();
+            })->toArray();
+        
+        foreach($servers as $server) {
+            $placeid = 0;
+            $jobId = '';
+            $found = false;
+            $server['players'] = json_decode($server['players'], true);
+
+            foreach($server['players'] as $player) {
+                if($player == $user['id']) {
+                    $found = true;
+                    $placeid = $server['placeid'];
+                    $jobId = $server['jobId'];
+                    break;
+                }
+            }
+
+            if($found) {
+                $user['InGame'] = true;
+                $user['game'] = [
+                    'id' => $placeid,
+                    'title' => strip_tags(htmlspecialchars(Asset::where('id', $placeid)->value('title'))),
+                    'jobId' => $jobId
+                ];
+            }
+        }
+
+        $user['friends'] = array_reverse($user['friends']);
+
+        foreach($user['friends'] as $key => $friend) {
+            $user['friends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, fn() => User::where('id', $friend['userid'])->value('username'));
+            $user['friends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['userid'], 60 * 60, fn() => User::where('id', $friend['userid'])->value('pfp'));
+        }
+
+        foreach($user['CurrentFriends'] as $key => $friend) {
+            $user['CurrentFriends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, fn() => User::where('id', $friend['userid'])->value('username'));
+            $user['CurrentFriends'][$key]['pfp'] = Cache::remember('pfp_' . $friend['userid'], 60 * 60, fn() => User::where('id', $friend['userid'])->value('pfp'));
+        }
+
+        $places = Asset::where('author', $user['id'])
+            ->where('asset_type', 9)
+            ->get()
+            ->map(function ($item) {
+                return (array) $item;
+            })->toArray();
+
+        foreach($places as $index => $place) {
+            $place['additional'] = json_decode($place['additional'], true);
+            $place['count'] = $index + 1;
+            $place['thumbnail'] = Cache::remember('thumbnail_' . $place['additional']['media']['imageAssetId'], 60 * 60, fn() => Asset::select('file')->where('id', $place['additional']['media']['imageAssetId'])->value('file'));
+            $user['places'][] = $place;
+        }
+
+        if(Ban::where('username', $user['username'])->where('perm', 'y')->exists()) {
+            $user['ban'] = [
+                'IsBanned' => true,
+                'data' => [
+                    'reason' => Ban::select('reason')->where('username', $user['username'])->where('perm', 'y')->value('reason')
+                ]
+            ];
+        }
+
+        $this->request['data']['profile'] = $user;
+        return view($this->request['data']['user']['version'] . '/User', $this->request);
+    }
+}
