@@ -32,7 +32,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [frontEnd::class, 'trades']);
         Route::get('/item/{id}', [frontEnd::class, 'item']);
-        Route::get('/invites', [frontEnd::class, 'invites']);
+        Route::get('/invites', [frontEnd::class, 'invites']); // this is a test
         Route::get('/video/{id}', [frontEnd::class, 'video']);
         Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
         Route::get('/video/thumb/{id}', [frontEnd::class, 'video_thumb']);
