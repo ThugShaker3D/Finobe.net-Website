@@ -77,9 +77,7 @@ class HomeController extends Controller
                     ->orderByDesc('total_players')
                     ->limit(6)
                     ->get()
-                    ->map(function ($item) {
-                        return $item->toArray();
-                    })->toArray();
+                    ->map(fn($item) => $item->toArray())->toArray();
             });
             
             foreach($games as $key => $game) {
@@ -89,9 +87,7 @@ class HomeController extends Controller
                 $servers = Server::select('players')
                     ->where('placeid', $game['id'])
                     ->get()
-                    ->map(function ($item) {
-                        return $item->toArray();
-                    })->toArray();
+                    ->map(fn($item) => $item->toArray())->toArray();
                 
                 foreach($servers as $server) {
                     $players += count(json_decode($server['players']));
