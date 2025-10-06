@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use App\Models\Ban;
 use App\Models\User;
 use App\Models\Asset;
@@ -39,7 +40,7 @@ class ProfileController extends Controller
         $user['blurb'] = nl2br(str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($user['blurb'])))));
         $user['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
         $user['friends'] = json_decode($user['friends'], true);
-        $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], fn() => $friend['status'] == 'friends'));
+        $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], fn($friend) => $friend['status'] == 'friends'));
 
         $servers = Server::get()
             ->map(function ($item) {
@@ -87,7 +88,7 @@ class ProfileController extends Controller
             ->where('asset_type', 9)
             ->get()
             ->map(function ($item) {
-                return (array) $item;
+                return $item->toArray();
             })->toArray();
 
         foreach($places as $index => $place) {

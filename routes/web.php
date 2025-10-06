@@ -7,6 +7,7 @@ use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\dataController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ProfileController;
+use App\Http\Controllers\Web\FriendsController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -39,7 +40,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
         Route::get('/video/thumb/{id}', [frontEnd::class, 'video_thumb']);
         Route::get('/password/reset', [frontEnd::class, 'password_reset']);
-        Route::get('/friends/incoming', [frontEnd::class, 'friends_incoming']);
+        Route::get('/friends/incoming', [FriendsController::class, 'incoming']);
         Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
         Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'email_verify']);
         Route::post('/verify/email', [frontEnd::class, 'verify_email']);
@@ -89,10 +90,10 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::get('/gettoken', [frontEnd::class, 'gettoken']);
             Route::get('/transaction-log', [frontEnd::class, 'transactions']);
             Route::get('/{id}', [ProfileController::class, 'index']);
-            Route::get('/{id}/add', [frontEnd::class, 'user_add']);
-            Route::get('/{id}/accept', [frontEnd::class, 'user_accept']);
-            Route::get('/{id}/remove', [frontEnd::class, 'user_remove']);
-            Route::get('/{id}/friends', [frontEnd::class, 'user_friends']);
+            Route::get('/{id}/add', [FriendsController::class, 'add']);
+            Route::get('/{id}/accept', [FriendsController::class, 'accept']);
+            Route::get('/{id}/remove', [FriendsController::class, 'remove']);
+            Route::get('/{id}/friends', [FriendsController::class, 'list']);
         });
 
         Route::prefix('forum')->group(function() {
