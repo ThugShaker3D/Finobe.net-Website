@@ -6,11 +6,11 @@ use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\dataController;
 use App\Http\Controllers\Web\HomeController;
-use App\Http\Controllers\Web\Users;
+use App\Http\Controllers\Web\ForumController;
+use App\Http\Controllers\Web\UsersController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
 use App\Http\Controllers\Web\CurrencyController;
-use App\Http\Controllers\Web\UsersController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -100,13 +100,13 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         });
 
         Route::prefix('forum')->group(function() {
-            Route::get('/home', [frontEnd::class, 'forum_home']);
-            Route::get('/home/{section}', [frontEnd::class, 'forum_section']);
-            Route::get('/subscribe', [frontEnd::class, 'forum_subscribe']);
-            Route::get('/search', [frontEnd::class, 'forum_search']);
-            Route::match(['post', 'get'], '/post', [frontEnd::class, 'forum_post']);
-            Route::match(['post', 'get'], '/edit', [frontEnd::class, 'forum_edit_reply']);
-            Route::match(['post', 'get'], '/new/reply', [frontEnd::class, 'forum_reply']);
+            Route::get('/home', [ForumController::class, 'index']);
+            Route::get('/home/{section}', [ForumController::class, 'section']);
+            Route::get('/subscribe', [ForumController::class, 'subscribe']);
+            Route::get('/search', [ForumController::class, 'search']);
+            Route::match(['post', 'get'], '/post', [ForumController::class, 'post']);
+            Route::match(['post', 'get'], '/edit', [ForumController::class, 'edit_reply']);
+            Route::match(['post', 'get'], '/new/reply', [ForumController::class, 'reply']);
         });
 
         Route::prefix('api')->group(function() {
