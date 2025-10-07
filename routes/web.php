@@ -14,6 +14,7 @@ use App\Http\Controllers\Web\CatalogController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
 use App\Http\Controllers\Web\InvitesController;
+use App\Http\Controllers\Web\ElectionController;
 use App\Http\Controllers\Web\CurrencyController;
 use App\Http\Controllers\Web\MessagesController;
 use App\Http\Middleware\SetClientIp;
@@ -52,7 +53,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::post('/password/email', [frontEnd::class, 'password_email']);
         Route::match(['post', 'get'], '/', [HomeController::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
-        Route::match(['post', 'get'], '/election', [frontEnd::class, 'election']);
+        Route::match(['post', 'get'], '/election', [ElectionController::class, 'election']);
         Route::match(['post', 'get'], '/invites/new', [InvitesController::class, 'new']);
         Route::match(['post', 'get'], '/item/{id}/settings', [CatalogController::class, 'settings']);
         Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);

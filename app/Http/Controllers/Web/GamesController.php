@@ -141,7 +141,7 @@ class GamesController extends Controller
             $asset = Asset::find($id);
             $asset->title = $data['title'];
             $asset->description = $data['description'] ?? '';
-            $asset->additional = json_encode($place['additional']);
+            $asset->additional = $place['additional'];
             $asset->save();
             
             Session::put('successv2', 'Place settings saved.');

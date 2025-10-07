@@ -269,7 +269,7 @@ class CatalogController extends Controller
             $item2 = Asset::find($id);
             $item2->title = $data['title'];
             $item2->description = $data['description'] ?? '';
-            $item2->additional = json_encode($item['additional']);
+            $item2->additional = $item['additional'];
             $item2->save();
 
             Session::put('successv2', 'Item settings saved.');

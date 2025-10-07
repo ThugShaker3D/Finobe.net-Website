@@ -37,7 +37,6 @@ class ProfileController extends Controller
         $user['created'] = date('m/d/Y h:i:s A', strtotime($user['created']));
         $user['blurb'] = nl2br(str_replace('${myDius}', '<span class="n-money-text text-nowrap"><img src="/s/img/diu_16.png" alt="Diu" title="Diu" class="img-responsive align-middle "> [' . number_format($user['Dius']) . ']</span>', preg_replace('/\b((?:https?|ftp):\/\/\S+)/i', '<a href="$1">$1</a>', strip_tags(htmlspecialchars($user['blurb'])))));
         $user['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
-        $user['friends'] = json_decode($user['friends'], true);
         $user['CurrentFriends'] = array_reverse(array_filter($user['friends'], fn($friend) => $friend['status'] == 'friends'));
 
         $servers = Server::get()->map(fn($item) => $item->toArray());
@@ -82,9 +81,7 @@ class ProfileController extends Controller
         $places = Asset::where('author', $user['id'])
             ->where('asset_type', 9)
             ->get()
-            ->map(function ($item) {
-                return $item->toArray();
-            })->toArray();
+            ->map(fn($item) => $item->toArray());
 
         foreach($places as $index => $place) {
             $place['additional'] = json_decode($place['additional'], true);

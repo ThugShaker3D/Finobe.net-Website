@@ -122,9 +122,7 @@ class frontEnd extends Controller
             } else {
                 $this->request['data']['embeds']['image'] .= 'logo.png';
             }
-
-            $this->request['data']['user']['friends'] = json_decode($this->request['data']['user']['friends'], true);
-            $this->request['data']['user']['avatar'] = json_decode($this->request['data']['user']['avatar'], true);
+            
             $this->request['data']['user']['places'] = $this->db->table('assets')
                 ->where('author', $this->request['data']['user']['id'])
                 ->where('asset_type', 9)
@@ -194,72 +192,6 @@ class frontEnd extends Controller
 
     public function getData() {
         return $this->request;
-    }
-
-    public function election(Request $request) {
-        $this->request['data']['embeds']['title'] = 'Invites' . $this->request['data']['embeds']['title'];
-        $data = $request->all();
-
-        if(!$this->request['data']['siteusername']) {
-            return redirect('/');
-        }
-
-        if(!$this->db->table('elections')->where('expire', '>', now())->exists()) {
-            Session::put('error', 'There is currently no active elections');
-            return redirect('/');
-        }
-
-        $election = (array) $this->db->table('elections')
-            ->where('expire', '>', now())
-            ->first();
-        
-        $election['title'] = strip_tags(htmlspecialchars($election['title']));
-        $election['options'] = json_decode($election['options'], true);
-        $election['votes'] = json_decode($election['votes'], true);
-
-        if($request->isMethod('post')) {
-            if(!isset($data['index'])) {
-                return redirect('/election');
-            }
-
-            foreach($election['votes'] as $key => $vote) {
-                if($vote['id'] != $data['index'] && $vote['username'] == $this->request['data']['user']['username']) {
-                    Session::put('error', 'You can only vote on one option');
-                    return redirect('/election');
-                }
-            }
-
-            foreach($election['votes'] as $key => $vote) {
-                if($vote['id'] == $data['index'] && $vote['username'] == $this->request['data']['user']['username']) {
-                    unset($election['votes'][$key]);
-
-                    $this->db->table('elections')
-                        ->where('id', $election['id'])
-                        ->update([
-                            'votes' => json_encode($election['votes'])
-                        ]);
-                    
-                    return redirect('/election');
-                }
-            }
-
-            $election['votes'][] = [
-                'id' => $data['index'],
-                'username' => $this->request['data']['user']['username']
-            ];
-
-            $this->db->table('elections')
-                ->where('id', $election['id'])
-                ->update([
-                    'votes' => json_encode($election['votes'])
-                ]);
-                    
-            return redirect('/election');
-        }
-
-        $this->request['data']['election'] = $election;
-
-        return view($this->request['data']['user']['version'] . '/Election', $this->request);
     }
 
     public function verify_email(Request $request) {

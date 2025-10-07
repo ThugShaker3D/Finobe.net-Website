@@ -18,20 +18,17 @@ class FriendsController extends Controller
         $this->request = $frontend->getData();
     }
 
-    public function add(Request $request, $id) {
-        $data = $request->all();
-
+    public function add($id) {
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
         }
 
-        if(!User::where('id', $id)->exists()) {
+        if(!User::find($id)) {
             Session::put('error', 'User does not exist');
             return redirect('/');
         }
 
         $user = User::find($id);
-        $user->friends = json_decode($user->friends, true);
         
         if($user->id == $this->request['data']['user']['id']) {
             return redirect('/user/' . $id);
@@ -49,7 +46,7 @@ class FriendsController extends Controller
             'status' => 'pending'
         ];
 
-        $user->friends = json_encode($friends, JSON_FORCE_OBJECT);
+        $user->friends = $friends;
         $user->save();
 
         return redirect('/user/' . $id);
@@ -62,7 +59,7 @@ class FriendsController extends Controller
             return redirect('/');
         }
 
-        if(!User::where('id', $id)->exists()) {
+        if(!User::find($id)) {
             Session::put('error', 'User does not exist');
             return redirect('/');
         }
@@ -76,7 +73,6 @@ class FriendsController extends Controller
         }
 
         $user = User::find($id);
-        $user->friends = json_decode($user->friends, true);
         
         if($user->id == $this->request['data']['user']['id']) {
             if(isset($data['feature'])) {
@@ -91,9 +87,9 @@ class FriendsController extends Controller
                 Session::put('error', 'You already added this user');
                 if(isset($data['feature'])) {
                     return redirect('/friends/incoming');
-                } else {
-                    return redirect('/user/' . $id);
                 }
+                
+                return redirect('/user/' . $id);
             }
         }
 
@@ -103,7 +99,7 @@ class FriendsController extends Controller
             'status' => 'friends'
         ];
 
-        $user->friends = json_encode($friends, JSON_FORCE_OBJECT);
+        $user->friends = $friends;
         $user->save();
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
@@ -114,7 +110,7 @@ class FriendsController extends Controller
         }
 
         User::where('id', $this->request['data']['user']['id'])->update([
-            'friends' => json_encode($this->request['data']['user']['friends'], JSON_FORCE_OBJECT)
+            'friends' => json_encode($this->request['data']['user']['friends'])
         ]);
 
         if(isset($data['feature'])) {
@@ -131,7 +127,7 @@ class FriendsController extends Controller
             return redirect('/');
         }
 
-        if(!User::where('id', $id)->exists()) {
+        if(!User::find($id)) {
             Session::put('error', 'User does not exist');
             return redirect('/');
         }
@@ -145,7 +141,6 @@ class FriendsController extends Controller
         }
 
         $user = User::find($id);
-        $user->friends = json_decode($user->friends, true);
         
         if($user->id == $this->request['data']['user']['id']) {
             if(isset($data['feature'])) {
@@ -164,7 +159,7 @@ class FriendsController extends Controller
             }
         }
 
-        $user->friends = json_encode($friends, JSON_FORCE_OBJECT);
+        $user->friends = $friends;
         $user->save();
 
         foreach($this->request['data']['user']['friends'] as $key => $friend) {
@@ -175,7 +170,7 @@ class FriendsController extends Controller
         }
 
         User::where('id', $this->request['data']['user']['id'])->update([
-            'friends' => json_encode($this->request['data']['user']['friends'], JSON_FORCE_OBJECT)
+            'friends' => json_encode($this->request['data']['user']['friends'])
         ]);
 
         if(isset($data['feature'])) {
@@ -192,12 +187,12 @@ class FriendsController extends Controller
             return redirect('/');
         }
 
-        if(!User::where('id', $id)->exists()) {
+        if(!User::find($id)) {
             abort(404);
         }
 
         $user = User::find($id)->toArray();
-        $user['friends'] = array_reverse(array_filter(json_decode($user['friends'], true), fn($friend) => $friend['status'] == 'friends'));
+        $user['friends'] = array_reverse(array_filter($user['friends'], fn($friend) => $friend['status'] == 'friends'));
 
         foreach($user['friends'] as $key => $friend) {
             $user['friends'][$key]['username'] = Cache::remember('username_' . $friend['userid'], 60 * 60, fn() => User::where('id', $friend['userid'])->value('username'));
@@ -244,9 +239,8 @@ class FriendsController extends Controller
         return view($this->request['data']['user']['version'] . '/User_friends', $this->request);
     }
 
-    public function incoming(Request $request) {
+    public function incoming() {
         $this->request['data']['embeds']['title'] = 'Friends Incoming' . $this->request['data']['embeds']['title'];
-        $data = $request->all();
 
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
