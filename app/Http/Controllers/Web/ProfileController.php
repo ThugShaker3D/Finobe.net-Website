@@ -10,7 +10,6 @@ use App\Models\Asset;
 use App\Models\Server;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\dataController;
 
 class ProfileController extends Controller
 {

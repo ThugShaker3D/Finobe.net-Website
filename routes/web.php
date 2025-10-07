@@ -8,6 +8,8 @@ use App\Http\Controllers\dataController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ForumController;
 use App\Http\Controllers\Web\UsersController;
+use App\Http\Controllers\Web\AvatarController;
+use App\Http\Controllers\Web\CatalogController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
 use App\Http\Controllers\Web\CurrencyController;
@@ -29,15 +31,12 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             ], 404);
         });
 
-        Route::get('/forum', function() {
-            return redirect('/forum/home'); // for version 1 users
-        });
-
+        Route::get('/forum', fn() => redirect('/forum/home'));
         Route::get('/users', [UsersController::class, 'index']);
         Route::get('/videos', [frontEnd::class, 'videos']);
         Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [frontEnd::class, 'trades']);
-        Route::get('/item/{id}', [frontEnd::class, 'item']);
+        Route::get('/item/{id}', [CatalogController::class, 'item']);
         Route::get('/invites', [frontEnd::class, 'invites']); // testtestestt
         Route::get('/video/{id}', [frontEnd::class, 'video']);
         Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
@@ -52,7 +51,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
         Route::match(['post', 'get'], '/election', [frontEnd::class, 'election']);
         Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_new']);
-        Route::match(['post', 'get'], '/item/{id}/settings', [frontend::class, 'item_settings']);
+        Route::match(['post', 'get'], '/item/{id}/settings', [CatalogController::class, 'settings']);
         Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);
 
         Route::prefix('legal')->group(function() {
@@ -70,7 +69,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::prefix('app')->group(function() {
             Route::get('/inbox', [frontEnd::class, 'inbox']);
             Route::get('/places', [frontEnd::class, 'places']);
-            Route::get('/character', [frontEnd::class, 'character']);
+            Route::get('/character', [AvatarController::class, 'index']);
             Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
             Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
             Route::match(['post', 'get'], '/theme', [frontEnd::class, 'app_theme']);
@@ -79,13 +78,13 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
             Route::match(['post', 'get'], '/inbox/message', [frontEnd::class, 'inbox_message']);
             Route::match(['post', 'get'], '/inbox/compose', [frontEnd::class, 'inbox_compose']);
-            Route::match(['post', 'get'], '/forum/new/post', [frontEnd::class, 'forum_new_post']);
+            Route::match(['post', 'get'], '/forum/new/post', [ForumController::class, 'new_post']);
             Route::match(['post', 'get', 'options'], '/settings', [frontEnd::class, 'app_settings']);
         });
 
         Route::prefix('catalog')->group(function() {
-            Route::match(['post', 'get', 'options'], '/new', [frontEnd::class, 'catalog_new']);
-            Route::get('/{section}', [frontEnd::class, 'catalog_index']);
+            Route::match(['post', 'get', 'options'], '/new', [CatalogController::class, 'new']);
+            Route::get('/{section}', [CatalogController::class, 'index']);
             Route::get('/', fn() => redirect('/catalog/hats'));
         });
 

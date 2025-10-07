@@ -20,7 +20,7 @@ use App\Models\Forum\Thread;
 use App\Models\Forum\Subscription;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\dataController;
+use App\Http\Controllers\dataController as DataController;
 
 class ForumController extends Controller
 {

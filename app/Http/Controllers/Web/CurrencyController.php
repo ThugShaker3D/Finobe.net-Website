@@ -8,7 +8,7 @@ use App\Models\Asset;
 use App\Models\Purchases;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\dataController;
+use App\Http\Controllers\dataController as DataController;
 
 class CurrencyController extends Controller
 {
