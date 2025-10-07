@@ -132,6 +132,8 @@
     "DFFlagPathfindingEnabled": "True",
     "FFlagUrlReconstructToAssetGame": "True",
     "FFlagUrlReconstructToAssetGameSecure": "True",
+    "DFFlagUrlReconstructToAssetGame": "True",
+    "DFFlagUrlReconstructToAssetGameSecure": "True",
     "DFFlagPhysicsAggressiveSimRadiusReduction": "True",
     "DFFlagPhysicsAllowSimRadiusToDecreaseToOne": "True",
     "DFFlagPhysicsFastSmoothTerrainUpdate": "True",

@@ -21,6 +21,8 @@
     "DFFlagAppendTrackerIdToTeleportUrl": "True",
     "FFlagUrlReconstructToAssetGame": "True",
     "FFlagUrlReconstructToAssetGameSecure": "True",
+    "DFFlagUrlReconstructToAssetGame": "True",
+    "DFFlagUrlReconstructToAssetGameSecure": "True",
     "FFlagUseDynamicTypesetterUTF8": "True",
     "DFFlagBadTypeOnConnectErrorEnabled": "True",
     "DFFlagBlockUsersInLuaChat": "True",
