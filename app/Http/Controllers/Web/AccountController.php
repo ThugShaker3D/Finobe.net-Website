@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Keys;
 use App\Models\Purchases;
 use App\Models\EmailVerify;
 use App\Models\ResetPassword;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\dataController as DataController;
 
 class AccountController extends Controller
 {
@@ -25,7 +27,7 @@ class AccountController extends Controller
         $this->request = $frontend->getData();
     }
 
-    public function verify_email(Request $request) {
+    public function verify_email() {
         if(!$this->request['data']['siteusername']) {
             return redirect('/');
         }
@@ -94,7 +96,7 @@ class AccountController extends Controller
         return redirect('/');
     }
 
-    public function email_verify(Request $request, $id, $verifyid) {
+    public function email_verify($id, $verifyid) {
         if(!User::find($id)) {
             Session::put('error', 'Unknown error');
             return redirect('/');
@@ -547,5 +549,152 @@ class AccountController extends Controller
         }
 
         return view($this->request['data']['user']['version'] . '/Settings/ConnectAPI', $this->request);
+    }
+
+    public function form() {
+        $this->request['data']['embeds']['title'] = 'Form' . $this->request['data']['embeds']['title'];
+        $this->request['data']['invitekeys'] = (bool) env('FINOBE_INVITE_KEYS');
+
+        if($this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Form', $this->request);
+    }
+
+    public function register(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Register' . $this->request['data']['embeds']['title'];
+        $this->request['data']['invitekeys'] = (bool) env('FINOBE_INVITE_KEYS');
+        $data = $request->all();
+
+        if($this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $forbiddenPhrases = [
+                'raped', 'dick', 'aesthetiful', 'instance', 'fuck', 'shit', 'fag', 'f@g', 'd1ck', 'pussy',
+                'jew', 'tranny', 'tr@nny', 'goon', 'g@@n', 'g00n', 'gyat', 'gy@t', 'r@ped', 'tities', 't1t1es',
+                'nigg', 'n!gger', 'nigga', 'n1gga', 'n1gger', 'pedo', 'fag', 'faggot'
+            ];
+
+            $validator = Validator::make($data, [
+                'username' => 'required|string|regex:/^(?!_)(?!.*_$)(?!.*_.*_)[A-Za-z0-9_]+$/|unique:finobe.users,username|min:3|max:20',
+                'password' => 'required|string|confirmed|alpha_dash|min:8|max:255',
+                'email' => 'required|email|confirmed|unique:finobe.users,email',
+                'invite_key' => ($this->request['data']['invitekeys'] ? 'required' : 'nullable') . '|string',
+                'g-recaptcha-response' => 'required'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/auth/form');
+            }
+
+            if(!$this->request['data']['invitekeys']) {
+                Session::put('error', 'Account creation is currently disabled');
+                return redirect('/auth/form');
+            }
+
+            $username = strtolower($data['username']);
+            foreach ($forbiddenPhrases as $phrase) {
+                if (str_contains($username, strtolower($phrase))) {
+                    Session::put('error', 'The username field must not be greater than 20 characters.');
+                    return redirect('/auth/form');
+                }
+            }
+
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+				'secret' => env('GOOGLE_RECAPTCHA_SECRET'),
+				'response' => $data['g-recaptcha-response']
+			])->json();
+
+            if(!$response['success']) {
+                Session::put('error', 'reCAPTCHA failed.');
+                return redirect('/auth/form');
+            }
+
+            if($this->request['data']['invitekeys'] && isset($data['invite_key']) && !Keys::where('IID', $data['invite_key'])->where('used', 'n')->exists()) {
+                Session::put('error', 'Invalid invite key.');
+                return redirect('/auth/form');
+            }
+
+            $user = User::create([
+                'username' => trim($data['username']),
+                'email' => trim($data['email']),
+                'password' => password_hash($data['password'], PASSWORD_BCRYPT),
+                'friends' => '[]',
+                'inventory' => '[]',
+                'badges' => '[]',
+                'avatar' => '[{"resolvedAvatarType":"R6","equippedGearVersionIds":[],"backpackGearVersionIds":[],"assetAndAssetTypeIds":[],"bodyColors":{"headColorId":24,"torsoColorId":"23","rightArmColorId":24,"leftArmColorId":24,"rightLegColorId":"119","leftLegColorId":"119"},"scales":{"height":1,"width":1,"head":1,"depth":1,"proportion":0,"bodyType":0}}]',
+                'token' => bin2hex(random_bytes(30))
+            ]);
+
+            DataController::send_discord_message('<@541523977475194880>, ' . $data['username'] . ' has sign up');
+
+            if($this->request['data']['invitekeys'] && isset($data['invite_key'])) {
+                Keys::where('IID', $data['invite_key'])
+                    ->update([
+                        'used' => 'y',
+                        'dateUsed' => now(),
+                        'usedBy' => trim($data['username'])
+                    ]);
+            }
+
+            Auth::login($user);
+            return redirect('/legal/welcome');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Register', $this->request['data']);
+    }
+
+    public function login(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Login' . $this->request['data']['embeds']['title'];
+        $this->request['data']['errorlogin'] = Session::has('errorlogin');
+        $data = $request->all();
+
+        Session::forget('errorlogin');
+
+        if($this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'email' => 'required|email',
+                'password' => 'required|string'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('errorlogin', true);
+                return redirect('/auth/login');
+            }
+
+            if(!User::where('email', $data['email'])->exists()) {
+                Session::put('errorlogin', true);
+                return redirect('/auth/login');
+            }
+
+            $user = User::where('email', $data['email'])->first();
+
+            if(!Hash::check($data['password'], $user->password)) {
+                Session::put('errorlogin', true);
+                return redirect('/auth/login');
+            }
+
+            Auth::login($user, isset($data['remember']));
+            Session::put('success', 'Successfully logged in.');
+            return redirect('/');
+        }
+
+        return view($this->request['data']['user']['version'] . '/Login', $this->request);
+    }
+
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

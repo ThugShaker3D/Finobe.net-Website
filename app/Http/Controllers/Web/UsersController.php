@@ -97,7 +97,6 @@ class UsersController extends Controller
             foreach($servers as $server) {
                 $placeid = 0;
                 $found = false;
-                $server['players'] = json_decode($server['players'], true);
     
                 foreach($server['players'] as $player) {
                     if($player == $result['id']) {
@@ -154,5 +153,13 @@ class UsersController extends Controller
         $this->request['data']['search'] = isset($data['search']) ? $data['search'] : false;
 
         return view($this->request['data']['user']['version'] . '/Users', $this->request);
+    }
+
+    public function gettoken(Request $request) {
+        if(!$this->request['data']['siteusername']) {
+            return response('', 204);
+        }
+
+        return response($this->request['data']['user']['token'], 200);
     }
 }

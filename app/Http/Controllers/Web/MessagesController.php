@@ -96,9 +96,7 @@ class MessagesController extends Controller
             ->offset($offset)
             ->limit($results_per_page)
             ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+            ->map(fn($item) => $item->toArray());
         
         foreach($messages as $message) {
             $message['message'] = strip_tags(htmlspecialchars($message['message']));

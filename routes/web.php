@@ -8,6 +8,8 @@ use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ForumController;
 use App\Http\Controllers\Web\UsersController;
 use App\Http\Controllers\Web\GamesController;
+use App\Http\Controllers\Web\LegalController;
+use App\Http\Controllers\Web\VideoController;
 use App\Http\Controllers\Web\TradesController;
 use App\Http\Controllers\Web\AvatarController;
 use App\Http\Controllers\Web\AccountController;
@@ -38,32 +40,32 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
 
         Route::get('/forum', fn() => redirect('/forum/home'));
         Route::get('/users', [UsersController::class, 'index']);
-        Route::get('/videos', [frontEnd::class, 'videos']);
+        Route::get('/videos', [VideoController::class, 'index']);
         Route::get('/create', [HomeController::class, 'create']);
         Route::get('/trades', [TradesController::class, 'trades']);
         Route::get('/item/{id}', [CatalogController::class, 'item']);
         Route::get('/invites', [InvitesController::class, 'index']); // testtestestt
-        Route::get('/video/{id}', [frontEnd::class, 'video']);
-        Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
-        Route::get('/video/thumb/{id}', [frontEnd::class, 'video_thumb']);
-        Route::get('/password/reset', [frontEnd::class, 'password_reset']);
+        Route::get('/video/{id}', [VideoController::class, 'video']);
+        Route::get('/video/data/{id}', [VideoController::class, 'video_data']);
+        Route::get('/video/thumb/{id}', [VideoController::class, 'video_thumb']);
+        Route::get('/password/reset', [AccountController::class, 'password_reset']);
         Route::get('/friends/incoming', [FriendsController::class, 'incoming']);
-        Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
-        Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'email_verify']);
+        Route::get('/transparency/bans', [LegalController::class, 'transparency_bans']);
+        Route::get('/email/verify/{id}/{verifyid}', [AccountController::class, 'email_verify']);
         Route::post('/verify/email', [AccountController::class, 'verify_email']);
-        Route::post('/password/email', [frontEnd::class, 'password_email']);
+        Route::post('/password/email', [AccountController::class, 'password_email']);
         Route::match(['post', 'get'], '/', [HomeController::class, 'index']);
-        Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
+        Route::match(['post', 'get'], '/logout', [AccountController::class, 'logout']);
         Route::match(['post', 'get'], '/election', [ElectionController::class, 'election']);
         Route::match(['post', 'get'], '/invites/new', [InvitesController::class, 'new']);
         Route::match(['post', 'get'], '/item/{id}/settings', [CatalogController::class, 'settings']);
-        Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);
+        Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [AccountController::class, 'password_verify']);
 
         Route::prefix('legal')->group(function() {
-            Route::get('/rules', [frontEnd::class, 'legal_rules']);
-            Route::get('/terms', [frontEnd::class, 'legal_terms']);
-            Route::get('/welcome', [frontEnd::class, 'legal_welcome']);
-            Route::get('/about-us', [frontEnd::class, 'legal_about_us']);
+            Route::get('/rules', [LegalController::class, 'rules']);
+            Route::get('/terms', [LegalController::class, 'terms']);
+            Route::get('/welcome', [LegalController::class, 'welcome']);
+            Route::get('/about-us', [LegalController::class, 'about_us']);
         });
 
         Route::prefix('place')->group(function() {
@@ -77,10 +79,10 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::get('/character', [AvatarController::class, 'index']);
             Route::get('/inbox/sent', [MessagesController::class, 'sent']);
             Route::get('/inbox/archive', [MessagesController::class, 'archive']);
-            Route::match(['post', 'get'], '/theme', [frontEnd::class, 'app_theme']);
-            Route::match(['post', 'get'], '/games', [frontEnd::class, 'app_games']);
-            Route::match(['post', 'get'], '/connect', [frontEnd::class, 'app_connect']);
-            Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
+            Route::match(['post', 'get'], '/theme', [AccountController::class, 'theme']);
+            Route::match(['post', 'get'], '/games', [AccountController::class, 'games']);
+            Route::match(['post', 'get'], '/connect', [AccountController::class, 'connect']);
+            Route::match(['post', 'get'], '/place/new', [GamesController::class, 'new']);
             Route::match(['post', 'get'], '/inbox/message', [MessagesController::class, 'message']);
             Route::match(['post', 'get'], '/inbox/compose', [MessagesController::class, 'compose']);
             Route::match(['post', 'get'], '/forum/new/post', [ForumController::class, 'new_post']);
@@ -94,7 +96,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         });
 
         Route::prefix('user')->group(function() {
-            Route::get('/gettoken', [frontEnd::class, 'gettoken']);
+            Route::get('/gettoken', [UsersController::class, 'gettoken']);
             Route::get('/transaction-log', [CurrencyController::class, 'transactions']);
             Route::get('/{id}', [ProfileController::class, 'index']);
             Route::get('/{id}/add', [FriendsController::class, 'add']);
@@ -124,18 +126,18 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::post('/purchase', [api::class, 'purchase']);
             Route::post('/character', [api::class, 'character']);
             Route::post('/rating_number', [api::class, 'rating_number']);
-            Route::match(['post', 'get'], '/connect', [frontEnd::class, 'api_connect']);
+            Route::match(['post', 'get'], '/connect', [AccountController::class, 'connect']);
 
             Route::prefix('video')->group(function() {
-                Route::post('/rate', [api::class, 'video_rate']);
-                Route::post('/rating_number', [api::class, 'video_rating_number']);
+                Route::post('/rate', [VideoController::class, 'rate']);
+                Route::post('/rating_number', [VideoController::class, 'rating_number']);
             });
         });
 
         Route::prefix('auth')->group(function() {
-            Route::get('/form', [frontEnd::class, 'auth_form']);
-            Route::match(['post', 'get'], '/login', [frontEnd::class, 'auth_login']);
-            Route::match(['post', 'get'], '/register', [frontEnd::class, 'auth_register']);
+            Route::get('/form', [AccountController::class, 'form']);
+            Route::match(['post', 'get'], '/login', [AccountController::class, 'login']);
+            Route::match(['post', 'get'], '/register', [AccountController::class, 'register']);
         });
 
         Route::prefix('admin')->group(function() {
