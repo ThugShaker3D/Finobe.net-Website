@@ -110,7 +110,7 @@ class VideoController extends Controller
             abort(404);
         }
 
-        return redirect('https://cdn.finobe.net/videos/thumbs/' . $this->db->table('videos')->select('thumbnail')->where('id', $id)->value('thumbnail'));
+        return redirect('https://cdn.finobe.net/videos/thumbs/' . Video::find($id)->thumbnail);
     }
 
     public function video_data(Request $request, $id) {
