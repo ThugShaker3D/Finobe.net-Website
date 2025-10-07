@@ -495,7 +495,29 @@
 										method: 'POST',
 										body: formData
 									  })
-									  .then(response => response.json())
+									  .then(async (response) => {
+										if (!response.ok) {
+											alert('An unknown server error occured');
+											render.innerHTML = "Done";
+											setTimeout(() => {
+												render.innerHTML = '<i class="fa fa-sync-alt"></i> regen';
+												render.disabled = false;
+											}, 10000);
+											throw new Error(`HTTP error! status: ${response.status}`);
+										}
+
+										try {
+											return await response.json();
+										} catch {
+											alert('An unknown server error occured');
+											render.innerHTML = "Done";
+											setTimeout(() => {
+												render.innerHTML = '<i class="fa fa-sync-alt"></i> regen';
+												render.disabled = false;
+											}, 10000);
+											throw new Error("Invalid JSON response");
+										}
+									  })
 									  .then(data => {
 										if(data.code != 200) {
 											alert(data.message);
