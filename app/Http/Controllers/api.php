@@ -4,20 +4,26 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Asset;
+use App\Models\Server;
+use App\Models\Replies;
+use App\Models\Message;
+use App\Models\Purchases;
+use App\Models\Notification;
+use App\Models\Forum\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class api extends Controller
 {
-    protected $db;
     protected $response;
 
     public function __construct(Request $request) {
-        $this->db = DB::connection('finobe');
         $this->response = [
             'code' => 200,
             'message' => 'Success'
@@ -64,8 +70,7 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
-        $itemcount = $this->db->table('purchases')
-            ->join('assets', 'purchases.assetid', '=', 'assets.id')
+        $itemcount = Purchases::join('assets', 'purchases.assetid', '=', 'assets.id')
             ->where('purchases.username', $data['user'])
             ->where('purchases.assetid', '!=', 0)
             ->where('purchases.type', 1)
@@ -74,8 +79,7 @@ class api extends Controller
             ->select('assets.id', 'assets.title', 'assets.author', 'assets.asset_type', 'assets.additional')
             ->count();
         
-        $items = $this->db->table('purchases')
-            ->join('assets', 'purchases.assetid', '=', 'assets.id')
+        $items = Purchases::join('assets', 'purchases.assetid', '=', 'assets.id')
             ->where('purchases.username', $data['user'])
             ->where('purchases.assetid', '!=', 0)
             ->where('purchases.type', 1)
@@ -86,12 +90,9 @@ class api extends Controller
             ->offset($offset)
             ->limit($itemsPerPage)
             ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+            ->map(fn($item) => $item->toArray());
 
         foreach($items as $item) {
-            $item['additional'] = json_decode($item['additional'], true);
             $item['thumbnail'] = $item['asset_type'] == 3 ? 'https://finobe.net/s/img/speaker.png' : $item['additional']['media']['thumbnail'];
 
             $user = User::find($item['author']);
@@ -141,28 +142,25 @@ class api extends Controller
         $user = Auth::user()->toArray();
         $data['postId'] = intval($data['postId']);
 
-        if($this->db->table('forum_ratings')->where('sender', $user['username'])->where('type', $data['type'])->where('toid', $data['postId'])->count()) {
-            $ratingData = (array) $this->db->table('forum_ratings')
-                ->where('sender', $user['username'])
+        if(Rating::where('sender', $user['username'])->where('type', $data['type'])->where('toid', $data['postId'])->count()) {
+            $ratingData = Rating::where('sender', $user['username'])
                 ->where('type', $data['type'])
                 ->where('toid', $data['postId'])
-                ->first();
+                ->first()
+                ->toArray();
             
             if($ratingData['rate_type'] != $data['rating']) {
-                $this->db->table('forum_ratings')
-                    ->where('id', $ratingData['id'])
-                    ->update([
-                        'rate_type' => $data['rating']
-                    ]);
+                $rating = Rating::find($ratingData['id']);
+                $rating->rate_type = $data['rating'];
+                $rating->save();
             } else {
-                $this->db->table('forum_ratings')
-                    ->where('sender', $user['username'])
+                Rating::where('sender', $user['username'])
                     ->where('toid', $data['postId'])
                     ->where('type', $data['type'])
                     ->delete();
             }
         } else {
-            $this->db->table('forum_ratings')->insert([
+            Rating::create([
                 'sender' => $user['username'],
                 'type' => $data['type'],
                 'toid' => $data['postId'],
@@ -198,14 +196,12 @@ class api extends Controller
 
         $data['postId'] = intval($data['postId']);
 
-        $rating = $this->db->table('forum_ratings')
-            ->where('type', $data['type'])
+        $rating = Rating::where('type', $data['type'])
             ->where('toid', $data['postId'])
             ->where('rate_type', 'l')
             ->count();
         
-        $rating -= $this->db->table('forum_ratings')
-            ->where('type', $data['type'])
+        $rating -= Rating::where('type', $data['type'])
             ->where('toid', $data['postId'])
             ->where('rate_type', 'd')
             ->count();
@@ -229,35 +225,27 @@ class api extends Controller
         $user = Auth::user()->toArray();
 
         if($data['id'] == 'all') {
-            $this->db->table('pms')
-                ->where('touser', $user['id'])
-                ->update([
-                    'readed' => 'y'
-                ]);
+            $message = Message::where('touser', $user['id']);
+            $message->readed = 'y';
+            $message->save();
             
             return redirect('/');
         }
 
-        if(!$this->db->table('pms')->where('id', $data['id'])->exists()) {
+        if(!Notification::find($data['id'])) {
             return redirect('/');
         }
 
-        $this->db->table('pms')
-            ->where('id', $data['id'])
-            ->update([
-                'readed' => 'y'
-            ]);
-        
-        $notification = (array) $this->db->table('pms')
-            ->where('id', $data['id'])
-            ->first();
+        $notification = Notification::find($data['id']);
+        $notification->readed = 'y';
+        $notification->save();
         
         $results_per_page = 10;
-        $total_replies_before = $this->db->table('forum_replies')->where('toid', $notification['forum_id'])->where('id', $notification['reply_id'])->count();
+        $total_replies_before = Replies::where('toid', $notification->forum_id)->where('id', $notification->reply_id)->count();
         $page_number = ceil($total_replies_before / $results_per_page);
         $page_number = max(1, $page_number);
 
-        return redirect('/forum/post?id=' . $notification['forum_id'] . ($page_number < 1 ? '&page=' . $page_number : ''));
+        return redirect('/forum/post?id=' . $notification->forum_id . ($page_number < 1 ? '&page=' . $page_number : ''));
     }
 
     public function purchase(Request $request) {
@@ -277,7 +265,7 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
-        if(!$this->db->table('assets')->where('id', $data['assetid'])->exists()) {
+        if(!Asset::find($data['assetid'])) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Asset does not exist';
 
@@ -285,62 +273,58 @@ class api extends Controller
         }
 
         $user = Auth::user();
-        $item = (array) $this->db->table('assets')
-            ->where('id', $data['assetid'])
-            ->first();
+        $item = Asset::find($data['assetid']);
 
-        $item['additional'] = json_decode($item['additional'], true);
-
-        if(!in_array($item['asset_type'], [2, 3, 8, 11, 12, 18, 19])) {
+        if(!in_array($item->asset_type, [2, 3, 8, 11, 12, 18, 19])) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Invalid item type';
 
             return response()->json($this->response, 400);
         }
         
-        if($user['Dius'] - $item['additional']['price'] < 0) {
+        if($user['Dius'] - $item->additional['price'] < 0) {
             $this->response['code'] = 400;
             $this->response['message'] = 'Not enough Dius';
 
             return response()->json($this->response, 400);
         }
 
-        if($this->db->table('purchases')->where('username', $user['username'])->where('assetid', $data['assetid'])->where('serial', isset($data['serial']) ? $data['serial'] : 0)->where('type', 1)->exists()) {
+        if(Purchases::where('username', $user['username'])->where('assetid', $data['assetid'])->where('serial', isset($data['serial']) ? $data['serial'] : 0)->where('type', 1)->exists()) {
             $this->response['code'] = 400;
             $this->response['message'] = 'This item has already been purchased';
 
             return response()->json($this->response, 400);
         }
 
-        if(!$item['additional']['onSale']) {
+        if(!$item->additional['onSale']) {
             $this->response['code'] = 400;
             $this->response['message'] = 'This item not on sale';
 
             return response()->json($this->response, 400);
         }
 
-        $this->db->table('purchases')->insert([
+        Purchases::create([
             'username' => $user['username'],
             'assetid' => $data['assetid'],
             'serial' => isset($data['serial']) ? $data['serial'] : 0,
-            'author' => $item['author'],
-            'amount' => -1 * $item['additional']['price']
+            'author' => $item->author,
+            'amount' => -1 * $item->additional['price']
         ]);
 
-        $user->Dius -= $item['additional']['price'];
+        $user->Dius -= $item->additional['price'];
         $user->save();
 
-        if(User::where('id', $item['author'])->exists() && $user->id != $item['author']) {
+        if(User::where('id', $item->author)->exists() && $user->id != $item->author) {
             $user = User::find($item['author']);
-            $user->Dius += $item['additional']['price'];
+            $user->Dius += $item->additional['price'];
             $user->save();
 
-            $this->db->table('purchases')->insert([
+            Purchases::create([
                 'username' => $user['username'],
                 'assetid' => $data['assetid'],
                 'serial' => isset($data['serial']) ? $data['serial'] : 0,
-                'author' => $item['author'],
-                'amount' => $item['additional']['price'],
+                'author' => $item->author,
+                'amount' => $item->additional['price'],
                 'type' => 2
             ]);
         }
@@ -463,7 +447,7 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
-            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+            $visibility = Asset::find($data['assetid'])->visibility;
 
             if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
@@ -472,7 +456,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+            if(!Purchases::where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You do not own this item';
 
@@ -480,7 +464,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $value)->where('asset_type', 8)->exists()) {
+                if(Asset::where('id', $value)->where('asset_type', 8)->exists()) {
                     $itemcount++;
                 }
             }
@@ -515,7 +499,7 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
-            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+            $visibility = Asset::find($data['assetid'])->visibility;
 
             if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
@@ -524,7 +508,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+            if(!Purchases::where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You do not own this item';
 
@@ -532,7 +516,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $value)->where('asset_type', 11)->exists()) {
+                if(Asset::where('id', $value)->where('asset_type', 11)->exists()) {
                     $itemcount++;
                 }
             }
@@ -567,7 +551,7 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
-            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+            $visibility = Asset::find($data['assetid'])->visibility;
 
             if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
@@ -576,7 +560,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+            if(!Purchases::where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You do not own this item';
 
@@ -584,7 +568,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $value)->where('asset_type', 12)->exists()) {
+                if(Asset::where('id', $value)->where('asset_type', 12)->exists()) {
                     $itemcount++;
                 }
             }
@@ -619,7 +603,7 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
-            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+            $visibility = Asset::find($data['assetid'])->visibility;
 
             if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
@@ -628,7 +612,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+            if(!Purchases::where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You do not own this item';
 
@@ -636,7 +620,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $value)->where('asset_type', 18)->exists()) {
+                if(Asset::where('id', $value)->where('asset_type', 18)->exists()) {
                     $itemcount++;
                 }
             }
@@ -671,7 +655,7 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
-            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+            $visibility = Asset::where('id', $data['assetid'])->value('visibility');
 
             if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
@@ -680,7 +664,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+            if(!Purchases::where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You do not own this item';
 
@@ -688,7 +672,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $value)->where('asset_type', 2)->exists()) {
+                if(Asset::where('id', $value)->where('asset_type', 2)->exists()) {
                     $itemcount++;
                 }
             }
@@ -723,7 +707,7 @@ class api extends Controller
 
             $data['assetid'] = intval($data['assetid']);
             $itemcount = 0;
-            $visibility = $this->db->table('assets')->select('visibility')->where('id', $data['assetid'])->value('visibility');
+            $visibility = Asset::find($data['assetid'])->visibility;
 
             if($visibility != 'n' && !in_array($data['assetid'], $avatar[0]['equippedGearVersionIds'])) {
                 $this->response['code'] = 400;
@@ -732,7 +716,7 @@ class api extends Controller
                 return response()->json($this->response, 400);
             }
 
-            if(!$this->db->table('purchases')->where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
+            if(!Purchases::where('username', $user->username)->where('assetid', $data['assetid'])->where('type', 1)->exists()) {
                 $this->response['code'] = 400;
                 $this->response['message'] = 'You do not own this item';
 
@@ -740,7 +724,7 @@ class api extends Controller
             }
 
             foreach($avatar[0]['equippedGearVersionIds'] as $key => $value) {
-                if($this->db->table('assets')->where('id', $value)->where('asset_type', 19)->exists()) {
+                if(Asset::where('id', $value)->where('asset_type', 19)->exists()) {
                     $itemcount++;
                 }
             }
@@ -884,8 +868,7 @@ class api extends Controller
         $currentPage = isset($data['page']) ? max(1, intval($data['page'])) : 1;
         $offset = ($currentPage - 1) * $results_per_page;
         if($data['type'] == 'all' && $data['version'] == 'all' && $data['search'] == '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->where('asset_type', 9)
                 ->groupBy('assets.id')
@@ -893,8 +876,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == 'all' && $data['search'] == '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw("additional->>'$.featured' = true")
                 ->where('asset_type', 9)
@@ -903,8 +885,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2012' && $data['search'] == '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw("additional->>'$.featured' = true")
                 ->whereRaw("additional->>'$.version' = '2012'")
@@ -914,8 +895,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2016' && $data['search'] == '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw("additional->>'$.featured' = true")
                 ->whereRaw("additional->>'$.version' = '2016'")
@@ -925,8 +905,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2012' && $data['search'] == '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw("additional->>'$.version' = '2012'")
                 ->where('asset_type', 9)
@@ -935,8 +914,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2016' && $data['search'] == '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw("additional->>'$.version' = '2016'")
                 ->where('asset_type', 9)
@@ -945,8 +923,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == 'all' && $data['search'] != '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.featured' = true")
@@ -956,8 +933,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2012' && $data['search'] != '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.featured' = true")
@@ -968,8 +944,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'featured' && $data['version'] == '2016' && $data['search'] != '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.featured' = true")
@@ -980,8 +955,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == 'all' && $data['search'] != '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->where('asset_type', 9)
@@ -990,8 +964,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2012' && $data['search'] != '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.version' = '2012'")
@@ -1001,8 +974,7 @@ class api extends Controller
                 ->limit($results_per_page)
                 ->offset($offset);
         } elseif($data['type'] == 'all' && $data['version'] == '2016' && $data['search'] != '') {
-            $results = $this->db->table('assets')
-                ->leftJoin('servers', 'assets.id', '=', 'servers.placeid')
+            $results = Asset::leftJoin('servers', 'assets.id', '=', 'servers.placeid')
                 ->select('assets.*', DB::raw('SUM(servers.players) as total_players'))
                 ->whereRaw('title LIKE ?', ['%' . htmlspecialchars($data['search']) . '%'])
                 ->whereRaw("additional->>'$.version' = '2016'")
@@ -1020,29 +992,22 @@ class api extends Controller
             return response()->json($this->response, 400);
         }
 
-        $results = $results->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })->toArray();
+        $results = $results->get()->map(fn($item) => $item->toArray());
         
         foreach($results as $result) {
-            $result['additional'] = json_decode($result['additional'], true);
             $players = 0;
 
-            $servers = $this->db->table('servers')
-                ->select('players')
+            $servers = Server::select('players')
                 ->where('placeid', $result['id'])
                 ->get()
-                ->map(function ($item) {
-                    return (array) $item;
-                })->toArray();
+                ->map(fn($item) => $item->toArray());
             
             foreach($servers as $server) {
-                $players += count(json_decode($server['players']));
+                $players += count($server['players']);
             }
 
             $result['author'] = htmlspecialchars(User::where('id', $result['author'])->value('username'));
-            $result['thumbnail'] = Cache::remember('thumbnail_' . $result['additional']['media']['imageAssetId'], 60 * 60, function() use ($result) { return $this->db->table('assets')->select('file')->where('id', $result['additional']['media']['imageAssetId'])->value('file'); });
+            $result['thumbnail'] = Cache::remember('thumbnail_' . $result['additional']['media']['imageAssetId'], 60 * 60, fn() => Asset::find($result['additional']['media']['imageAssetId'])->value('file'));
 
             $html = '
                 <div data-v-5ad0ed22="" title="' . htmlspecialchars($result['title']) . '" class="game-card-div">
@@ -1078,7 +1043,7 @@ class api extends Controller
             $this->response['data'][] = $html;
         }
 
-        $total_items = $this->db->table('assets')->where('asset_type', 9)->count();
+        $total_items = Asset::where('asset_type', 9)->count();
         $total_pages = ceil($total_items / $results_per_page);
 
         $this->response['info']['pages'] = $total_pages;
