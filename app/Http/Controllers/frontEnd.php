@@ -2,36 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use FFMpeg\FFMpeg;
-use FFMpeg\Format\Audio\Mp3;
-use FFMpeg\Format\Video\X264;
-use FFMpeg\Coordinate\TimeCode;
-use Carbon\Carbon;
-use App\Mail\DynamicContentEmail;
 use App\Models\User;
-use App\Jobs\ProcessVideo;
 use App\Http\Controllers\dataController as DataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use League\CommonMark\Environment\Environment;
-use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
-use League\CommonMark\MarkdownConverter;
-use League\CommonMark\Extension\DisallowedRawHtml\DisallowedRawHtmlExtension;
-use League\CommonMark\Renderer\Block\ParagraphRenderer;
-use League\CommonMark\Node\Block\Paragraph;
-use League\CommonMark\Util\HtmlElement;
-use Parsedown;
 
 class frontEnd extends Controller
 {
