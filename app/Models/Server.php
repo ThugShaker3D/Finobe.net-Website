@@ -24,4 +24,16 @@ class Server extends Model
         'jobId',
         'status',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'players' => 'array'
+        ];
+    }
 }

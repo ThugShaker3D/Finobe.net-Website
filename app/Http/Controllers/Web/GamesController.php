@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Asset;
 use App\Models\Server;
+use App\Http\Controllers\Asset as AssetHelper;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
 
@@ -41,8 +42,7 @@ class GamesController extends Controller
         }
 
         $place = Asset::find($id)->toArray();
-        
-        $place['additional'] = json_decode($place['additional'], true);
+
         $this->request['data']['embeds']['title'] = strip_tags(htmlspecialchars($place['title'])) . $this->request['data']['embeds']['title'];
 
         $place = [
@@ -59,11 +59,10 @@ class GamesController extends Controller
             'servers' => []
         ];
 
-        $servers = [];
         $results = Server::where('placeid', $place)->get()->map(fn($item) => $item->toArray());
 
         foreach($results as $result) {
-            $players = json_decode($result['players'], true);
+            $players = $result['players'];
             $result['players'] = [];
 
             foreach($players as $playerId) {
@@ -97,7 +96,6 @@ class GamesController extends Controller
 
         $place = Asset::find($id)->toArray();
         $place['username'] = User::where('id', $place['author'])->value('username');
-        $place['additional'] = json_decode($place['additional'], true);
 
         if($place['username'] != $this->request['data']['user']['username']) {
             Session::put('error', 'You do not own this place');
@@ -155,5 +153,97 @@ class GamesController extends Controller
         $this->request['data']['embeds']['title'] = $place['title'] . $this->request['data']['embeds']['title'];
 
         return view($this->request['data']['user']['version'] . '/Places/Place_settings', $this->request);
+    }
+
+    public function place_new(Request $request) {
+        $this->request['data']['embeds']['title'] = 'New Place' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if(!$this->request['data']['siteusername']) {
+            return redirect('/');
+        }
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'title' => 'required|string|min:3|max:255',
+                'description' => 'nullable|string|max:8192'
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/app/place/new');
+            }
+
+            $games = Asset::where('author', $this->request['data']['user']['id'])
+                ->where('asset_type', 9)
+                ->count();
+            
+            if(!(bool)env('FINOBE_CREATE_PLACES')) {
+                Session::put('error', 'Creating assets is currently disabled');
+                return redirect('/app/place/new');
+            }
+
+            if($games >= $this->request['data']['user']['slots']) {
+                Session::put('error', 'You have used all of your place slots');
+                return redirect('/app/place/new');
+            }
+
+            if($this->request['data']['user']['status'] != 'admin') {
+                Session::put('error', 'Admin status is required');
+                return redirect('/app/place/new');
+            }
+            /*
+            $id = $this->db->table('assets')->insertGetId([
+                'asset_type' => 9,
+                'title' => trim($data['title']),
+                'description' => trim($data['description'] ?? ''),
+                'additional' => json_encode([
+                    'visits' => 0,
+                    'version' => '2012',
+                    'maxplayers' => 15,
+                    'category' => 'original',
+                    'featured' => false,
+                    'gears' => [
+                        'combat' => true,
+                        'social' => true,
+                        'building' => true,
+                        'musical' => true
+                    ],
+                    'uncopylocked' => false,
+                    'allowplaying' => true,
+                    'chat_type' => 'classic',
+                    'media' => [
+                        'imageAssetId' => 1
+                    ],
+                    'hidden' => false
+                ])
+            ]);
+            */
+            $defaultPlace = file_get_contents("/var/www/cdn.finobe.net/default.rbxl");
+            $id = AssetHelper::createAsset(trim($data['title']), 9, $this->request['data']['user']['id'], $defaultPlace, trim($data['description'] ?? ''), "n", [
+                'visits' => 0,
+                'version' => '2012',
+                'maxplayers' => 15,
+                'category' => 'original',
+                'featured' => false,
+                'gears' => [
+                    'combat' => true,
+                    'social' => true,
+                    'building' => true,
+                    'musical' => true
+                ],
+                'uncopylocked' => false,
+                'allowplaying' => true,
+                'chat_type' => 'classic',
+                'media' => [
+                    'imageAssetId' => 1
+                ],
+                'hidden' => false
+            ]);
+
+            return redirect('/place/' . $id);
+        }
+
+        return view($this->request['data']['user']['version'] . '/Places/New', $this->request);
     }
 }

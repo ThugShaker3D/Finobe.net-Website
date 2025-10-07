@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\UsersController;
 use App\Http\Controllers\Web\GamesController;
 use App\Http\Controllers\Web\TradesController;
 use App\Http\Controllers\Web\AvatarController;
+use App\Http\Controllers\Web\AccountController;
 use App\Http\Controllers\Web\CatalogController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
@@ -38,7 +39,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/forum', fn() => redirect('/forum/home'));
         Route::get('/users', [UsersController::class, 'index']);
         Route::get('/videos', [frontEnd::class, 'videos']);
-        Route::get('/create', [frontEnd::class, 'create']);
+        Route::get('/create', [HomeController::class, 'create']);
         Route::get('/trades', [TradesController::class, 'trades']);
         Route::get('/item/{id}', [CatalogController::class, 'item']);
         Route::get('/invites', [InvitesController::class, 'index']); // testtestestt
@@ -49,7 +50,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/friends/incoming', [FriendsController::class, 'incoming']);
         Route::get('/transparency/bans', [frontEnd::class, 'transparency_bans']);
         Route::get('/email/verify/{id}/{verifyid}', [frontEnd::class, 'email_verify']);
-        Route::post('/verify/email', [frontEnd::class, 'verify_email']);
+        Route::post('/verify/email', [AccountController::class, 'verify_email']);
         Route::post('/password/email', [frontEnd::class, 'password_email']);
         Route::match(['post', 'get'], '/', [HomeController::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
@@ -83,7 +84,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::match(['post', 'get'], '/inbox/message', [MessagesController::class, 'message']);
             Route::match(['post', 'get'], '/inbox/compose', [MessagesController::class, 'compose']);
             Route::match(['post', 'get'], '/forum/new/post', [ForumController::class, 'new_post']);
-            Route::match(['post', 'get', 'options'], '/settings', [frontEnd::class, 'app_settings']);
+            Route::match(['post', 'get', 'options'], '/settings', [AccountController::class, 'settings']);
         });
 
         Route::prefix('catalog')->group(function() {
