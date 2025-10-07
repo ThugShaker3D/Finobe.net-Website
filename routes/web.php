@@ -4,15 +4,17 @@ use App\Http\Controllers\api;
 use App\Http\Controllers\admin;
 use App\Http\Controllers\rbxAPIs;
 use App\Http\Controllers\frontEnd;
-use App\Http\Controllers\dataController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ForumController;
 use App\Http\Controllers\Web\UsersController;
+use App\Http\Controllers\Web\GamesController;
+use App\Http\Controllers\Web\TradesController;
 use App\Http\Controllers\Web\AvatarController;
 use App\Http\Controllers\Web\CatalogController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
 use App\Http\Controllers\Web\CurrencyController;
+use App\Http\Controllers\Web\MessagesController;
 use App\Http\Middleware\SetClientIp;
 use App\Http\Middleware\LimitRequestPerIp;
 use App\Http\Middleware\ModerationMiddleware;
@@ -35,7 +37,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/users', [UsersController::class, 'index']);
         Route::get('/videos', [frontEnd::class, 'videos']);
         Route::get('/create', [frontEnd::class, 'create']);
-        Route::get('/trades', [frontEnd::class, 'trades']);
+        Route::get('/trades', [TradesController::class, 'trades']);
         Route::get('/item/{id}', [CatalogController::class, 'item']);
         Route::get('/invites', [frontEnd::class, 'invites']); // testtestestt
         Route::get('/video/{id}', [frontEnd::class, 'video']);
@@ -62,22 +64,22 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         });
 
         Route::prefix('place')->group(function() {
-            Route::get('/{id}', [frontEnd::class, 'place']);
-            Route::match(['post', 'get'], '/{id}/settings', [frontEnd::class, 'place_settings']);
+            Route::get('/{id}', [GamesController::class, 'place']);
+            Route::match(['post', 'get'], '/{id}/settings', [GamesController::class, 'place_settings']);
         });
 
         Route::prefix('app')->group(function() {
-            Route::get('/inbox', [frontEnd::class, 'inbox']);
-            Route::get('/places', [frontEnd::class, 'places']);
+            Route::get('/inbox', [MessagesController::class, 'inbox']);
+            Route::get('/places', [GamesController::class, 'index']);
             Route::get('/character', [AvatarController::class, 'index']);
-            Route::get('/inbox/sent', [frontEnd::class, 'inbox_sent']);
-            Route::get('/inbox/archive', [frontEnd::class, 'inbox_archive']);
+            Route::get('/inbox/sent', [MessagesController::class, 'sent']);
+            Route::get('/inbox/archive', [MessagesController::class, 'archive']);
             Route::match(['post', 'get'], '/theme', [frontEnd::class, 'app_theme']);
             Route::match(['post', 'get'], '/games', [frontEnd::class, 'app_games']);
             Route::match(['post', 'get'], '/connect', [frontEnd::class, 'app_connect']);
             Route::match(['post', 'get'], '/place/new', [frontEnd::class, 'place_new']);
-            Route::match(['post', 'get'], '/inbox/message', [frontEnd::class, 'inbox_message']);
-            Route::match(['post', 'get'], '/inbox/compose', [frontEnd::class, 'inbox_compose']);
+            Route::match(['post', 'get'], '/inbox/message', [MessagesController::class, 'message']);
+            Route::match(['post', 'get'], '/inbox/compose', [MessagesController::class, 'compose']);
             Route::match(['post', 'get'], '/forum/new/post', [ForumController::class, 'new_post']);
             Route::match(['post', 'get', 'options'], '/settings', [frontEnd::class, 'app_settings']);
         });
