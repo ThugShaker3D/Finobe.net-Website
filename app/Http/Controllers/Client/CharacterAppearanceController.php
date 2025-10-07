@@ -33,13 +33,13 @@ class CharacterAppearanceController extends Controller
             <External>nil</External>
             <Item class="BodyColors">
                 <Properties>
-                    <int name="HeadColor">'.$colors->headColorId.'</int>
-                    <int name="LeftArmColor">'.$colors->leftArmColorId.'</int>
-                    <int name="LeftLegColor">'.$colors->leftLegColorId.'</int>
+                    <int name="HeadColor">'.$colors['headColorId'].'</int>
+                    <int name="LeftArmColor">'.$colors['leftArmColorId'].'</int>
+                    <int name="LeftLegColor">'.$colors['leftLegColorId'].'</int>
                     <string name="Name">Body Colors</string>
-                    <int name="RightArmColor">'.$colors->rightArmColorId.'</int>
-                    <int name="RightLegColor">'.$colors->rightLegColorId.'</int>
-                    <int name="TorsoColor">'.$colors->torsoColorId.'</int>
+                    <int name="RightArmColor">'.$colors['rightArmColorId'].'</int>
+                    <int name="RightLegColor">'.$colors['rightLegColorId'].'</int>
+                    <int name="TorsoColor">'.$colors['torsoColorId'].'</int>
                     <bool name="archivable">true</bool>
                 </Properties>
             </Item>
@@ -67,8 +67,8 @@ class CharacterAppearanceController extends Controller
         $charApp = route('asset-game.body-colors', ['userId' => $user->id]).';';
 
         $ids = array_merge(
-            $avatar->equippedGearVersionIds ?? [],
-            $avatar->backpackGearVersionIds ?? []
+            $avatar['equippedGearVersionIds'] ?? [],
+            $avatar['backpackGearVersionIds'] ?? []
         );
 
         $charApp .= $ids ? implode(";", array_map(
