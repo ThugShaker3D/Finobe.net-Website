@@ -101,7 +101,6 @@ class CatalogController extends Controller
         }
 
         foreach($results as $result) {
-            $result['additional'] = json_decode($result['additional'], true);
             $result['title'] = htmlspecialchars(preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', fn() => $replacements[array_rand($replacements)], $result['title']));
 
             if($result['asset_type'] == 3) {
@@ -177,7 +176,6 @@ class CatalogController extends Controller
             abort(404);
         }
 
-        $item['additional'] = json_decode($item['additional'], true);
         $item['title'] = htmlspecialchars(preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', fn() => $replacements[array_rand($replacements)], $item['title']));
         
         if(User::find($item['author'])) {
@@ -234,7 +232,6 @@ class CatalogController extends Controller
             return redirect('/item/' . $id);
         }
 
-        $item['additional'] = json_decode($item['additional'], true);
         $item['description'] = strip_tags(htmlspecialchars($item['description']));
 
         if($request->isMethod('post')) {
@@ -443,14 +440,14 @@ class CatalogController extends Controller
                     'file' => $filename,
                     'description' => $data['description'] ?? '',
                     'visibility' => 'r',
-                    'additional' => json_encode([
+                    'additional' => [
                         'duration' => $duration,
                         'price' => intval($data['price']),
                         'media' => [
                             'imageAssetId' => 2
                         ],
                         'oldUser' => ''
-                    ])
+                    ]
                 ]);
 
                 $user = User::find($this->request['data']['user']['id']);

@@ -43,7 +43,6 @@ class AvatarController extends Controller
                 continue;
             }
 
-            $item['additional'] = json_decode($item['additional'], true);
             $result['asset_type'] = $item['asset_type'];
             $result['visibility'] = $item['visibility'];
 

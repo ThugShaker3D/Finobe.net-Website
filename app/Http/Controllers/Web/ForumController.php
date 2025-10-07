@@ -316,7 +316,7 @@ class ForumController extends Controller
         $post['status'] = $user['status'];
         $post['pfp'] = $user['pfp'];
         $post['posts'] = Thread::where('author', $post['author'])->count() + Thread::where('author', $post['author'])->count();
-        $post['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
+        $post['badges'] = $user['badges']['data']['custom_badges'] ?? [];
         $phrasesToReplace = $this->request['data']['string_replacements']['phrasesToReplace'];
         $replacements = $this->request['data']['string_replacements']['replacements'];
 
@@ -385,7 +385,7 @@ class ForumController extends Controller
             $sticked['status'] = $user['status'];
             $sticked['pfp'] = $user['pfp'];
             $sticked['posts'] = Thread::where('author', $sticked['author'])->count() + Reply::where('author', $sticked['author'])->count();
-            $sticked['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
+            $sticked['badges'] = $user['badges']['data']['custom_badges'] ?? [];
             $sticked['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', fn() => $replacements[array_rand($replacements)], $sticked['comment']);
 
             $environment = new Environment([
@@ -473,7 +473,7 @@ class ForumController extends Controller
             $reply['status'] = $user['status'];
             $reply['pfp'] = $user['pfp'];
             $reply['posts'] = Thread::where('author', $reply['author'])->count() + Reply::where('author', $reply['author'])->count();
-            $reply['badges'] = json_decode($user['badges'], true)['data']['custom_badges'] ?? [];
+            $reply['badges'] = $user['badges']['data']['custom_badges'] ?? [];
             $reply['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', fn() => $replacements[array_rand($replacements)], $reply['comment']);
 
             $environment = new Environment([
