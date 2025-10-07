@@ -26,7 +26,7 @@ class CharacterAppearanceController extends Controller
 		$valid = $validator->valid();
 		$user = User::where('id', $valid['userId'])->first();
 
-        $colors = json_decode($user->avatar, false)[0]->bodyColors;
+        $colors = $user['avatar']['bodyColors'];
 
         return '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.finobe.net/roblox.xsd" version="4">
             <External>null</External>
@@ -62,7 +62,7 @@ class CharacterAppearanceController extends Controller
         $user = User::where('id', $valid['userId'])->first();
 
         //TODO(Karma): Database structure actually should be revamped, as current is hell, too much json which is not supposed to be used?
-        $avatar = json_decode($user->avatar, false)[0];
+        $avatar = $user['avatar'];
 
         $charApp = route('asset-game.body-colors', ['userId' => $user->id]).';';
 
