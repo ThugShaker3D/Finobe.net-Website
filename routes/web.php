@@ -178,4 +178,10 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/universes/validate-place-join', [rbxAPIs::class, 'validatePlaceJoin']);
         Route::any('/marketplace/productinfo', [rbxAPIs::class, 'productInfo']);
     });
+
+    Route::domain('www.finobe.net')->group(function() {
+        Route::get('/asset/', [rbxAPIs::class, 'asset']);
+        Route::get('/Asset', [rbxAPIs::class, 'asset']);
+        Route::get('/Asset/', [rbxAPIs::class, 'asset']);
+    });
 });
