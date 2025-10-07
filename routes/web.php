@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\AvatarController;
 use App\Http\Controllers\Web\CatalogController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\FriendsController;
+use App\Http\Controllers\Web\InvitesController;
 use App\Http\Controllers\Web\CurrencyController;
 use App\Http\Controllers\Web\MessagesController;
 use App\Http\Middleware\SetClientIp;
@@ -39,7 +40,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::get('/create', [frontEnd::class, 'create']);
         Route::get('/trades', [TradesController::class, 'trades']);
         Route::get('/item/{id}', [CatalogController::class, 'item']);
-        Route::get('/invites', [frontEnd::class, 'invites']); // testtestestt
+        Route::get('/invites', [InvitesController::class, 'index']); // testtestestt
         Route::get('/video/{id}', [frontEnd::class, 'video']);
         Route::get('/video/data/{id}', [frontEnd::class, 'video_data']);
         Route::get('/video/thumb/{id}', [frontEnd::class, 'video_thumb']);
@@ -52,7 +53,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
         Route::match(['post', 'get'], '/', [HomeController::class, 'index']);
         Route::match(['post', 'get'], '/logout', [frontEnd::class, 'logout']);
         Route::match(['post', 'get'], '/election', [frontEnd::class, 'election']);
-        Route::match(['post', 'get'], '/invites/new', [frontEnd::class, 'invites_new']);
+        Route::match(['post', 'get'], '/invites/new', [InvitesController::class, 'new']);
         Route::match(['post', 'get'], '/item/{id}/settings', [CatalogController::class, 'settings']);
         Route::match(['post', 'get'], '/password/verify/{id}/{resetid}', [frontEnd::class, 'password_verify']);
 
