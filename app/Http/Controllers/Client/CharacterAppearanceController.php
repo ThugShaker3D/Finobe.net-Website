@@ -24,9 +24,9 @@ class CharacterAppearanceController extends Controller
 		}
 
 		$valid = $validator->valid();
-		$user = User::where('id', $valid['userId'])->first();
+		$user = User::find($valid['userId']);
 
-        $colors = $user['avatar']['bodyColors'];
+        $colors = $user->avatar[0]['bodyColors'];
 
         return '<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.finobe.net/roblox.xsd" version="4">
             <External>null</External>
