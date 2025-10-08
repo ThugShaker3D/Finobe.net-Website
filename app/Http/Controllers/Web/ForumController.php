@@ -333,13 +333,17 @@ class ForumController extends Controller
             $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', fn() => $replacements[array_rand($replacements)], $post['comment']);
 
             if($post['status'] != "admin") {
-                $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
+                $post['comment'] = strip_tags(htmlspecialchars($post['comment']));
             }
 
             $post['comment'] = $converter->convert($post['comment'])->getContent();
-            $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+            $post['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) use ($post) {
                 if (strpos($matches[0], '<img') === 0) {
-                    return $matches[0];
+                    if($post['status'] != 'admin') {
+                        return htmlspecialchars($matches[0]);
+                    } else {
+                        return $matches[0];
+                    }
                 } else {
                     return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
                 }
@@ -350,7 +354,7 @@ class ForumController extends Controller
             $post['comment'] = preg_replace_callback('/\b(' . implode('|', array_map('preg_quote', $phrasesToReplace)) . ')\b/i', fn() => $replacements[array_rand($replacements)], $post['comment']);
 
             if($post['status'] != "admin") {
-                $post['comment'] = strip_tags(htmlspecialchars($post['comment'], ENT_QUOTES, 'UTF-8'));
+                $post['comment'] = strip_tags(htmlspecialchars($post['comment'],));
             }
         }
 
@@ -401,9 +405,13 @@ class ForumController extends Controller
             }
 
             $sticked['comment'] = $converter->convert($sticked['comment'])->getContent();
-            $sticked['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+            $sticked['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) use ($sticked) {
                 if (strpos($matches[0], '<img') === 0) {
-                    return $matches[0];
+                    if($sticked['status'] != 'admin') {
+                        return htmlspecialchars($matches[0]);
+                    } else {
+                        return $matches[0];
+                    }
                 } else {
                     return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
                 }
@@ -489,9 +497,13 @@ class ForumController extends Controller
             }
 
             $reply['comment'] = $converter->convert($reply['comment'])->getContent();
-            $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) {
+            $reply['comment'] = preg_replace_callback('/(<img[^>]*>|\b(?:https?|ftp):\/\/\S+)/i', function ($matches) use ($reply) {
                 if (strpos($matches[0], '<img') === 0) {
-                    return $matches[0];
+                    if($reply['status'] != 'admin') {
+                        return htmlspecialchars($matches[0]);
+                    } else {
+                        return $matches[0];
+                    }
                 } else {
                     return '<a href="' . strip_tags($matches[0]) . '" target="_blank">' . $matches[0] . '</a>';
                 }
