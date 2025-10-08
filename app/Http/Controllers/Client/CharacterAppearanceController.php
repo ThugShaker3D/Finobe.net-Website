@@ -59,16 +59,16 @@ class CharacterAppearanceController extends Controller
 		}
 
 		$valid = $validator->valid();
-        $user = User::where('id', $valid['userId'])->first();
+        $user = User::find($valid['userId']);
 
         //TODO(Karma): Database structure actually should be revamped, as current is hell, too much json which is not supposed to be used?
-        $avatar = $user['avatar'];
+        $avatar = $user->avatar;
 
         $charApp = route('asset-game.body-colors', ['userId' => $user->id]).';';
 
         $ids = array_merge(
-            $avatar['equippedGearVersionIds'] ?? [],
-            $avatar['backpackGearVersionIds'] ?? []
+            $avatar[0]['equippedGearVersionIds'] ?? [],
+            $avatar[0]['backpackGearVersionIds'] ?? []
         );
 
         $charApp .= $ids ? implode(";", array_map(
