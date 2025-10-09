@@ -933,7 +933,7 @@ class AdminController extends Controller
             return redirect('/admin/servers');
         }
 
-        $this->request['data']['servers'] = Server::all();
+        $this->request['data']['servers'] = Server::all()->toArray();
 
         return view($this->request['data']['user']['version'] . '/Admin/Servers', $this->request);
     }

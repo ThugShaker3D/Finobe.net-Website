@@ -37,7 +37,7 @@ status
         {% for server in data.servers %}
             <tr>
                 {% for value in server %}
-                    <td>{{ value }}</td>
+                    <td>{{ value is iterable ? value|json_encode : value }}</td>
                 {% endfor %}
                 <td>
                     <form method="post">

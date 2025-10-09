@@ -432,7 +432,7 @@ class ForumController extends Controller
                     $sticked['userRating'] = Rating::select('rate_type')->where('type', '2')->where('toid', $sticked['id'])->where('sender', $this->request['data']['user']['username'])->value('rate_type');
                 }
 
-                $sticked['subscription'] = Rating::where('username', $this->request['data']['user']['username'])->where('forumId', $sticked['id'])->exists();
+                $sticked['subscription'] = Subscription::where('username', $this->request['data']['user']['username'])->where('forumId', $sticked['id'])->exists();
             }
 
             $sticked['online'] = Carbon::parse($user['lastlogin'])->gt(Carbon::now()->subMinutes(2));
