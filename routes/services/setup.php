@@ -2,16 +2,22 @@
 
 use App\Http\Controllers\Client\CharacterAppearanceController;
 use App\Http\Controllers\Client\GameJoinControlller;
+use App\Http\Controllers\Client\SetupController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\rbxAPIs;
 
 Route::group(['as' => 'prod-setup.'], function(){
-    Route::get('/version', function () {
-        return 'version-publictest';
-    });
+    Route::get('/version', [SetupController::class, 'getCurrentVersion'])->name('get-current-version');
 
-    Route::get('/version-{hash}-BootstrapperVersion.txt', function () {
-        return '1, 6, 3, 172';
+    Route::get('/version-{hash}-BootstrapperVersion.txt', [SetupController::class, 'getCurrentBootstrapperVersion'])->name('get-bootstrapper-version');
+
+    Route::get('/cdn.txt', [SetupController::class,'getCurrentActiveCDN'])->name('get-cdn');
+
+    Route::get('/{file}', [SetupController::class,'getFile'])->name('get-file');
+
+
+    Route::fallback(function () {
+        return response ()->json([ 'code' => 0, 'message' => 'Not found.'], 404);
     });
 });
 
