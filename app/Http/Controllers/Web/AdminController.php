@@ -804,7 +804,7 @@ class AdminController extends Controller
                 'color' => $data['color']
             ];
 
-            $user->badges = json_encode($badges);
+            $user->badges = $badges;
             $user->save();
 
             Session::put('success', 'Successfully created.');

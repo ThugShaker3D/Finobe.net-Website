@@ -118,9 +118,9 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
 
         Route::prefix('api')->group(function() {
             Route::get('/mark', [api::class, 'mark']); // not mathmark reference >:D
-            Route::get('/deny', [admin::class, 'deny']);
+            Route::get('/deny', [AdminController::class, 'deny']);
             Route::get('/places', [api::class, 'places']);
-            Route::get('/accept', [admin::class, 'accept']);
+            Route::get('/accept', [AdminController::class, 'accept']);
             Route::get('/inventory', [api::class, 'inventory']);
             Route::post('/rate', [api::class, 'rate']);
             Route::post('/render', [api::class, 'render']);
