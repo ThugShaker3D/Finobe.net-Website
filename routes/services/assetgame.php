@@ -14,6 +14,7 @@ Route::group(['as' => 'asset-game.'], function(){
 
     Route::group(['prefix'=> 'game', 'as'=> 'game.'], function() { 
         Route::match(['get','post'],'PlaceLauncher.ashx', [GameJoinControlller::class, 'placeLauncher'])->name('place-launcher');
+        Route::get('Join.ashx', [GameJoinControlller::class,'joinScript'])->name('join-script');
     });
 });
 
