@@ -27,6 +27,7 @@ class AdminController extends Controller
     public function __construct(Request $request) {
         $frontend = new frontEnd($request);
         $this->request = $frontend->getData();
+        dd('this is a test');
     }
 
     public function index(Request $request) {
