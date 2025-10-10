@@ -225,9 +225,7 @@ class api extends Controller
         $user = Auth::user()->toArray();
 
         if($data['id'] == 'all') {
-            $message = Message::where('touser', $user['id']);
-            $message->readed = 'y';
-            $message->save();
+            Message::where('touser', $user['id'])->update(['readed' => 'y']);
             
             return redirect('/');
         }
