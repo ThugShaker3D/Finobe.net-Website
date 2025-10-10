@@ -446,7 +446,8 @@ class CatalogController extends Controller
                         'media' => [
                             'imageAssetId' => 2
                         ],
-                        'oldUser' => ''
+                        'oldUser' => '',
+                        'onSale' => true
                     ]
                 ]);
 

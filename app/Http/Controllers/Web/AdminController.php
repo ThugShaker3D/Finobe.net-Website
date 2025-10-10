@@ -10,13 +10,16 @@ use App\Models\Warning;
 use App\Models\Election;
 use App\Models\Purchases;
 use App\Models\Announcement;
+use App\Models\Configuration;
 use App\Models\Forum\Reply;
 use App\Models\Forum\Thread;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\dataController as DataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -1061,7 +1064,17 @@ class AdminController extends Controller
             $validator = Validator::make($data, [
                 'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
                 'md5' => 'required|regex:/^[a-f0-9]{32}$/i',
-                'version' => 'required|regex:/^version-[a-f0-9]{16}$/'
+                'version' => 'required|regex:/^version-[a-f0-9]{16}$/',
+                'libraries' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'librariesqt4' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'executable' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'redist' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'content' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'contenttextures3' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'contentterrain' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'shaders' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'builtinplugins' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
+                'publiclauncher' => 'required|file|mimetypes:application/x-msdownload,application/x-msdos-program,application/x-exe'
             ]);
 
             if($validator->fails()) {
@@ -1069,6 +1082,18 @@ class AdminController extends Controller
                 return redirect('/admin/changeversions');
             }
 
+            $libraries = $request->file('libraries');
+            $librariesqt4 = $request->file('librariesqt4');
+            $executable = $request->file('executable');
+            $redist = $request->file('redist');
+            $content = $request->file('content');
+            $contenttextures3 = $request->file('contenttextures3');
+            $contentterrain = $request->file('contentterrain');
+            $shaders = $request->file('shaders');
+            $builtinplugins = $request->file('builtinplugins');
+            $publiclauncher = $request->file('publiclauncher');
+
+            /*
             $json = [
                 'application' => $data['application'],
                 'md5' => $data['md5'],
@@ -1076,12 +1101,65 @@ class AdminController extends Controller
             ];
 
             file_put_contents(storage_path('app/private/versions.json'), json_encode($json));
+            */
+
+            $libraries->storeAs('private/setup', $data['version'] . '-Libraries.zip');
+            $librariesqt4->storeAs('private/setup', $data['version'] . '-LibrariesQT4.zip');
+            $executable->storeAs('private/setup', $data['version'] . '-Executable.zip');
+            $redist->storeAs('private/setup', $data['version'] . '-redist.zip');
+            $content->storeAs('private/setup', $data['version'] . '-content.zip');
+            $contenttextures3->storeAs('private/setup', $data['version'] . '-content-textures3.zip');
+            $contentterrain->storeAs('private/setup', $data['version'] . '-content-terrain.zip');
+            $shaders->storeAs('private/setup', $data['version'] . '-shaders.zip');
+            $builtinplugins->storeAs('private/setup', $data['version'] . '-BuiltInPlugins.zip');
+            $publiclauncher->storeAs('private/setup', $data['version'] . '-PublicLauncher.exe');
+
+            if(!Configuration::where('type', 'client-application')->exists()) {
+                Configuration::create([
+                    'type' => 'client-application',
+                    'data' => $data['application']
+                ]);
+            } else {
+                Configuration::where('type', 'client-application')->update([
+                    'data' => $data['application']
+                ]);
+            }
+
+            if(!Configuration::where('type', 'client-md5')->exists()) {
+                Configuration::create([
+                    'type' => 'client-md5',
+                    'data' => $data['md5']
+                ]);
+            } else {
+                Configuration::where('type', 'client-md5')->update([
+                    'data' => $data['md5']
+                ]);
+            }
+
+            if(!Configuration::where('type', 'client-version')->exists()) {
+                Configuration::create([
+                    'type' => 'client-version',
+                    'data' => $data['version']
+                ]);
+            } else {
+                Configuration::where('type', 'client-version')->update([
+                    'data' => $data['version']
+                ]);
+            }
+
+            Cache::forget('client_data');
 
             Session::put('success', 'Successfully changed');
             return redirect('/admin/changeversions');
         }
 
-        $json = json_decode(file_get_contents(storage_path('app/private/versions.json')), true);
+        $json = Cache::remember('client_data', now()->addHours(12), function() {
+            return [
+                'application' => Configuration::where('type', 'client-application')->value('data'),
+                'md5' => Configuration::where('type', 'client-md5')->value('data'),
+                'version' => Configuration::where('type', 'client-version')->value('data')
+            ];
+        });
 
         $this->request['data']['application'] = $json['application'];
         $this->request['data']['md5'] = $json['md5'];
