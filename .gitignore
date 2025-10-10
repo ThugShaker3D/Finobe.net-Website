@@ -14,7 +14,7 @@
 /public/chiwawa.html
 /storage/*.key
 /storage/pail
-/storage/app/private/*
+#/storage/app/private/*
 /storage/rbx/files/privateKey1024.pem
 /storage/rbx/files/publicKeyBlob1024.txt
 /vendor
