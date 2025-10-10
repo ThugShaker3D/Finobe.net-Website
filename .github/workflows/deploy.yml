@@ -20,7 +20,7 @@ jobs:
       - name: Running Deploy
         run: |
           ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-
+            cd /var/www/Finobe
             git fetch
             git pull
 
