@@ -10,7 +10,7 @@ Route::group(['as' => 'prod-setup.'], function(){
         return 'version-publictest';
     });
 
-    Route::get('/{version}-BootstrapperVersion.txt', function () {
+    Route::get('/version-{hash}-BootstrapperVersion.txt', function () {
         return '1, 6, 3, 172';
     });
 });
