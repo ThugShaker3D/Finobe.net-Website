@@ -26,7 +26,7 @@ class SetupController extends Controller
 		$filePath = Storage::path('setup/' . $file);
 		
 		if(!file_exists($filePath))
-            return response ()->json([ 'code' => 0, 'message' => 'Not found.', 'filepath' => $filePath], 404);
+            return response ()->json([ 'code' => 0, 'message' => 'Not found.'], 404);
 		
 		return response()->file($filePath);
     }
