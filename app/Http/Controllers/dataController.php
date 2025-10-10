@@ -134,9 +134,7 @@ class dataController extends Controller
     public static function arbiter_pool() {
         // returns random arbiter instance
         $arbiters = [
-            //'45.131.65.123',
-            '74.208.123.25',
-            //'104.223.8.156'
+            '74.208.123.25'
         ];
 
         return $arbiters[random_int(0, count($arbiters) - 1)];

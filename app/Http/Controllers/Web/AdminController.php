@@ -375,18 +375,18 @@ class AdminController extends Controller
 
         $paginator = Announcement::orderByDesc('id')->paginate($perPage, ['*'], 'page', $page);
 
-        $results = $paginator->items();
+        $results = $paginator->toArray();
 
         if (count($results)) {
             $html['data'] = "<table border='1' style=\"width:100%;\"><tr>";
 
-            foreach (array_keys((array) $results[0]) as $key) {
+            foreach (array_keys((array) $results['data'][0]) as $key) {
                 $html['data'] .= "<th>" . htmlspecialchars($key) . "</th>";
             }
 
             $html['data'] .= "</tr>";
 
-            foreach ($results as $row) {
+            foreach ($results['data'] as $row) {
                 $html['data'] .= "<tr>";
                 foreach ((array) $row as $key => $value) {
                     if ($key === 'username') {
@@ -804,7 +804,7 @@ class AdminController extends Controller
                 'color' => $data['color']
             ];
 
-            $user->badges = json_encode($badges);
+            $user->badges = $badges;
             $user->save();
 
             Session::put('success', 'Successfully created.');

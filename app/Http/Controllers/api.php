@@ -6,10 +6,10 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Asset;
 use App\Models\Server;
-use App\Models\Replies;
 use App\Models\Message;
 use App\Models\Purchases;
 use App\Models\Notification;
+use App\Models\Forum\Reply;
 use App\Models\Forum\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -225,9 +225,7 @@ class api extends Controller
         $user = Auth::user()->toArray();
 
         if($data['id'] == 'all') {
-            $message = Message::where('touser', $user['id']);
-            $message->readed = 'y';
-            $message->save();
+            Message::where('touser', $user['id'])->update(['readed' => 'y']);
             
             return redirect('/');
         }
@@ -241,7 +239,7 @@ class api extends Controller
         $notification->save();
         
         $results_per_page = 10;
-        $total_replies_before = Replies::where('toid', $notification->forum_id)->where('id', $notification->reply_id)->count();
+        $total_replies_before = Reply::where('toid', $notification->forum_id)->where('id', $notification->reply_id)->count();
         $page_number = ceil($total_replies_before / $results_per_page);
         $page_number = max(1, $page_number);
 
