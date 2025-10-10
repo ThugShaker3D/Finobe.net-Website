@@ -30,24 +30,20 @@ class AdminController extends Controller
     public function __construct(Request $request) {
         $frontend = new frontEnd($request);
         $this->request = $frontend->getData();
+
+        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
+            abort(404);
+        }
     }
 
     public function index(Request $request) {
         $this->request['data']['embeds']['title'] = 'Admin Panel' . $this->request['data']['embeds']['title'];
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         return view($this->request['data']['user']['version'] . '/Admin/Index', $this->request);
     }
 
     public function assets(Request $request) {
         $this->request['data']['embeds']['title'] = 'Asset Moderation' . $this->request['data']['embeds']['title'];
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         $assets = [];
         $results = Asset::where('visibility', 'r')
@@ -70,10 +66,6 @@ class AdminController extends Controller
 
     public function accept(Request $request) {
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if(!isset($data['id']) || !Asset::find($data['id'])) {
             Session::put('error', 'error');
@@ -127,10 +119,6 @@ class AdminController extends Controller
     public function deny(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if(!isset($data['id']) || !Asset::find($data['id'])) {
             Session::put('error', 'error');
             return redirect('/admin/assets');
@@ -170,10 +158,6 @@ class AdminController extends Controller
     public function bans(Request $request) {
         $this->request['data']['embeds']['title'] = 'User Moderation' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -254,20 +238,12 @@ class AdminController extends Controller
     public function decider(Request $request) {
         $this->request['data']['embeds']['title'] = 'Decider' . $this->request['data']['embeds']['title'];
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         return view($this->request['data']['user']['version'] . '/Admin/Decider', $this->request);
     }
 
     public function prune_posts(Request $request) {
         $this->request['data']['embeds']['title'] = 'Prune Forum Posts' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             if(!empty($data['id']) || !empty($data['replyid'])) {
@@ -334,10 +310,6 @@ class AdminController extends Controller
     public function announcements(Request $request) {
         $this->request['data']['embeds']['title'] = 'Announcements' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -420,10 +392,6 @@ class AdminController extends Controller
     public function lock(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if(!isset($data['id'])) {
             return redirect('/forum/home');
         }
@@ -443,10 +411,6 @@ class AdminController extends Controller
 
     public function unlock(Request $request) {
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if(!isset($data['id'])) {
             return redirect('/forum/home');
@@ -468,10 +432,6 @@ class AdminController extends Controller
     public function pin(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if(!isset($data['id'])) {
             return redirect('/forum/home');
         }
@@ -492,10 +452,6 @@ class AdminController extends Controller
     public function unpin(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if(!isset($data['id'])) {
             return redirect('/forum/home');
         }
@@ -515,10 +471,6 @@ class AdminController extends Controller
 
     public function stick(Request $request) {
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if(!isset($data['id'])) {
             return redirect('/forum/home');
@@ -546,10 +498,6 @@ class AdminController extends Controller
     public function unstick(Request $request) {
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if(!isset($data['id'])) {
             return redirect('/forum/home');
         }
@@ -570,10 +518,6 @@ class AdminController extends Controller
     public function createxml(Request $request) {
         $this->request['data']['embeds']['title'] = 'New XML Asset' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -657,10 +601,6 @@ class AdminController extends Controller
         $this->request['data']['embeds']['title'] = 'Reward Dius' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
@@ -742,10 +682,6 @@ class AdminController extends Controller
         $this->request['data']['embeds']['title'] = 'Warn Users' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
-
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
                 'name' => 'required|string|min:3|max:255',
@@ -778,10 +714,6 @@ class AdminController extends Controller
     public function give_badges(Request $request) {
         $this->request['data']['embeds']['title'] = 'Give Badges' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -820,10 +752,6 @@ class AdminController extends Controller
     public function elections(Request $request) {
         $this->request['data']['embeds']['title'] = 'Elections' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -879,10 +807,6 @@ class AdminController extends Controller
 
     public function servers(Request $request) {
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -944,10 +868,6 @@ class AdminController extends Controller
     public function rbxcreatexml(Request $request) {
         $this->request['data']['embeds']['title'] = 'Create RBX XML asset' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
@@ -1055,10 +975,6 @@ class AdminController extends Controller
     public function changeversions(Request $request) {
         $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
         $data = $request->all();
-
-        if(!$this->request['data']['siteusername'] || $this->request['data']['user']['status'] != 'admin') {
-            return redirect('/');
-        }
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
