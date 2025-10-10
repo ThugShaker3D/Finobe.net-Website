@@ -9,6 +9,10 @@ Route::group(['as' => 'prod-setup.'], function(){
     Route::get('/version', function () {
         return 'version-publictest';
     });
+
+    Route::get('/{version}-BootstrapperVersion.txt', function () {
+        return '1, 6, 3, 172';
+    });
 });
 
 ?>
