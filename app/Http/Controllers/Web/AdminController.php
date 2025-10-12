@@ -972,14 +972,13 @@ class AdminController extends Controller
         return view($this->request['data']['user']['version'] . '/Admin/RBXCreateXML', $this->request);
     }
 
-    public function changeversions(Request $request) {
+    public function deployClient(Request $request)
+    {
         $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
         $data = $request->all();
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
-                'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
-                'md5' => 'required|regex:/^[a-f0-9]{32}$/i',
                 'version' => 'required|regex:/^version-[a-f0-9]{16}$/',
                 'libraries' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
                 'librariesqt4' => 'required|file|mimetypes:application/zip,application/x-zip-compressed,multipart/x-zip',
@@ -1009,16 +1008,6 @@ class AdminController extends Controller
             $builtinplugins = $request->file('builtinplugins');
             $publiclauncher = $request->file('publiclauncher');
 
-            /*
-            $json = [
-                'application' => $data['application'],
-                'md5' => $data['md5'],
-                'version' => $data['version']
-            ];
-
-            file_put_contents(storage_path('app/private/versions.json'), json_encode($json));
-            */
-
             $libraries->storeAs('private/setup', $data['version'] . '-Libraries.zip');
             $librariesqt4->storeAs('private/setup', $data['version'] . '-LibrariesQT4.zip');
             $executable->storeAs('private/setup', $data['version'] . '-Executable.zip');
@@ -1029,6 +1018,52 @@ class AdminController extends Controller
             $shaders->storeAs('private/setup', $data['version'] . '-shaders.zip');
             $builtinplugins->storeAs('private/setup', $data['version'] . '-BuiltInPlugins.zip');
             $publiclauncher->storeAs('private/setup', $data['version'] . '-PublicLauncher.exe');
+
+            if(!Configuration::where('type', 'client-version')->exists()) {
+                Configuration::create([
+                    'type' => 'client-version',
+                    'data' => $data['version']
+                ]);
+            } else {
+                Configuration::where('type', 'client-version')->update([
+                    'data' => $data['version']
+                ]);
+            }
+
+            Cache::forget('client_data');
+
+            Session::put('success', 'Successfully changed');
+            return redirect('/admin/changeversions');
+        }
+
+        $json = Cache::remember('client_data', now()->addHours(12), function() {
+            return [
+                'application' => Configuration::where('type', 'client-application')->value('data'),
+                'md5' => Configuration::where('type', 'client-md5')->value('data'),
+                'version' => Configuration::where('type', 'client-version')->value('data')
+            ];
+        });
+
+        $this->request['data']['application'] = $json['application'];
+        $this->request['data']['md5'] = $json['md5'];
+        $this->request['data']['version'] = $json['version'];
+
+        return view($this->request['data']['user']['version'] . '/Admin/Changeversions', $this->request);
+    }
+    public function changeversions(Request $request) {
+        $this->request['data']['embeds']['title'] = 'Change client version' . $this->request['data']['embeds']['title'];
+        $data = $request->all();
+
+        if($request->isMethod('post')) {
+            $validator = Validator::make($data, [
+                'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
+                'md5' => 'required|regex:/^[a-f0-9]{32}$/i',
+            ]);
+
+            if($validator->fails()) {
+                Session::put('error', $validator->errors()->first());
+                return redirect('/admin/changeversions');
+            }
 
             if(!Configuration::where('type', 'client-application')->exists()) {
                 Configuration::create([
@@ -1051,18 +1086,6 @@ class AdminController extends Controller
                     'data' => $data['md5']
                 ]);
             }
-
-            if(!Configuration::where('type', 'client-version')->exists()) {
-                Configuration::create([
-                    'type' => 'client-version',
-                    'data' => $data['version']
-                ]);
-            } else {
-                Configuration::where('type', 'client-version')->update([
-                    'data' => $data['version']
-                ]);
-            }
-
             Cache::forget('client_data');
 
             Session::put('success', 'Successfully changed');

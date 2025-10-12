@@ -36,7 +36,7 @@ class GameJoinControlller extends Controller
             "UserId" => 1, // make this depend on database later
             "SuperSafeChat" => false,
             "CharacterAppearance" => route('asset-game.character-fetch', ['userId' => 1]), // TODO
-            "ClientTicket" => RobloxUtilities::GenerateClientTicket(1, 'notaku',route('asset-game.character-fetch', ['userId' => 1]), 'test'),
+            "ClientTicket" => RobloxUtilities::GenerateClientTicket(1, 'notaku',route('asset-game.character-fetch', ['userId' => 1]), 'jobId-Test'),
             "GameId" => 'jobId-Test', // actually jobid not GameId purposefully misleading
             "PlaceId" => 1908, // make this depend on database later
             "MeasurementUrl" => "", // idk what this does tbh
