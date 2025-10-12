@@ -13,7 +13,7 @@ class VersionCompatibilityController extends Controller
 	{
 		return Response()->json([
 			'data' => [
-				explode(';', Configuration::where('type', 'client-application')->value('data'),)
+				explode(';', Configuration::where('type', 'client-application')->value('data'))
 			]
 		]);
 	}
@@ -22,7 +22,7 @@ class VersionCompatibilityController extends Controller
 	{		
 		return Response()->json([
 			'data' => [
-				explode(';', Configuration::where('type', 'client-md5')->value('data'),)
+				explode(';', Configuration::where('type', 'client-md5')->value('data'))
 			]
 		]);
 	}
