@@ -1058,7 +1058,7 @@ class AdminController extends Controller
 
         if($request->isMethod('post')) {
             $validator = Validator::make($data, [
-                'application' => 'required|regex:/^\d+\.\d+\.\d+pcapplication$/',
+                'application' => 'required|regex:/^\d+\.\d+\.\d+pcplayer$/',
                 'md5' => 'required|regex:/^[a-f0-9]{32}$/i',
             ]);
 
