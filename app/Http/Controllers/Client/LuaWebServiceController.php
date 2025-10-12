@@ -28,10 +28,14 @@ class LuaWebServiceController extends Controller
                 if ($valid['groupid'] == '1200769') {
                     $user = User::where('id', $valid['playerid'])->first();
 
-                    return response('<Value Type="boolean">'.$user->status == 'admin'.'</Value>');
+                    if ($user) {
+                        return response('<Value Type="boolean">'.(($user->status == 'admin') ? 'true' : 'false').'</Value>')
+                            ->header('Content-Type', 'text/xml');
+                    }
                 }
         }
 
-        return response()->json(['code' => 0, 'error' => 'Bad Request'], status: 403);
+        return response('<Value Type="boolean">false</Value>')
+            ->header('Content-Type', 'text/xml');
     }
 }
