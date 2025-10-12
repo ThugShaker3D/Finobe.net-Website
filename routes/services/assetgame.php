@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Client\CharacterAppearanceController;
 use App\Http\Controllers\Client\GameJoinControlller;
+use App\Http\Controllers\Client\LuaWebServiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\rbxAPIs;
 
@@ -15,6 +16,7 @@ Route::group(['as' => 'asset-game.'], function(){
     Route::group(['prefix'=> 'game', 'as'=> 'game.'], function() { 
         Route::match(['get','post'],'PlaceLauncher.ashx', [GameJoinControlller::class, 'placeLauncher'])->name('place-launcher');
         Route::get('Join.ashx', [GameJoinControlller::class,'joinScript'])->name('join-script');
+        Route::get('LuaWebService/HandleSocialRequest.ashx', [LuaWebServiceController::class,'handleSocialRequest'])->name('lua-web-service');
     });
 });
 
