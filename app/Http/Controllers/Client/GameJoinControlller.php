@@ -33,7 +33,7 @@ class GameJoinControlller extends Controller
             "PingInterval" => 20,
             "UserName" => 'notaku', // make this depend on database later
             "SeleniumTestMode" => false,
-            "UserId" => 48121, // make this depend on database later
+            "UserId" => 4812, // make this depend on database later
             "SuperSafeChat" => false,
             "CharacterAppearance" => route('asset-game.character-fetch', ['userId' => 4812]), // TODO
             "ClientTicket" => RobloxUtilities::GenerateClientTicket(4812, 'notaku',route('asset-game.character-fetch', ['userId' => 4812]), 'jobId-Test'),
