@@ -569,7 +569,7 @@ class AdminController extends Controller
                     return redirect('/admin/createxml');
                 }
 
-                $id = Asset::createAsset(
+                $id = \App\Http\Controllers\Asset::createAsset(
                     $data['title'],
                     4,
                     $this->request['data']['user']['id'],
@@ -579,7 +579,7 @@ class AdminController extends Controller
                     []
                 );
             } elseif($data['type'] == 'texture') {
-                $id = Asset::createAsset(
+                $id = \App\Http\Controllers\Asset::createAsset(
                     $data['title'],
                     1,
                     $this->request['data']['user']['id'],
