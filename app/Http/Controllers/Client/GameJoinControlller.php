@@ -49,6 +49,7 @@ class GameJoinControlller extends Controller
 
     public function joinScript(Request $request)
     {
+        if (Auth::user()->status !== 'admin') { return response()->json(['code' => 0, 'message' => 'Bad Request'], 403); }
         $joinScript = json_encode([
             "ClientPort" => 0,
             "MachineAddress" => '127.0.0.1',
