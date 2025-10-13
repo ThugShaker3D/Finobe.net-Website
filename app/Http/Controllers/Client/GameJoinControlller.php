@@ -52,7 +52,7 @@ class GameJoinControlller extends Controller
         if (Auth::user()->status !== 'admin') { return response()->json(['code' => 0, 'message' => 'Bad Request'], 403); }
         $joinScript = json_encode([
             "ClientPort" => 0,
-            "MachineAddress" => '127.0.0.1',
+            "MachineAddress" => '104.223.8.193',
             "ServerPort" => 340,
             "PingUrl" => "",
             "PingInterval" => 20,
