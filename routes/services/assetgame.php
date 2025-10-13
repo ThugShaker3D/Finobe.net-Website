@@ -6,7 +6,7 @@ use App\Http\Controllers\Client\LuaWebServiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\rbxAPIs;
 
-Route::group(['as' => 'asset-game.'], function(){
+Route::group(['as' => 'client-routes.'], function(){
     Route::get('/asset', [rbxAPIs::class, 'asset'])->name('asset');
     Route::get('/Asset', [rbxAPIs::class, 'asset']);
     Route::group(['prefix' => 'asset'], function() {
@@ -19,6 +19,8 @@ Route::group(['as' => 'asset-game.'], function(){
         Route::get('Join.ashx', [GameJoinControlller::class,'joinScript'])->name('join-script');
         Route::get('LuaWebService/HandleSocialRequest.ashx', [LuaWebServiceController::class,'handleSocialRequest'])->name('lua-web-service');
     });
+
+    Route::get('/penelope/login/negotiate', [GameJoinControlller::class,'authenticateClient'])->name('negotiate');
 });
 
 ?>

@@ -6,12 +6,36 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\FormatVersion;
 use App\Http\Controllers\RobloxUtilities;
 use App\Http\Controllers\SecurityNotary;
+use App\Models\User;
 use App\Services\Matchmaking\Enums\PlaceLauncherStatusCodes;
 use App\Services\Matchmaking\Types\PlaceLauncherResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class GameJoinControlller extends Controller
 {
+    public function authenticateClient(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+			'suggest' => ['required'],
+		]);
+
+        if($validator->fails()) {
+            return response()->json(['code' => 0, 'error' => 'Bad Request'], status: 403);
+		}
+        $valid = $validator->valid();
+        if (!User::where('token', $valid['suggest']))
+        {
+            return response()->json(['code'=> 0,'message'=> 'Invalid authentication token'], 403);
+        }
+
+        $authToken = User::where('token', $valid['suggest'])->first();
+
+        Auth::login($authToken);
+
+        return response()->json(['code' => 1, 'message' => 'Successfully authenticated client'], 200);
+    }
     public function placeLauncher(Request $request)
     {
         return response()->json(new PlaceLauncherResponse(
@@ -31,15 +55,15 @@ class GameJoinControlller extends Controller
             "ServerPort" => 340,
             "PingUrl" => "",
             "PingInterval" => 20,
-            "UserName" => 'notaku', // make this depend on database later
+            "UserName" => Auth::user()->name,
             "SeleniumTestMode" => false,
-            "UserId" => 4812, // make this depend on database later
+            "UserId" => Auth::id(),
             "SuperSafeChat" => false,
-            "CharacterAppearance" => route('asset-game.character-fetch', ['userId' => 4812]), // TODO
-            "ClientTicket" => RobloxUtilities::GenerateClientTicket(4812, 'notaku',route('asset-game.character-fetch', ['userId' => 4812]), 'jobId-Test'),
-            "GameId" => 'jobId-Test', // actually jobid not GameId purposefully misleading
-            "PlaceId" => 1908, // make this depend on database later
-            "MeasurementUrl" => "", // idk what this does tbh
+            "CharacterAppearance" => route('client-routes.character-fetch', ['userId' => Auth::id()]), // TODO
+            "ClientTicket" => RobloxUtilities::GenerateClientTicket(Auth::id(), Auth::user()->name,route('client-routes.character-fetch', ['userId' => Auth::id()]), 'jobId-Test'),
+            "GameId" => 'jobId-Test',
+            "PlaceId" => 1908,
+            "MeasurementUrl" => "",
             "WaitingForCharacterGuid" => RobloxUtilities::GenerateGUID(),
             "BaseUrl" => "https://assetgame.finobe.net/",
             "ChatStyle" => "ClassicAndBubble",
@@ -62,7 +86,7 @@ class GameJoinControlller extends Controller
             "BrowserTrackerId" => 0,
             "UsePortraitMode" => false,
             "FollowUserId" => 0,
-            "characterAppearanceId" => 4812
+            "characterAppearanceId" => Auth::id()
         ]);
         return response(SecurityNotary::SignScript($joinScript, FormatVersion::V2), 200);
     }

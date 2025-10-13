@@ -806,7 +806,7 @@ class api extends Controller
             0,
             2,
             "ScriptExecution",
-            [route('asset-game.character-fetch', ['userId' => $user->id]), "https://www.finobe.net", "PNG", 768, 768]
+            [route('client-routes.character-fetch', ['userId' => $user->id]), "https://www.finobe.net", "PNG", 768, 768]
         );
     
         $jobEx = $arbiter->OpenJobEx($constructedJob);
