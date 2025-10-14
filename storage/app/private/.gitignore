@@ -1,3 +1,5 @@
 !.gitignore
 setup/*
 !setup/.gitkeep
+!penelope/
+!penelope/**

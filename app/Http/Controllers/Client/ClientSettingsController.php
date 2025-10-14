@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\RobloxUtilities;
+use Illuminate\Support\Facades\Storage;
 
 class ClientSettingsController extends Controller
 {
@@ -22,10 +23,10 @@ class ClientSettingsController extends Controller
         $settings = "{}";
         switch ($bucket) {
             case "ClientAppSettings":
-                $settings = file_get_contents(storage_path("rbx/fflags/PCDesktopClient_2016.json"));
+                $settings = file_get_contents(Storage::path('penelope/fflags/ClientAppSettings.json'));
             case "RCCService":
                 if (RobloxUtilities::IsFinobeCloudAuthorized()) {
-                    $settings = file_get_contents(storage_path("rbx/fflags/WindowsComputeCloud_2016.json"));
+                    $settings = file_get_contents(Storage::path('penelope/fflags/RCCService.json'));
                 }
         }
 
