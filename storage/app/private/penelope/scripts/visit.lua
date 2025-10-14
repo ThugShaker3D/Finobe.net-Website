@@ -15,27 +15,27 @@ local message = Instance.new("Message")
 message.Parent = workspace
 message.archivable = false
 
-game:GetService("ScriptInformationProvider"):SetAssetUrl("http://assetgame.finobe.net/asset/")
+game:GetService("ScriptInformationProvider"):SetAssetUrl("http://www.finobe.net/asset/")
 game:GetService("ContentProvider"):SetThreadPool(16)
-pcall(function() game:GetService("InsertService"):SetFreeModelUrl("http://assetgame.finobe.net/game/Tools/InsertAsset.ashx?type=fm&q=%s&pg=%d&rs=%d") end) -- Used for free model search (insert tool)
-pcall(function() game:GetService("InsertService"):SetFreeDecalUrl("http://assetgame.finobe.net/game/Tools/InsertAsset.ashx?type=fd&q=%s&pg=%d&rs=%d") end) -- Used for free decal search (insert tool)
+pcall(function() game:GetService("InsertService"):SetFreeModelUrl("http://www.finobe.net/game/Tools/InsertAsset.ashx?type=fm&q=%s&pg=%d&rs=%d") end) -- Used for free model search (insert tool)
+pcall(function() game:GetService("InsertService"):SetFreeDecalUrl("http://www.finobe.net/game/Tools/InsertAsset.ashx?type=fd&q=%s&pg=%d&rs=%d") end) -- Used for free decal search (insert tool)
 
 ifSeleniumThenSetCookie("SeleniumTest2", "Set URL service")
 
 settings().Diagnostics:LegacyScriptMode()
 
-game:GetService("InsertService"):SetBaseSetsUrl("http://assetgame.finobe.net/game/Tools/InsertAsset.ashx?nsets=10&type=base")
-game:GetService("InsertService"):SetUserSetsUrl("http://assetgame.finobe.net/game/Tools/InsertAsset.ashx?nsets=20&type=user&userid=%d")
-game:GetService("InsertService"):SetCollectionUrl("http://assetgame.finobe.net/game/Tools/InsertAsset.ashx?sid=%d")
-game:GetService("InsertService"):SetAssetUrl("http://assetgame.finobe.net/Asset/?id=%d")
-game:GetService("InsertService"):SetAssetVersionUrl("http://assetgame.finobe.net/Asset/?assetversionid=%d")
+game:GetService("InsertService"):SetBaseSetsUrl("http://www.finobe.net/game/Tools/InsertAsset.ashx?nsets=10&type=base")
+game:GetService("InsertService"):SetUserSetsUrl("http://www.finobe.net/game/Tools/InsertAsset.ashx?nsets=20&type=user&userid=%d")
+game:GetService("InsertService"):SetCollectionUrl("http://www.finobe.net/game/Tools/InsertAsset.ashx?sid=%d")
+game:GetService("InsertService"):SetAssetUrl("http://www.finobe.net/Asset/?id=%d")
+game:GetService("InsertService"):SetAssetVersionUrl("http://www.finobe.net/Asset/?assetversionid=%d")
 
-pcall(function() game:GetService("SocialService"):SetFriendUrl("http://assetgame.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=IsFriendsWith&playerid=%d&userid=%d") end)
-pcall(function() game:GetService("SocialService"):SetBestFriendUrl("http://assetgame.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=IsBestFriendsWith&playerid=%d&userid=%d") end)
-pcall(function() game:GetService("SocialService"):SetGroupUrl("http://assetgame.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=IsInGroup&playerid=%d&groupid=%d") end)
-pcall(function() game:GetService("SocialService"):SetGroupRankUrl("http://assetgame.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRank&playerid=%d&groupid=%d") end)
-pcall(function() game:GetService("SocialService"):SetGroupRoleUrl("http://assetgame.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRole&playerid=%d&groupid=%d") end)
-pcall(function() game:GetService("GamePassService"):SetPlayerHasPassUrl("http://assetgame.finobe.net/game/GamePass/GamePassHandler.ashx?Action=HasPass&UserID=%d&PassID=%d") end)
+pcall(function() game:GetService("SocialService"):SetFriendUrl("http://www.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=IsFriendsWith&playerid=%d&userid=%d") end)
+pcall(function() game:GetService("SocialService"):SetBestFriendUrl("http://www.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=IsBestFriendsWith&playerid=%d&userid=%d") end)
+pcall(function() game:GetService("SocialService"):SetGroupUrl("http://www.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=IsInGroup&playerid=%d&groupid=%d") end)
+pcall(function() game:GetService("SocialService"):SetGroupRankUrl("http://www.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRank&playerid=%d&groupid=%d") end)
+pcall(function() game:GetService("SocialService"):SetGroupRoleUrl("http://www.finobe.net/game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRole&playerid=%d&groupid=%d") end)
+pcall(function() game:GetService("GamePassService"):SetPlayerHasPassUrl("http://www.finobe.net/game/GamePass/GamePassHandler.ashx?Action=HasPass&UserID=%d&PassID=%d") end)
 pcall(function() game:GetService("MarketplaceService"):SetProductInfoUrl("https://api.finobe.net/marketplace/productinfo?assetId=%d") end)
 pcall(function() game:GetService("MarketplaceService"):SetDevProductInfoUrl("https://api.finobe.net/marketplace/productDetails?productId=%d") end)
 pcall(function() game:GetService("MarketplaceService"):SetPlayerOwnsAssetUrl("https://api.finobe.net/ownership/hasasset?userId=%d&assetId=%d") end)
@@ -103,7 +103,7 @@ function doVisit()
 	else
 		player = game:GetService("Players"):CreateLocalPlayer({userId})
 	end
-	player.CharacterAppearance = "http://assetgame.finobe.net/asset/CharacterFetch.ashx?userId={userId}&placeId={placeId}"
+	player.CharacterAppearance = "http://www.finobe.net/asset/CharacterFetch.ashx?userId={userId}&placeId={placeId}"
 	local propExists, canAutoLoadChar = false
 	propExists = pcall(function()  canAutoLoadChar = game.Players.CharacterAutoLoads end)
 
@@ -119,7 +119,7 @@ function doVisit()
 	
 	if not inStudio and false then
 		message.Text = "Setting Ping"
-		visit:SetPing("http://assetgame.finobe.net/game/ClientPresence.ashx?version=old&PlaceID=0", 120)
+		visit:SetPing("http://www.finobe.net/game/ClientPresence.ashx?version=old&PlaceID=0", 120)
 
 		message.Text = "Sending Stats"
 		game:HttpGet("")
