@@ -6,8 +6,8 @@ end
 
 ifSeleniumThenSetCookie("SeleniumTest1", "Inside the visit lua script")
 
-pcall(function() game:SetPlaceID({pladeId}) end)
-pcall(function() game:SetUniverseId({pladeId}) end)
+pcall(function() game:SetPlaceID({placeId}) end)
+pcall(function() game:SetUniverseId({placeId}) end)
 
 visit = game:GetService("Visit")
 
@@ -48,7 +48,7 @@ pcall(function() game:SetVideoInfo("") end)
 
 function registerPlay(key)
 	if true and game:GetService("CookiesService"):GetCookieValue(key) == "" then
-		game:GetService("CookiesService"):SetCookieValue(key, "{ \"userId\" : {userId}, \"placeId\" : {pladeId}, \"os\" : \"" .. settings().Diagnostics.OsPlatform .. "\"}")
+		game:GetService("CookiesService"):SetCookieValue(key, "{ \"userId\" : {userId}, \"placeId\" : {placeId}, \"os\" : \"" .. settings().Diagnostics.OsPlatform .. "\"}")
 	end
 end
 
