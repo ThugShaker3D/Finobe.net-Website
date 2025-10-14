@@ -168,9 +168,6 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
     Route::domain('clientsettings.finobe.net')
         ->group(base_path('routes/services/clientsettings.php'));
     
-    Route::domain('assetgame.finobe.net')
-        ->group(base_path('routes/services/assetgame.php'));
-
     Route::domain('www.finobe.net')
         ->group(base_path('routes/services/assetgame.php'));
 
