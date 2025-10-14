@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use FFMpeg\FFMpeg;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -14,10 +15,20 @@ class Asset extends Controller
         $this->db = DB::connection('finobe');
     }
 
-    public static function createAsset(string $name, int $assetType, int $author, $file, string $description, string $visibility, array $additional): int
+    public static function createAsset(string $name, int $assetType, int $author, $file, string $description, string $visibility, array $additional, bool $isEncodable = false): int
     {
         $instance = new self();
         $fileHash = uniqid();
+
+        if($isEncodable) {
+            $ffmpeg = FFMpeg::create();
+            file_put_contents(storage_path('app/private/asset_tmp/' . $fileHash), $file);
+
+            $png = $ffmpeg->open(storage_path('app/private/asset_tmp/' . $fileHash));
+            $png->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(0))->save(storage_path('app/private/asset_tmp/' . $fileHash) . '_tmp.png');
+            $file = file_get_contents(storage_path('app/private/asset_tmp/' . $fileHash) . '_tmp.png');
+        }
+
         $additional = json_encode($additional);
         $asset = $instance->db->table('assets')->insertGetId([
             'asset_type' => $assetType,
@@ -108,7 +119,7 @@ class Asset extends Controller
     public static function createHatOrGear(string $name, $texture = false, $mesh = false, array $xml, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, array $historicalPrice = [], int $type): int
     {
         if(is_array($texture)) {
-            $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), "", "n", []);
+            $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), "", "n", [], true);
         }
         
         if(is_array($mesh)) {
@@ -167,7 +178,7 @@ class Asset extends Controller
 
     public static function createAccessory(string $name, array $texture, int $author, string $description, int $price, bool $onSale = false, bool $isLimited = false, string $type = "face"): int //type: shirt/pants/tshirt/face
     {
-        $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), '', "r", []);
+        $textureId = self::createAsset("{$name} Texture", 1, $author, file_get_contents($texture['tmp_name']), '', "r", [], true);
         $assetType = 18;
         $xmlTemplate = "";
         if($type == "face") {
