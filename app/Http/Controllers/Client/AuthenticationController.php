@@ -34,12 +34,9 @@ class AuthenticationController extends Controller
 
     public function requestAuth(Request $request)
     {
-        if (Auth::check())
-            return response()->json(['code'=> 0,'message'=> 'already authenticated'], 403);
-
         return response(route('client-routes.negotiate', [ 'suggest' => Auth::user()->token ]));
     }
-    
+
     public function logout(Request $request)
     {
         Auth::logout();
