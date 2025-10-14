@@ -20,7 +20,6 @@ Route::group(['as' => 'client-routes.'], function(){
         Route::match(['get','post'],'PlaceLauncher.ashx', [GameJoinControlller::class, 'placeLauncher'])->name('place-launcher');
         Route::get('Join.ashx', [GameJoinControlller::class,'joinScript'])->name('join-script');
         Route::get('visit.ashx', [StudioJoinController::class,'visit'])->name('visit-script');
-        Route::get('logout.aspx', [AuthenticationController::class,'logout'])->name('logout');
         Route::get('GetCurrentUser.ashx', [AuthenticationController::class,'getCurrentUser'])->name('get-current-user');
         Route::get('LuaWebService/HandleSocialRequest.ashx', [LuaWebServiceController::class,'handleSocialRequest'])->name('lua-web-service');
     });
