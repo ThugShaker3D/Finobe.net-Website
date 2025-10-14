@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\FormatVersion;
+use App\Http\Controllers\SecurityNotary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -24,6 +26,8 @@ class StudioJoinController extends Controller
         $visitScript = Storage::get('penelope/scripts/visit.lua');
         $visitScript = str_replace("{placeId}", $valid['PlaceID'], $visitScript);
         $visitScript = str_replace("{userId}", $valid['UserID'], $visitScript);
-        return response();
+
+        $signedScript = SecurityNotary::SignScript($visitScript, FormatVersion::V2, true);
+        return response($signedScript, 200);
     }
 }
