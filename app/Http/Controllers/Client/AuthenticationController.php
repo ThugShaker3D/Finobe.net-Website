@@ -31,6 +31,20 @@ class AuthenticationController extends Controller
 
         return response()->json(['code' => 1, 'message' => 'Successfully authenticated client'], 200);
     }
+
+    public function requestAuth(Request $request)
+    {
+        if (Auth::check())
+            return response()->json(['code'=> 0,'message'=> 'already authenticated'], 403);
+
+        return response(route('client-routes.negotiate', [ 'suggest' => Auth::user()->token ]));
+    }
+    
+    public function logout(Request $request)
+    {
+        Auth::logout();
+    }
+
     public function getCurrentUser(Request $request)
     {
         //Simple function.
