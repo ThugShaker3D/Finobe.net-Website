@@ -40,11 +40,12 @@ class AuthenticationController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
+        return response();
     }
 
     public function getCurrentUser(Request $request)
     {
         //Simple function.
-        return Auth::id() ?? -1;
+        return response(Auth::id() ?? -1, 200);
     }
 }
