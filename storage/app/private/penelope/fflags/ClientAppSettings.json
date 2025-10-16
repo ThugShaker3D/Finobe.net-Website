@@ -24,6 +24,8 @@
     "FFlagUrlReconstructToAssetGameSecure": "True",
     "DFFlagUrlReconstructToAssetGame": "True",
     "DFFlagUrlReconstructToAssetGameSecure": "True",
+    "FFlagWebkitDeveloperToolsEnabled": "True",
+    
     "FFlagUseDynamicTypesetterUTF8": "True",
     "DFFlagBadTypeOnConnectErrorEnabled": "True",
     "DFFlagBlockUsersInLuaChat": "True",
