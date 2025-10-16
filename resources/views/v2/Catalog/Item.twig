@@ -130,8 +130,7 @@
                                                                 <p><b>This item is off-sale.</b></p>
                                                             </div>
                                                         </div>
-                                                        {% endif %}
-                                                        {% if not data.item.isOwned %}
+                                                        {% elseif not data.item.isOwned %}
                                                             <button id="btn-purchase" class="btn btn-success btn-lg col-md-12 mb-1">purchase</button>
                                                         {% else %}
                                                         <div class="row justify-content-center mt-2">

@@ -13,6 +13,7 @@ use App\Models\Announcement;
 use App\Models\Configuration;
 use App\Models\Forum\Reply;
 use App\Models\Forum\Thread;
+use App\Http\Controllers\Asset as AssetHelper;
 use App\Http\Controllers\frontEnd;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\dataController as DataController;
@@ -126,8 +127,8 @@ class AdminController extends Controller
 
         $asset = Asset::find($data['id']);
 
-        if($asset['visibility'] == 'r') {
-            if($asset['asset_type'] == 3) {
+        if($asset->visibility == 'r') {
+            if($asset->asset_type == 3) {
                 if(!rename(public_path('dynamic/reviewing/' . $asset->file), public_path('dynamic/denied/' . $asset->file))) {
                     Session::put('error', error_get_last()['message']);
                     return redirect('/admin/assets');
@@ -137,11 +138,8 @@ class AdminController extends Controller
                     Session::put('error', error_get_last()['message']);
                     return redirect('/admin/assets');
                 }
-
-                $asset->visibility = 'd';
-                $asset->save();
             }
-        } elseif($asset['visibility'] == 'n') {
+        } elseif($asset->visibility == 'n') {
             if(!rename('/var/www/cdn.finobe.net/' . ($asset->asset_type == 3 ? 'audios' : 'assets') . '/' . $asset->file, public_path('dynamic/denied/' . $asset->file))) {
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
@@ -151,7 +149,7 @@ class AdminController extends Controller
         $asset->visibility = 'd';
         $asset->save();
         
-        Session::put('success', 'Item denied.');
+        Session::put('success', 'Item deniedd.');
         return redirect('/admin/assets');
     }
 
@@ -526,7 +524,7 @@ class AdminController extends Controller
                 'price' => 'required|integer|min:0',
                 'onsale' => 'nullable|in:on,1,true,0,false,off',
                 'mesh' => 'nullable|file',
-                'xml' => 'nullable|file|mimetypes:text/plain',
+                'xml' => 'nullable|file|mimetypes:text/plain,application/xml,application/octet-stream',
                 'texture' => 'nullable|file|mimetypes:image/png',
                 'type' => 'required|string|in:hat,gear,mesh,texture'
             ]);
@@ -543,7 +541,7 @@ class AdminController extends Controller
                 }
 
                 try {
-                    $id = Asset::createHatOrGear(
+                    $id = AssetHelper::createHatOrGear(
                         $data['title'],
                         ($request->hasFile('texture') ? ['tmp_name' => $request->file('texture')->getPathname()] : false),
                         ($request->hasFile('mesh') ? ['tmp_name' => $request->file('mesh')->getPathname()] : false),
@@ -569,7 +567,7 @@ class AdminController extends Controller
                     return redirect('/admin/createxml');
                 }
 
-                $id = \App\Http\Controllers\Asset::createAsset(
+                $id = AssetHelper::createAsset(
                     $data['title'],
                     4,
                     $this->request['data']['user']['id'],
@@ -579,7 +577,7 @@ class AdminController extends Controller
                     []
                 );
             } elseif($data['type'] == 'texture') {
-                $id = \App\Http\Controllers\Asset::createAsset(
+                $id = AssetHelper::createAsset(
                     $data['title'],
                     1,
                     $this->request['data']['user']['id'],
@@ -947,7 +945,7 @@ class AdminController extends Controller
             file_put_contents(public_path('dynamic/temp/' . $filename . '.png'), $texture);
 
             try {
-                $id = Asset::createHatOrGear(
+                $id = AssetHelper::createHatOrGear(
                     $data['title'],
                     ['tmp_name' => public_path('dynamic/temp/' . $filename . '.png')],
                     ['tmp_name' => public_path('dynamic/temp/' . $filename . '.mesh')],
@@ -962,7 +960,7 @@ class AdminController extends Controller
                 );
             } catch(\Exception $e) {
                 Session::put('error', $e->getMessage());
-                return redirect('/admin/createxml');
+                return redirect('/admin/rbxcreatexml');
             }
 
             Session::put('success', 'Success');

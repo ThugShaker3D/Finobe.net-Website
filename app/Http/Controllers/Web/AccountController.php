@@ -111,7 +111,9 @@ class AccountController extends Controller
 
         $email = EmailVerify::where('username', $user->username)
             ->where('uid', $verifyid)
-            ->where('used', 'n');
+            ->where('used', 'n')
+            ->first();
+        
         $email->used = 'y';
         $email->save();
         
