@@ -137,6 +137,16 @@ class dataController extends Controller
             '74.208.123.25'
         ];
 
+        /* DO NOT DELETE AWAITING IMPLEMENTATION (future implementation)
+        $arbiters = [
+            {
+                'serverid' => 'US-WEST-JFFIOJ', // random string identifer
+                'ip' => '74.208.123.25',
+                'availablePorts' => '1000-2000'
+            }
+        ];
+        */
+
         return $arbiters[random_int(0, count($arbiters) - 1)];
     }
 }
