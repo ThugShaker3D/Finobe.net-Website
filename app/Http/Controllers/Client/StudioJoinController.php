@@ -24,8 +24,9 @@ class StudioJoinController extends Controller
         $valid = $validator->valid();
 
         $visitScript = Storage::get('penelope/scripts/visit.lua');
+        //I'm gonna force it ID 1 until I rewrite everything to WebEngine.
         $visitScript = str_replace("{placeId}", $valid['PlaceID'], $visitScript);
-        $visitScript = str_replace("{userId}", $valid['UserID'], $visitScript);
+        $visitScript = str_replace("{userId}", 1, $visitScript);
 
         $signedScript = SecurityNotary::SignScript($visitScript, FormatVersion::V2, true);
         return response($signedScript, 200);

@@ -8,6 +8,7 @@ use App\Http\Controllers\RobloxUtilities;
 use App\Http\Controllers\SecurityNotary;
 use App\Models\User;
 use App\Services\Matchmaking\Enums\PlaceLauncherStatusCodes;
+use App\Services\Matchmaking\PlaceLauncher;
 use App\Services\Matchmaking\Types\PlaceLauncherResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,12 @@ class GameJoinControlller extends Controller
 {
     public function placeLauncher(Request $request)
     {
+        // I should ask la for some pseudo code for placelauncher, to implement it properly
+        $placeLauncher = PlaceLauncher::getAvailableServer(1);
+
         return response()->json(new PlaceLauncherResponse(
-            'test',
-            PlaceLauncherStatusCodes::Waiting,
+            $placeLauncher['job_id'],
+            $placeLauncher['server_state'],
             '',
             '',
             '',
