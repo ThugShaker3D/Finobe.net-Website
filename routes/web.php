@@ -83,7 +83,7 @@ Route::middleware([SetClientIp::class, LimitRequestPerIp::class, ModerationMiddl
             Route::match(['post', 'get'], '/theme', [AccountController::class, 'theme']);
             Route::match(['post', 'get'], '/games', [AccountController::class, 'games']);
             Route::match(['post', 'get'], '/connect', [AccountController::class, 'connect']);
-            Route::match(['post', 'get'], '/place/new', [GamesController::class, 'new']);
+            Route::match(['post', 'get'], '/place/new', [GamesController::class, 'place_new']);
             Route::match(['post', 'get'], '/inbox/message', [MessagesController::class, 'message']);
             Route::match(['post', 'get'], '/inbox/compose', [MessagesController::class, 'compose']);
             Route::match(['post', 'get'], '/forum/new/post', [ForumController::class, 'new_post']);
