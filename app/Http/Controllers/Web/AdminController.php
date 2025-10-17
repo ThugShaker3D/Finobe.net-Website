@@ -93,6 +93,20 @@ class AdminController extends Controller
                     Session::put('error', error_get_last()['message']);
                     return redirect('/admin/assets');
                 }
+            } elseif($asset->asset_type == 8 && Asset::find(intval($data['id']) - 2) && Asset::find(intval($data['id']) - 1)) {
+                $texture = Asset::find(intval($data['id']) - 2);
+                $xml = Asset::find(intval($data['id']) - 1);
+
+                if(!rename(public_path('dynamic/denied/' . $asset->file), '/var/www/cdn.finobe.net/assets/' . $asset->file) || !rename(public_path('dynamic/denied/' . $texture->file), '/var/www/cdn.finobe.net/assets/' . $texture->file) || !rename(public_path('dynamic/denied/' . $xml->file), '/var/www/cdn.finobe.net/assets/' . $xml->file)) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+
+                $texture->visibility = 'n';
+                $xml->visibility = 'n';
+
+                $texture->save();
+                $xml->save();
             } elseif(in_array($asset->asset_type, [2, 11, 12, 18])) {
                 Asset::where('id', $asset['additional']['media']['textureAssetId'])
                     ->update([
@@ -144,12 +158,38 @@ class AdminController extends Controller
                 Session::put('error', error_get_last()['message']);
                 return redirect('/admin/assets');
             }
+
+            if($asset->asset_type == 8) {
+                $texture = Asset::find(intval($data['id']) - 2);
+                $xml = Asset::find(intval($data['id']) - 1);
+
+                if(!rename('/var/www/cdn.finobe.net/assets/' . $texture->file, public_path('dynamic/denied/' . $texture->file)) || !rename('/var/www/cdn.finobe.net/assets/' . $xml->file, public_path('dynamic/denied/' . $xml->file))) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+
+                $texture->visibility = 'd';
+                $xml->visibility = 'd';
+
+                $texture->save();
+                $xml->save();
+            } elseif(in_array($asset->asset_type, [12, 11, 2])) {
+                $texture = Asset::find(intval($data['id']) - 1);
+
+                if(!rename('/var/www/cdn.finobe.net/assets/' . $texture->file, public_path('dynamic/denied/' . $texture->file))) {
+                    Session::put('error', error_get_last()['message']);
+                    return redirect('/admin/assets');
+                }
+
+                $texture->visibility = 'd';
+                $texture->save();
+            }
         }
 
         $asset->visibility = 'd';
         $asset->save();
         
-        Session::put('success', 'Item deniedd.');
+        Session::put('success', 'Item denied.');
         return redirect('/admin/assets');
     }
 
