@@ -89,7 +89,7 @@ class AdminController extends Controller
             }
         } elseif($asset['visibility'] == 'd') {
             if($asset->asset_type == 3) {
-                if(!rename(public_path('dynamic/denied/' . $asset['file']), '/var/www/cdn.finobe.net/audios/' . $asset['file'])) {
+                if(!rename(public_path('dynamic/denied/' . $asset->file), '/var/www/cdn.finobe.net/audios/' . $asset->file)) {
                     Session::put('error', error_get_last()['message']);
                     return redirect('/admin/assets');
                 }
