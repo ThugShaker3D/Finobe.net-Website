@@ -625,10 +625,25 @@ class AccountController extends Controller
                 'username' => trim($data['username']),
                 'email' => trim($data['email']),
                 'password' => password_hash($data['password'], PASSWORD_BCRYPT),
-                'friends' => '[]',
-                'inventory' => '[]',
-                'badges' => '[]',
-                'avatar' => '[{"resolvedAvatarType":"R6","equippedGearVersionIds":[],"backpackGearVersionIds":[],"assetAndAssetTypeIds":[],"bodyColors":{"headColorId":24,"torsoColorId":"23","rightArmColorId":24,"leftArmColorId":24,"rightLegColorId":"119","leftLegColorId":"119"},"scales":{"height":1,"width":1,"head":1,"depth":1,"proportion":0,"bodyType":0}}]',
+                'friends' => [],
+                'inventory' => [],
+                'badges' => [],
+                'avatar' => [
+                    [
+                        'resolvedAvatarType' => 'R6',
+                        'equippedGearVersionIds' => [],
+                        'backpackGearVersionIds' => [],
+                        'assetAndAssetTypeIds' => [],
+                        'bodyColors' => [
+                            'headColorId' => 24,
+                            'torsoColorId' => 23,
+                            'rightArmColorId' => 24,
+                            'leftArmColorId' => 24,
+                            'rightLegColorId' => 119,
+                            'leftLegColorId' => 119
+                        ]
+                    ]
+                ],
                 'token' => bin2hex(random_bytes(30))
             ]);
 

@@ -75,19 +75,18 @@ class AdminController extends Controller
 
         $asset = Asset::find($data['id']);
 
-        if($asset['visibility'] == 'r') {
+        if($asset->visibility == 'r') {
             if($asset['asset_type'] == 3) {
                 if(!rename(public_path('dynamic/reviewing/' . $asset->file), '/var/www/cdn.finobe.net/audios/' . $asset->file)) {
                     Session::put('error', error_get_last()['message']);
                     return redirect('/admin/assets');
                 }
             } elseif(in_array($asset->asset_type, [2, 11, 12, 18])) {
-                Asset::where('id', $asset['additional']['media']['textureAssetId'])
-                    ->update([
-                        'visibility' => 'n'
-                    ]);
+                $texture = Asset::find($asset->additional['media']['textureAssetId']);
+                $texture->visibility = 'n';
+                $texture->save();
             }
-        } elseif($asset['visibility'] == 'd') {
+        } elseif($asset->visibility == 'd') {
             if($asset->asset_type == 3) {
                 if(!rename(public_path('dynamic/denied/' . $asset->file), '/var/www/cdn.finobe.net/audios/' . $asset->file)) {
                     Session::put('error', error_get_last()['message']);
@@ -108,10 +107,9 @@ class AdminController extends Controller
                 $texture->save();
                 $xml->save();
             } elseif(in_array($asset->asset_type, [2, 11, 12, 18])) {
-                Asset::where('id', $asset['additional']['media']['textureAssetId'])
-                    ->update([
-                        'visibility' => 'n'
-                    ]);
+                $texture = Asset::find($asset->additional['media']['textureAssetId']);
+                $texture->visibility = 'n';
+                $texture->save();
             }
         }
 
