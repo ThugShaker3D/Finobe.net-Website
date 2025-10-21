@@ -222,10 +222,10 @@ class api extends Controller
             return redirect('/');
         }
 
-        $user = Auth::user()->toArray();
+        $user = Auth::user();
 
         if($data['id'] == 'all') {
-            Message::where('touser', $user['id'])->update(['readed' => 'y']);
+            Notification::where('touser', $user->id)->update(['readed' => 'y']);
             
             return redirect('/');
         }
