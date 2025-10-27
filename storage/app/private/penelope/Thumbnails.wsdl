@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://roblox.com/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" targetNamespace="http://roblox.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://roblox.com/Imports">
+      <xsd:import namespace="http://roblox.com/" />
+      <xsd:import namespace="http://schemas.microsoft.com/Message" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ThumbnailsRelay_IsAlive_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsAlive" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_IsAlive_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsAliveResponse" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_Ping_InputMessage">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_Ping_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_GetStats_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetStats" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_GetStats_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_RequestThumbnailGenerationEx_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestThumbnailGenerationEx" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_RequestThumbnailGenerationEx_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestThumbnailGenerationExResponse" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_RequestAvatarThumbnailGenerationEx_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestAvatarThumbnailGenerationEx" />
+  </wsdl:message>
+  <wsdl:message name="ThumbnailsRelay_RequestAvatarThumbnailGenerationEx_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestAvatarThumbnailGenerationExResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ThumbnailsRelay">
+    <wsdl:operation name="IsAlive">
+      <wsdl:input wsaw:Action="http://roblox.com/ThumbnailsRelay/IsAlive" message="tns:ThumbnailsRelay_IsAlive_InputMessage" />
+      <wsdl:output wsaw:Action="http://roblox.com/ThumbnailsRelay/IsAliveResponse" message="tns:ThumbnailsRelay_IsAlive_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:input wsaw:Action="http://roblox.com/ThumbnailsRelay/Ping" message="tns:ThumbnailsRelay_Ping_InputMessage" />
+      <wsdl:output wsaw:Action="http://roblox.com/ThumbnailsRelay/PingResponse" message="tns:ThumbnailsRelay_Ping_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStats">
+      <wsdl:input wsaw:Action="http://roblox.com/ThumbnailsRelay/GetStats" message="tns:ThumbnailsRelay_GetStats_InputMessage" />
+      <wsdl:output wsaw:Action="http://roblox.com/ThumbnailsRelay/GetStatsResponse" message="tns:ThumbnailsRelay_GetStats_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestThumbnailGenerationEx">
+      <wsdl:input wsaw:Action="http://roblox.com/ThumbnailsRelay/RequestThumbnailGenerationEx" message="tns:ThumbnailsRelay_RequestThumbnailGenerationEx_InputMessage" />
+      <wsdl:output wsaw:Action="http://roblox.com/ThumbnailsRelay/RequestThumbnailGenerationExResponse" message="tns:ThumbnailsRelay_RequestThumbnailGenerationEx_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestAvatarThumbnailGenerationEx">
+      <wsdl:input wsaw:Action="http://roblox.com/ThumbnailsRelay/RequestAvatarThumbnailGenerationEx" message="tns:ThumbnailsRelay_RequestAvatarThumbnailGenerationEx_InputMessage" />
+      <wsdl:output wsaw:Action="http://roblox.com/ThumbnailsRelay/RequestAvatarThumbnailGenerationExResponse" message="tns:ThumbnailsRelay_RequestAvatarThumbnailGenerationEx_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DefaultBinding_ThumbnailsRelay" type="tns:ThumbnailsRelay">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="IsAlive">
+      <soap:operation soapAction="http://roblox.com/ThumbnailsRelay/IsAlive" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://roblox.com/ThumbnailsRelay/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStats">
+      <soap:operation soapAction="http://roblox.com/ThumbnailsRelay/GetStats" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestThumbnailGenerationEx">
+      <soap:operation soapAction="http://roblox.com/ThumbnailsRelay/RequestThumbnailGenerationEx" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestAvatarThumbnailGenerationEx">
+      <soap:operation soapAction="http://roblox.com/ThumbnailsRelay/RequestAvatarThumbnailGenerationEx" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>
