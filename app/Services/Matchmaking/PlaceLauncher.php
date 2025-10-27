@@ -10,8 +10,8 @@ class PlaceLauncher
   // No matter, Loading server or "Joining"
   public static function getAvailableServer(int $placeId): array
   {
-    self::createGameInstance('fuck_this_shit_i_hate_my_life', 1, '127.0.0.1', 1488, 1, PlaceLauncherStatusCodes::Loading);
-
+    self::createGameInstance('fuck_this_shit_i_hate_my_life', 1, '127.0.0.1', 1488, 1, PlaceLauncherStatusCodes::Loading->value);
+    
     return [
       'job_id' => 'test',
       'server_state' => PlaceLauncherStatusCodes::Loading,
@@ -24,7 +24,7 @@ class PlaceLauncher
     string $serverAddress,
     int $port,
     int $matchmakingContext = 1,
-    PlaceLauncherStatusCodes $gameState = PlaceLauncherStatusCodes::Loading,
+    int $gameState = PlaceLauncherStatusCodes::Loading,
   ): bool {
     try {
       Redis::hmset('game-instances:' . $gameId, [
