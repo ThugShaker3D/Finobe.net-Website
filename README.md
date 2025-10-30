@@ -25,3 +25,6 @@ Client Developer, Leaker - Karma
 watcha27 - rebuilded db
 ThugShaker3D - uploaded this to github
 Karma - leaking
+
+# [ Issues ]
+Faulty placelauncher, please hit us with a pull request.
