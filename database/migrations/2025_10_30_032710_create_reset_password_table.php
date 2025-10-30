@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('reset_password', function (Blueprint $table) {
+            $table->id();
+            $table->string('username');
+            $table->timestamp('date')->useCurrent();
+            $table->timestamp('expire')->nullable();
+            $table->boolean('used')->default(false);
+            $table->string('uid');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('reset_password');
+    }
+};
