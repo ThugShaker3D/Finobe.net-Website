@@ -3,7 +3,7 @@
 # [ INFORMATION ]
 Happy halloween! and this is our gift to you. Finobe.NET is a really shit revival, and it's been in-development since 2021.
 
-# [ setup ]
+# [ SETUP ]
 you set it up like any other laravel site, wait for guide for now.
 
 
@@ -14,3 +14,7 @@ Co-Owner, Developer (The one who made this trainwreck of a revival) - Aesthetifu
 Client Developer, Leaker - Karma
 ~~Client Developer~~ Dude who didn't do anything to contribute to development - WaterBoi
 
+- Bepistown -
+watcha27 - rebuilded db
+ThugShaker3D - uploaded this to github
+Karma - leaking
