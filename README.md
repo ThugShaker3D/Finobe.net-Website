@@ -26,5 +26,8 @@ watcha27 - rebuilded db
 ThugShaker3D - uploaded this to github
 Karma - leaking
 
-# [ Issues ]
+# [ ISSUES ]
 Faulty placelauncher, please hit us with a pull request.
+
+# [ TODO ]
+Replace Soap requests with something other, PHP's SoapClient halts the website.
