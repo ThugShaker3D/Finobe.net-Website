@@ -15,13 +15,13 @@ Use caddy or NGINX to host it.
 Have fun!  
 
 # [ CREDITS ]
-- Original Dev Team -   
+\- Original Dev Team -   
 Instance - Giving Aesthetiful money to buy things for Finobe.NET  
 Co-Owner, Developer (The one who made this trainwreck of a revival) - Aesthetiful  
 Client Developer, Leaker - Karma  
 ~~Client Developer~~ Dude who didn't do anything to contribute to development - WaterBoi  
   
-- Bepistown -  
+\- Bepistown -  
 watcha27 - rebuilt db  
 ThugShaker3D - reuploaded source code this to github  
 Karma - leaking website source code
